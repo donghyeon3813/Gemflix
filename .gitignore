@@ -1,0 +1,42 @@
+HELP.md
+Gemflix/.gradle
+Gemflix/build/
+!Gemflix/gradle/wrapper/gradle-wrapper.jar
+!Gemflix/**/src/main/**/build/
+!Gemflix/**/src/test/**/build/
+
+### IntelliJ IDEA ###
+Gemflix/.idea
+Gemflix/*.iws
+Gemflix/*.iml
+Gemflix/*.ipr
+Gemflix/out/
+!Gemflix/**/src/main/**/out/
+!Gemflix/**/src/test/**/out/
+
+### VS Code ###
+Gemflix/.vscode/
+
+### React ###
+# dependencies
+Gemflix-Front/node_modules
+Gemflix-Front/.pnp
+Gemflix-Front/.pnp.js
+
+# testing
+Gemflix-Front/coverage
+
+# production
+Gemflix-Front/build
+
+# misc
+Gemflix-Front/.DS_Store
+Gemflix-Front/.env.local
+Gemflix-Front/.env.development.local
+Gemflix-Front/.env.test.local
+Gemflix-Front/.env.production.local
+
+Gemflix-Front/npm-debug.log*
+Gemflix-Front/yarn-debug.log*
+Gemflix-Front/yarn-error.log*
+
