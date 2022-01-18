@@ -9,32 +9,39 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @Slf4j
 @Component
 public class JwtTokenUtil{
 
-    private static final long JWT_TOKEN_EXPIRE = 5 * 60 * 60 * 1000; //5시간
+    public static final long JWT_ACCESS_TOKEN_EXPIRE = 2 * 60 * 60 * 1000; //2시간
+    public static final long JWT_REFRESH_TOKEN_EXPIRE = 6 * 60 * 60 * 1000; //6시간
+    public static final String ACCESS_TOKEN_NAME = "accessTokenName";
+    public static final String REFRESH_TOKEN_NAME = "refreshTokenName";
 
     @Value("${jwt.secret.key}")
-    private String secretKey;
+    private String SECRET_KEY;
 
-    //create token
-    public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, userDetails.getUsername());
+    //create access token
+    public String generateToken(String username) {
+        return doGenerateToken(username, JWT_ACCESS_TOKEN_EXPIRE);
     }
-    public String doGenerateToken(Map<String, Object> claims, String username){
+
+    //create refresh token
+    public String generateRefreshToken(String username) {
+        return doGenerateToken(username, JWT_REFRESH_TOKEN_EXPIRE);
+    }
+
+    public String doGenerateToken(String username, Long expiredTime){
         return Jwts.builder()
-                .setClaims(claims) //claims: token에 담을 정보
+                .setClaims(Jwts.claims()) //claims: token에 담을 정보
                 .setSubject(username) //subject: Token (sub에 사용자 이름 넣기)
                 .setIssuedAt(new Date(System.currentTimeMillis())) //issuedate: Token 발급 시간
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_EXPIRE)) //expiration: Token 만료 시간
-                .signWith(SignatureAlgorithm.HS256, secretKey).compact(); //알고리즘, 비밀키
+                .setExpiration(new Date(System.currentTimeMillis() + expiredTime)) //expiration: Token 만료 시간
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact(); //알고리즘, 비밀키
     }
+
 
     //get username from jwt token
     public String getUsernameFromToken(String token) {
@@ -52,7 +59,7 @@ public class JwtTokenUtil{
     }
 
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
     }
 
     //check if the token has expired
