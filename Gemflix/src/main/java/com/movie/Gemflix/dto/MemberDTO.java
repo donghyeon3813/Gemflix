@@ -34,7 +34,7 @@ public class MemberDTO {
     //그 외 기본 정보들
     private int point = 0;
     private String status = "1";
-    private MemberRole authority = MemberRole.MEMBER;
+    private MemberRole authority = MemberRole.NO_PERMISSION;
     private String grade = "1";
     private String delStatus = "0";
     private LocalDateTime regDate;

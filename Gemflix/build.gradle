@@ -1,6 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.6.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" //QueryDsl
 	id 'java'
 }
 
@@ -28,6 +29,11 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-oauth2-client:5.6.1'
 	implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.2'
 	implementation 'org.modelmapper:modelmapper:2.4.4'
+	implementation 'org.springframework.boot:spring-boot-starter-mail:2.6.2'
+
+	//querydsl
+	implementation 'com.querydsl:querydsl-apt:5.0.0'
+	implementation 'com.querydsl:querydsl-jpa:5.0.0'
 
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.6.2'
@@ -52,3 +58,24 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
+
+//QueryDsl
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+	main.java.srcDir querydslDir
+}
+
+configurations {
+	querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+

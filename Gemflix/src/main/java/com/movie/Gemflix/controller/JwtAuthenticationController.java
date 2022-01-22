@@ -49,7 +49,7 @@ public class JwtAuthenticationController {
                     jwtUtil.REFRESH_TOKEN_NAME, jwtUtil.JWT_REFRESH_TOKEN_EXPIRE, refreshJwtToken);
 
             //Redis에 Refresh Token 저장 후 만료시간 설정
-            redisUtil.setDataExpire(refreshJwtToken, username, jwtUtil.JWT_REFRESH_TOKEN_EXPIRE);
+            redisUtil.setStringDataExpire(refreshJwtToken, username, jwtUtil.JWT_REFRESH_TOKEN_EXPIRE);
 
             response.addCookie(accessToken);
             response.addCookie(refreshToken);
