@@ -1,12 +1,9 @@
 package com.movie.Gemflix.entity;
 
 import lombok.*;
-import org.springframework.security.access.vote.RoleHierarchyVoter;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Builder
@@ -14,8 +11,9 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@DynamicInsert //insert시 null인 필드 제외
 @Table(name = "MEMBER")
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @SequenceGenerator(name = "M_ID_SEQ_GEN", sequenceName = "M_ID_SEQ", initialValue = 1, allocationSize = 1)
@@ -30,16 +28,6 @@ public class Member {
     private String email;
     private MemberRole authority;
     private String grade;
-    private LocalDateTime regDate;
-    private LocalDateTime modDate;
     private String delStatus;
-
-    /*@ElementCollection(fetch = FetchType.LAZY)
-    @Builder.Default //builder 사용시 기본값 설정
-    private Set<MemberRole> roleSet = new HashSet<>();
-
-    public void addMemberRole(MemberRole memberRole){
-        roleSet.add(memberRole);
-    }*/
 
 }

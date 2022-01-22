@@ -59,8 +59,6 @@ class GemflixApplicationTests {
 					.email("person" + i + "@gmail.com")
 					.authority(role)
 					.grade("1")
-					.regDate(date)
-					.modDate(null)
 					.delStatus("0")
 					.status("1")
 					.build();

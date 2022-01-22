@@ -13,7 +13,7 @@ import java.util.function.Function;
 
 @Slf4j
 @Component
-public class JwtTokenUtil{
+public class JwtUtil{
 
     public static final long JWT_ACCESS_TOKEN_EXPIRE = 2 * 60 * 60 * 1000; //2시간
     public static final long JWT_REFRESH_TOKEN_EXPIRE = 6 * 60 * 60 * 1000; //6시간

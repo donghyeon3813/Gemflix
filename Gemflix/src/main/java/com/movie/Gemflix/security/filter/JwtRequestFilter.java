@@ -1,9 +1,10 @@
 package com.movie.Gemflix.security.filter;
 
 import com.movie.Gemflix.security.util.CookieUtil;
-import com.movie.Gemflix.security.util.JwtTokenUtil;
+import com.movie.Gemflix.security.util.JwtUtil;
 import com.movie.Gemflix.security.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,18 +24,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
+@RequiredArgsConstructor
 @Component
 //Client의 Request를 Intercept해서 Header의 Token가 유효한지 검증
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-
-    @Autowired
-    private CookieUtil cookieUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
@@ -44,7 +42,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         log.info("REQUESTURI : " + request.getRequestURI());
 
         //JWT Token
-        final Cookie jwtToken = cookieUtil.getCookie(request, JwtTokenUtil.ACCESS_TOKEN_NAME);
+        final Cookie jwtToken = cookieUtil.getCookie(request, JwtUtil.ACCESS_TOKEN_NAME);
 
         final String authHeader = request.getHeader("Authorization");
 
@@ -57,12 +55,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         try{
             if(jwtToken != null){
                 jwt = jwtToken.getValue();
-                username = jwtTokenUtil.getUsernameFromToken(jwt);
+                username = jwtUtil.getUsernameFromToken(jwt);
             }
             if(username != null){
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-                if(jwtTokenUtil.validateToken(jwt, userDetails)){
+                if(jwtUtil.validateToken(jwt, userDetails)){
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                             new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -72,7 +70,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         }catch (ExpiredJwtException e) {
             log.info("JWT Token has expired");
-            Cookie refreshToken = cookieUtil.getCookie(request, jwtTokenUtil.generateRefreshToken(username));
+            Cookie refreshToken = cookieUtil.getCookie(request, jwtUtil.generateRefreshToken(username));
             if(refreshToken != null){
                 refreshJwt  = refreshToken.getValue();
             }

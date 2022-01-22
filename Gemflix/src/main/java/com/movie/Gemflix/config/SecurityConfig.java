@@ -3,6 +3,7 @@ package com.movie.Gemflix.config;
 import com.movie.Gemflix.security.filter.JwtRequestFilter;
 import com.movie.Gemflix.security.service.UserDetailsServiceImpl;
 import com.movie.Gemflix.security.util.JwtAuthenticationEntryPoint;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,18 +26,14 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity //SpringSecurityFilterChain이 자동으로 포함
 @EnableGlobalMethodSecurity(prePostEnabled = true) //@PreAuthorize, @PostAuthorize 을 사용하여 인가 처리를 하고 싶을때 사용하는 옵션
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-
-    @Autowired
-    private JwtRequestFilter jwtRequestFilter;
-
-    @Autowired
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final JwtRequestFilter jwtRequestFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     public PasswordEncoder delegatingPasswordEncoder() {
@@ -91,9 +88,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .expressionHandler(expressionHandler())
                 .antMatchers("/authenticate").permitAll()
-                .antMatchers("/none").hasRole("NONE")
-                .antMatchers("/member").hasRole("MEMBER")
-                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/register").permitAll()
+                .antMatchers("/member/**").hasRole("MEMBER")
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
 
                 //jwtRequestFilter 를 addFilterBefore 로 등록 (UsernamePasswordAuthenticationFilter 필터 이전에 실행)

@@ -1,10 +1,12 @@
 package com.movie.Gemflix.controller;
 
 import com.movie.Gemflix.security.util.CookieUtil;
-import com.movie.Gemflix.security.util.JwtTokenUtil;
+import com.movie.Gemflix.security.util.JwtUtil;
 import com.movie.Gemflix.security.model.JwtRequest;
 import com.movie.Gemflix.security.model.JwtResponse;
 import com.movie.Gemflix.security.service.UserDetailsServiceImpl;
+import com.movie.Gemflix.security.util.RedisUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,21 +23,17 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @RestController
 @CrossOrigin
+@RequiredArgsConstructor
 public class JwtAuthenticationController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final CookieUtil cookieUtil;
+    private final RedisUtil redisUtil;
+    private final UserDetailsServiceImpl userDetailsService;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private CookieUtil cookieUtil;
-
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-
-    @PostMapping("/login")
+    @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest jwtRequest,
                                                        HttpServletResponse response) throws Exception {
         try {
@@ -43,13 +41,16 @@ public class JwtAuthenticationController {
             authenticate(jwtRequest.getUsername(), jwtRequest.getPassword());
             final UserDetails userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUsername());
             String username = userDetails.getUsername();
-            final String token = jwtTokenUtil.generateToken(username);
-            final String refreshJwtToken = jwtTokenUtil.generateRefreshToken(username);
+            final String token = jwtUtil.generateToken(username);
+            final String refreshJwtToken = jwtUtil.generateRefreshToken(username);
             Cookie accessToken = cookieUtil.createCookie(
-                    JwtTokenUtil.ACCESS_TOKEN_NAME, JwtTokenUtil.JWT_ACCESS_TOKEN_EXPIRE, token);
+                    jwtUtil.ACCESS_TOKEN_NAME, jwtUtil.JWT_ACCESS_TOKEN_EXPIRE, token);
             Cookie refreshToken = cookieUtil.createCookie(
-                    JwtTokenUtil.REFRESH_TOKEN_NAME, JwtTokenUtil.JWT_REFRESH_TOKEN_EXPIRE, refreshJwtToken);
-            //TODO: Redis 만료시간 설정
+                    jwtUtil.REFRESH_TOKEN_NAME, jwtUtil.JWT_REFRESH_TOKEN_EXPIRE, refreshJwtToken);
+
+            //Redis에 Refresh Token 저장 후 만료시간 설정
+            redisUtil.setDataExpire(refreshJwtToken, username, jwtUtil.JWT_REFRESH_TOKEN_EXPIRE);
+
             response.addCookie(accessToken);
             response.addCookie(refreshToken);
             return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken));
