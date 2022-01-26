@@ -33,6 +33,10 @@ dependencies {
 	//json
 	implementation 'com.alibaba:fastjson:1.2.78'
 
+	// webClient
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux', version: '2.6.2'
+
+
 	//test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
