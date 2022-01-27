@@ -1,10 +1,8 @@
 package com.movie.Gemflix.security.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.movie.Gemflix.entity.MemberRole;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.time.LocalDateTime;

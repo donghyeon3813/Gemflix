@@ -23,8 +23,8 @@ public class MemberDTO {
     private String password;
 
     @NotBlank
-    @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$",
-            message = "핸드폰번호 형식에 맞게 입력해주세요.(01x-xxxx-xxxx)")
+    @Pattern(regexp = "^\\d{2,3}\\d{3,4}\\d{4}$",
+            message = "핸드폰번호 형식에 맞게 입력해주세요.")
     private String phone;
 
     @NotBlank

@@ -3,10 +3,11 @@ package com.movie.Gemflix.common;
 public enum ErrorType {
 
     DUPLICATED_MEMBER_ID(1001, "duplicated id"), //memberId 중복
-    INVALID_MEMBER_ID(1002, "invalid id"), //memberId 유효성검사 실패
+    INVALID_MEMBER_ID(1002, "invalid member id"), //memberId 유효성검사 실패
     INVALID_MEMBER_PASSWORD(1003, "invalid password"), //password 유효성검사 실패
     INVALID_MEMBER_PHONE(1004, "invalid phone"), //phone 유효성검사 실패
     INVALID_MEMBER_EMAIL(1005, "invalid email"), //email 유효성검사 실패
+    INVALID_MEMBER(1006, "invalid member"), //유효하지않은 member
 
     ETC_FAIL(1999, "fail...") //그 외 오류
     ;
