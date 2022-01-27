@@ -4,8 +4,14 @@ import Home from './components/home';
 import Profile from './components/profile';
 import Login from './components/login';
 import Join from './components/join';
+import { useState } from 'react';
 
 function App({server, id, pw, phone, email}) {
+  const [isLogin , setIsLogin] = useState(false);
+
+  const loginCallBack = login => {
+    setIsLogin(login);
+}
 
   return (
     <BrowserRouter>
@@ -17,7 +23,8 @@ function App({server, id, pw, phone, email}) {
         <Route path="/home" element={<Home />}></Route>
         <Route path="/profile" element={<Profile />}></Route>
         <Route path="/join" element={<Join server={server}/>}></Route>
-        <Route path="/login" element={<Login />}></Route>
+        {/* <Route path="/login" element={<Login />}></Route> */}
+        <Route path="/login" element={<Login loginCallBack={loginCallBack} server={server}/>} />
       </Routes>
     </BrowserRouter>
   );
