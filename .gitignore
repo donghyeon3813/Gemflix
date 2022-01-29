@@ -11,6 +11,7 @@ Gemflix/*.iws
 Gemflix/*.iml
 Gemflix/*.ipr
 Gemflix/out/
+Gemflix/src/main/resources/application.yml
 !Gemflix/**/src/main/**/out/
 !Gemflix/**/src/test/**/out/
 
