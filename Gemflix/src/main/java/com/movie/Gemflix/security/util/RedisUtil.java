@@ -1,9 +1,6 @@
 package com.movie.Gemflix.security.util;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisKeyValueTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
@@ -15,6 +12,9 @@ import java.time.Duration;
 public class RedisUtil {
 
     private final StringRedisTemplate stringRedisTemplate;
+
+    public static final String PREFIX_EMAIL_KEY = "email:";
+    public static final String PREFIX_REFRESH_TOKEN_KEY = "refresh.token:";
 
     //String Type
     public String getStringData(String key){

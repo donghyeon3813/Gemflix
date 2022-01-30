@@ -15,6 +15,7 @@ public class CookieUtil {
         cookie.setHttpOnly(true);
         cookie.setMaxAge((int) maxAge);
         cookie.setPath("/");
+        cookie.setSecure(true); //웹브라우저와 웹서버가 HTTPS를 통신할 경우에만 쿠키를 전송
         return cookie;
     }
 

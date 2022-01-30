@@ -26,13 +26,13 @@ public class EmailService {
 
     private static final String MAIL_VERIFICATION_LINK = "http://localhost:9091/verify/";
     private static final String MAIL_SUBJECT = "[Gemflix] 회원가입 인증메일입니다.";
-    private static final Long EXPIRE_TIME = 60 * 30L;
+    private static final Long LINK_EXPIRE_TIME = 60 * 30L; //30분
 
     public boolean sendVerificationMail(MemberDTO memberDTO) throws Exception{
         try {
             String uuid = UUID.randomUUID().toString();
             String memberId = memberDTO.getId();
-            redisUtil.setStringDataExpire(uuid, memberId, EXPIRE_TIME);
+            redisUtil.setStringDataExpire(RedisUtil.PREFIX_EMAIL_KEY + uuid, memberId, LINK_EXPIRE_TIME);
             String text = "안녕하세요. " + memberId + "님," +
                     "\n 보석같은 영화를 제공하는 Gemplix 입니다." +
                     "\n 아래 링크를 눌러 Email 인증을 완료하세요." +

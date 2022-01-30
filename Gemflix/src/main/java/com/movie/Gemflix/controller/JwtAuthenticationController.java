@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
@@ -40,49 +41,45 @@ public class JwtAuthenticationController {
     private final PasswordEncoder passwordEncoder;
 
 
+    //refreshToken 으로 accessToken 재발급
     @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest jwtRequest,
-                                                       HttpServletResponse response) throws Exception {
-        try {
-            log.info("jwtRequest: {}", jwtRequest.toString());
-            if(!checkMemberAuth(jwtRequest)) {
-                ApiResponseMessage apiRm = new ApiResponseMessage(HttpStatus.UNAUTHORIZED.value(), ErrorType.INVALID_MEMBER);
-                return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));
+    public ResponseEntity<?> checkAuthenticationToken(HttpServletRequest request,
+                                                      HttpServletResponse response){
+        log.info(("=== checkAuthenticationToken"));
+        return null;
+        /*String token = null;
+        String refreshJwtToken = null;
+        Cookie accessToken = null;
+        Cookie refreshToken = null;
+
+        Cookie [] cookies = request.getCookies();
+        if(cookies != null && cookies.length > 0 ) {
+            for(Cookie cookie : cookies) {
+                if(cookie.getName().equals(JwtUtil.REFRESH_TOKEN_NAME)){
+                    
+                    refreshJwtToken = cookie.getValue();
+                    if(refreshJwtToken == null || refreshJwtToken.isEmpty()) break;
+                        
+                    String username = jwtUtil.getUsernameFromToken(refreshJwtToken);
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                    //memberId, 토큰 유효시간 확인
+                    if(jwtUtil.validateToken(refreshJwtToken, userDetails)) {
+                        token = jwtUtil.generateToken(username); //access토큰 발급
+                        accessToken = cookieUtil.createCookie(JwtUtil.ACCESS_TOKEN_NAME, JwtUtil.JWT_ACCESS_TOKEN_EXPIRE, token);
+                        refreshToken = cookieUtil.createCookie(JwtUtil.REFRESH_TOKEN_NAME, JwtUtil.JWT_REFRESH_TOKEN_EXPIRE, refreshJwtToken);
+                        log.info("accessToken: {}, refreshToken: {}", accessToken, refreshToken);
+
+                        response.addCookie(accessToken);
+                        response.addCookie(refreshToken);
+                        return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken));
+                        
+                    }
+                }
             }
-
-            String username = jwtRequest.getUsername();
-            final String token = jwtUtil.generateToken(username);
-            final String refreshJwtToken = jwtUtil.generateRefreshToken(username);
-            Cookie accessToken = cookieUtil.createCookie(
-                    JwtUtil.ACCESS_TOKEN_NAME, JwtUtil.JWT_ACCESS_TOKEN_EXPIRE, token);
-            Cookie refreshToken = cookieUtil.createCookie(
-                    JwtUtil.REFRESH_TOKEN_NAME, JwtUtil.JWT_REFRESH_TOKEN_EXPIRE, refreshJwtToken);
-            log.info("accessToken: {}, refreshToken: {}", accessToken, refreshToken);
-
-            //Redis에 Refresh Token 저장 후 만료시간 설정
-            redisUtil.setStringDataExpire(refreshJwtToken, username, JwtUtil.JWT_REFRESH_TOKEN_EXPIRE);
-
-            response.addCookie(accessToken);
-            response.addCookie(refreshToken);
-            return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken));
-
-        }catch (Exception e){
-            ApiResponseMessage apiRm = new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), ErrorType.INVALID_MEMBER);
-            return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));
         }
-    }
-
-    private boolean checkMemberAuth(JwtRequest jwtRequest) {
-        String id = jwtRequest.getUsername();
-        String password = jwtRequest.getPassword();
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(id);
-        String realId = userDetails.getUsername();
-        String realPassword = userDetails.getPassword();
-        boolean isValidMember = id.equals(realId) && passwordEncoder.matches(password, realPassword);
-
-        if(!isValidMember) return false; //유효하지않은 회원
-        String authority = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toString();
-        return !("ROLE_" + MemberRole.NONE).equals(authority); //비회원은 로그인 불가
+        ApiResponseMessage apiRm = new ApiResponseMessage(HttpStatus.UNAUTHORIZED.value(), ErrorType.INVALID_MEMBER);
+        return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));*/
     }
 
     private void authenticate(String username, String password) throws Exception {

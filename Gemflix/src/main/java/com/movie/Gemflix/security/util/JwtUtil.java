@@ -15,10 +15,15 @@ import java.util.function.Function;
 @Component
 public class JwtUtil{
 
-    public static final long JWT_ACCESS_TOKEN_EXPIRE = 2 * 60 * 60 * 1000; //2시간
-    public static final long JWT_REFRESH_TOKEN_EXPIRE = 6 * 60 * 60 * 1000; //6시간
-    public static final String ACCESS_TOKEN_NAME = "accessTokenName";
-    public static final String REFRESH_TOKEN_NAME = "refreshTokenName";
+//    public static final long JWT_ACCESS_TOKEN_EXPIRE = 2 * 60 * 60 * 1000; //2시간
+//    public static final long JWT_REFRESH_TOKEN_EXPIRE = 6 * 60 * 60 * 1000; //6시간
+
+    //for test
+    public static final long JWT_ACCESS_TOKEN_EXPIRE = 60; //1분
+    public static final long JWT_REFRESH_TOKEN_EXPIRE = 10 * 60; //10분
+
+    public static final String ACCESS_TOKEN_NAME = "accessToken";
+    public static final String REFRESH_TOKEN_NAME = "refreshToken";
 
     @Value("${jwt.secret.key}")
     private String SECRET_KEY;

@@ -19,9 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Optional;
 
 @Slf4j
@@ -35,6 +33,8 @@ public class AuthService {
     private final EmailService emailService;
     private final RedisUtil redisUtil;
     private final JPAQueryFactory queryFactory;
+
+    private QMember qMember = QMember.member;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -59,25 +59,20 @@ public class AuthService {
 
     @Transactional
     public ApiResponseMessage verifyEmail(String key) throws Exception {
-        String memberId = redisUtil.getStringData(key);
+        String memberId = redisUtil.getStringData(RedisUtil.PREFIX_EMAIL_KEY + key);
         if(memberId == null){
             return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), ErrorType.INVALID_MEMBER_ID);
         }else{
             modifyUserRole(memberId);
-            redisUtil.deleteData(key);
+            redisUtil.deleteData(RedisUtil.PREFIX_EMAIL_KEY + key);
             return new ApiResponseMessage(HttpStatus.OK.value(), "Member Email Permission Success");
         }
     }
 
     public void modifyUserRole(String memberId) throws Exception{
-        //TODO: modDate 수정
-        Instant instant = Instant.ofEpochMilli(System.currentTimeMillis());
-        LocalDateTime now = instant.atZone(ZoneId.systemDefault()).toLocalDateTime();
-
-        QMember qMember = QMember.member;
         queryFactory.update(qMember)
                 .set(qMember.authority, MemberRole.MEMBER)
-                .set(qMember.modDate, now)
+                .set(qMember.modDate, LocalDateTime.now())
                 .where(qMember.id.eq(memberId))
                 .execute();
         entityManager.flush();
