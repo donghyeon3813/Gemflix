@@ -1,0 +1,33 @@
+package com.movie.Gemflix.entity;
+
+import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
+
+import javax.persistence.*;
+
+@Entity
+@Builder
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@DynamicInsert //insert시 null인 필드 제외
+@Table(name = "MEMBER")
+public class Member extends BaseEntity {
+
+    @Id
+    @SequenceGenerator(name = "M_ID_SEQ_GEN", sequenceName = "M_ID_SEQ", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "M_ID_SEQ_GEN")
+    private int mId;
+
+    private String id;
+    private String password;
+    private int point;
+    private String phone;
+    private String status;
+    private String email;
+    private MemberRole authority;
+    private String grade;
+    private String delStatus;
+
+}

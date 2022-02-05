@@ -16,6 +16,9 @@ Gemflix/src/main/resources/application.yml
 !Gemflix/**/src/main/**/out/
 !Gemflix/**/src/test/**/out/
 
+### TOKEN ###
+Gemflix-Front/.env
+
 ### VS Code ###
 Gemflix/.vscode/
 

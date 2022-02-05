@@ -186,7 +186,9 @@ public class MovieUpdateService {
             JSONArray castList = peopleListResult.getJSONArray("cast");
             for(int i=0; i<castList.size(); i++){
                 String peopleApiId = castList.getJSONObject(i).get("id").toString();
-                if(castList.getJSONObject(i).get("known_for_department").toString().equals("Acting")){
+                if(castList.getJSONObject(i).get("known_for_department")== null){
+                    continue;
+                }else if(castList.getJSONObject(i).get("known_for_department").toString().equals("Acting")){
                     if(i<5){
                         String type = "2";
                         JSONObject peopleInfo = webClient
