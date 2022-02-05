@@ -1,6 +1,7 @@
 HELP.md
 Gemflix/.gradle
 Gemflix/build/
+
 !Gemflix/gradle/wrapper/gradle-wrapper.jar
 !Gemflix/**/src/main/**/build/
 !Gemflix/**/src/test/**/build/
@@ -11,6 +12,7 @@ Gemflix/*.iws
 Gemflix/*.iml
 Gemflix/*.ipr
 Gemflix/out/
+Gemflix/src/main/resources/application.yml
 !Gemflix/**/src/main/**/out/
 !Gemflix/**/src/test/**/out/
 
