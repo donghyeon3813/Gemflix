@@ -94,19 +94,19 @@ public class NoneController {
             String username = jwtRequest.getUsername();
             String accessToken = jwtUtil.generateToken(username);
             String refreshToken = jwtUtil.generateRefreshToken(username);
-            Cookie accessTokenCookie = cookieUtil.createCookie(
-                    JwtUtil.ACCESS_TOKEN_NAME, JwtUtil.JWT_ACCESS_TOKEN_EXPIRE, accessToken);
+//            Cookie accessTokenCookie = cookieUtil.createCookie(
+//                    JwtUtil.ACCESS_TOKEN_NAME, JwtUtil.JWT_ACCESS_TOKEN_EXPIRE, accessToken);
             Cookie refreshTokenCookie = cookieUtil.createCookie(
                     JwtUtil.REFRESH_TOKEN_NAME, JwtUtil.JWT_REFRESH_TOKEN_EXPIRE, refreshToken);
-            log.info("accessToken: {}, refreshToken: {}", accessTokenCookie, refreshTokenCookie);
+//            log.info("accessToken: {}, refreshToken: {}", accessTokenCookie, refreshTokenCookie);
 
             //Redis에 Refresh Token 저장 후 만료시간 설정
             redisUtil.setStringDataExpire(
                     RedisUtil.PREFIX_REFRESH_TOKEN_KEY + refreshToken, username, JwtUtil.JWT_REFRESH_TOKEN_EXPIRE);
 
-            response.addCookie(accessTokenCookie);
+//            response.addCookie(accessTokenCookie);
             response.addCookie(refreshTokenCookie);
-            return ResponseEntity.ok(new JwtResponse(accessTokenCookie, refreshTokenCookie));
+            return ResponseEntity.ok(new JwtResponse(accessToken, refreshTokenCookie));
 
         }catch (Exception e){
             e.printStackTrace();

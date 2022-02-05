@@ -14,7 +14,8 @@ import javax.servlet.http.Cookie;
 @AllArgsConstructor
 public class JwtResponse {
 
-    private Cookie accessToken;
+    private String accessToken;
+//    private Cookie accessToken;
     private Cookie refreshToken;
 
 }

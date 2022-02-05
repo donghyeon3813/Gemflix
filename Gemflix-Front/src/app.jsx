@@ -1,13 +1,14 @@
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import './app.css';
-import Home from './components/home';
-import Profile from './components/profile';
-import Login from './components/login';
-import Join from './components/join';
+import Home from './components/home/home';
+import Profile from './components/login/profile';
+import Login from './components/login/login';
+import Join from './components/login/join';
 import { React, useEffect } from 'react';
 import { userLogin, userLogout } from './store/actions';
 import { useCookies } from 'react-cookie';
 import { useDispatch, useSelector } from 'react-redux';
+import MovieList from "./components/movie/list";
 
 
 function App({server}) {
@@ -39,7 +40,10 @@ function App({server}) {
   return (
     <BrowserRouter>
     <nav>
-      <Link to="/">Home</Link>
+          <ul>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/movies">movies</Link></li>
+          </ul>
     </nav>
       <Routes>
         <Route path="/" exact element={<Home/>}></Route>
@@ -47,6 +51,7 @@ function App({server}) {
         <Route path="/profile" element={<Profile />}></Route>
         <Route path="/join" element={<Join server={server}/>}></Route>
         <Route path="/login" element={<Login server={server}/>}></Route>
+        <Route path="/movies" exact element={<MovieList />}></Route>
       </Routes>
     </BrowserRouter>
   );

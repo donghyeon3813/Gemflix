@@ -1,7 +1,7 @@
 import { React } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { userLogout } from '../store/actions';
+import { userLogout } from '../../store/actions';
 import { useCookies } from 'react-cookie';
 
 

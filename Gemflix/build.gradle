@@ -1,8 +1,8 @@
 plugins {
 	id 'org.springframework.boot' version '2.6.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" //QueryDsl
 	id 'java'
+	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'com.movie'
@@ -51,24 +51,33 @@ dependencies {
 	//json
 	implementation 'com.alibaba:fastjson:1.2.78'
 
+	// webClient
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-webflux', version: '2.6.2'
+
+	//querydsl
+	implementation 'com.querydsl:querydsl-apt:5.0.0'
+	implementation 'com.querydsl:querydsl-jpa:5.0.0'
+
 	//test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+
 }
+
 
 test {
 	useJUnitPlatform()
 }
 
-//QueryDsl
-def querydslDir = "$buildDir/generated/querydsl"
+def querydslSrcDir = "$buildDir/generated/querydsl"
 
 querydsl {
 	jpa = true
-	querydslSourcesDir = querydslDir
+	querydslSourcesDir = querydslSrcDir
 }
 
 sourceSets {
-	main.java.srcDir querydslDir
+	main.java.srcDirs querydslSrcDir
 }
 
 configurations {
