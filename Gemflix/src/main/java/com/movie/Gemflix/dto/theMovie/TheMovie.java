@@ -1,8 +1,6 @@
-package com.movie.Gemflix.dto.movie;
+package com.movie.Gemflix.dto.theMovie;
 
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class TheMovie {
