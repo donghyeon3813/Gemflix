@@ -56,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //role 계층 설정
     private SecurityExpressionHandler<FilterInvocation> expressionHandler() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_MEMBER > NO_PERMISSION > ROLE_NONE");
+        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_MEMBER > ROLE_NO_PERMISSION > ROLE_NONE");
 
         DefaultWebSecurityExpressionHandler defaultWebSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
         defaultWebSecurityExpressionHandler.setRoleHierarchy(roleHierarchy);
@@ -89,14 +89,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .expressionHandler(expressionHandler())
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/movie/**").permitAll()
-                .antMatchers("/member/**").hasRole("MEMBER")
+                .antMatchers("/member/**").hasRole("NO_PERMISSION")
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
 
                 //jwtRequestFilter 를 addFilterBefore 로 등록 (UsernamePasswordAuthenticationFilter 필터 이전에 실행)
                 .and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-                ;
+        ;
 
         http.formLogin(); //문제시 로그인 화면으로
         http.logout();

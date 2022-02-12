@@ -8,6 +8,9 @@ public enum ErrorType {
     INVALID_MEMBER_PHONE(1004, "invalid phone"), //phone 유효성검사 실패
     INVALID_MEMBER_EMAIL(1005, "invalid email"), //email 유효성검사 실패
     INVALID_MEMBER(1006, "invalid member"), //유효하지않은 member
+    ACCESS_TOKEN_EXPIRED(1007, "access token expired"), //access token 유효시간 만료
+    REFRESH_TOKEN_EXPIRED(1008, "refresh token expired"), //refresh token 유효시간 만료
+    REFRESH_IS_NULL(1009, "refresh token is null"), //refresh token is null
 
     ETC_FAIL(1999, "fail...") //그 외 오류
     ;

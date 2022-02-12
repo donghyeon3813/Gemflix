@@ -1,14 +1,15 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import Header from '../home/header';
+import Footer from '../home/footer';
 
-const Profile = (props) => {
-    const navigate = useNavigate();
+const Profile = () => {
     return (
         <>
+        <Header/>
+        <div>
             <h1>Profile</h1>
-            <button onClick={()=> {
-                navigate('/');
-            }}>Go to Home</button>
+        </div>
+        <Footer/>
         </>
         )
     };
