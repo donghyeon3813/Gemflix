@@ -1,7 +1,7 @@
-import React from 'react';
+import { React, memo } from 'react';
 
-const Footer = () => {
-    return <div>footer</div>;
-};
+const Footer = memo(() => {
+    return <div className='footer' >footer</div>;
+});
 
 export default Footer;

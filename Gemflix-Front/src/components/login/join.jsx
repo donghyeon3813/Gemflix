@@ -1,7 +1,6 @@
 import React from 'react';
 import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../home/header';
 import Footer from '../home/footer';
 
 const Join = ({server}) => {
@@ -66,7 +65,6 @@ const Join = ({server}) => {
     if(!loading){
         return (
             <>
-            <Header/>
             <div>
                 <h2>회원가입 페이지</h2>
                 <form ref={joinFormRef} className="join-form" onSubmit={onJoinClick}>
@@ -81,7 +79,6 @@ const Join = ({server}) => {
                 </form>
                 <button type="button" className="join-button" onClick={onJoinClick}>가입하기</button>
             </div>
-            <Footer/>
             </>
         );
     }else{

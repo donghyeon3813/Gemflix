@@ -8,7 +8,7 @@ const userReducer = (state = defaultState, action) => {
         case "LOGIN":
             return {
                 loggedIn: true,
-                token: {...action.payload}
+                token: action.payload
             }
         case "LOGOUT":
             localStorage.clear()

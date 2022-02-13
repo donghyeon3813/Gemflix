@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { userLogin } from '../../store/actions';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { useCookies } from 'react-cookie';
-import Header from '../home/header';
-import Footer from '../home/footer';
+import axios from "axios";
 
 
 const Login = ({server, checkLogin}) => {
-    const JWT_REFRESH_TOKEN_EXPIRE = 10; //10초
+    const JWT_REFRESH_TOKEN_EXPIRE = 3 * 60; //3분
+    const KAKAO_API_KEY = process.env.KAKAO_API_KEY;
+    const KAKAO_REDIRECT_URI = process.env.KAKAO_REDIRECT_URI;
 
     const [cookies, setCookie, removeCookie] = useCookies(["refreshToken"]);
     const navigate = useNavigate();
@@ -21,7 +22,6 @@ const Login = ({server, checkLogin}) => {
     const [loading , setLoading] = useState(false);
 
     useEffect(() => {
-        console.log("user.loggedIn: " + user.loggedIn);
         if(user.loggedIn){
             checkLogin();
         }
@@ -32,12 +32,10 @@ const Login = ({server, checkLogin}) => {
         event.preventDefault();
         const id = idInputRef.current.value;
         const password = passwordInputRef.current.value;
-        console.log("id: " + id, ", password: " + password);
 
         //server reqeust
         server.login(id, password)
         .then(response => {
-            console.log("response: " + response);
             if(response.accessToken){
                 const accessToken = response.accessToken;
                 const refreshToken = response.refreshToken;
@@ -65,24 +63,26 @@ const Login = ({server, checkLogin}) => {
             console.log("login request end");
             
         });
-        
     }
 
     if(!loading){
         return (
             <>
-            <Header/>
             <div>
-                <h1>로그인페이지</h1>
-                <form ref={loginFormRef} className="login-form" onSubmit={onClickLogin}>
-                    <label>아이디 : </label>
-                    <input ref={idInputRef} type="text" placeholder="id" name='input_id'/><br />
-                    <label>비밀번호 : </label>
-                    <input ref={passwordInputRef} type="password" placeholder="password" name='input_password'/><br />
-                </form>
-                <button type="button" className="login-button" onClick={onClickLogin}>로그인</button>
+                <div>
+                    <h1>로그인페이지</h1>
+                    <form ref={loginFormRef} className="login-form" onSubmit={onClickLogin}>
+                        <label>아이디 : </label>
+                        <input ref={idInputRef} type="text" placeholder="id" name='input_id'/><br />
+                        <label>비밀번호 : </label>
+                        <input ref={passwordInputRef} type="password" placeholder="password" name='input_password'/><br />
+                    </form>
+                    <button type="button" className="login-button" onClick={onClickLogin}>로그인</button>
+                </div>
+                
+                
+                
             </div>
-            <Footer/>
             </>
         );
     }else{

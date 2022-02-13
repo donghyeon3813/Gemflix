@@ -52,13 +52,13 @@ public class MemberController {
         return ResponseEntity.ok(memberDto);
     }
 
-    /*@GetMapping("/login/oauth2/code/kakao")
-    public String kakaoLogin(String code) {
-        // authorizedCode: 카카오 서버로부터 받은 인가 코드
+    @GetMapping("/login/oauth2/code/kakao")
+    public String kakaoLogin(String code){
+        //authorizedCode: 카카오 서버로부터 받은 인가 코드
         System.out.println("code: " + code);
 //        userService.kakaoLogin(code);
 
         return "redirect:/";
-    }*/
+    }
 
 }

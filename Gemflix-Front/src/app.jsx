@@ -9,6 +9,9 @@ import MovieList from "./components/movie/list";
 import { useCookies } from 'react-cookie';
 import { userLogout } from './store/actions';
 import { useDispatch } from 'react-redux';
+import Header from './components/home/header';
+import Footer from './components/home/footer';
+import MovieReserve from './components/movie/movie_reserve';
 
 function App({server}) {
 
@@ -45,8 +48,9 @@ function App({server}) {
   }
 
   return (
-    <>
+    <div className='app'>
     <BrowserRouter>
+      <Header/>
       <Routes>
         <Route path="/" exact element={<Home server={server} onClickLogout={onClickLogout}/>}></Route>
         <Route path="/home" element={<Home server={server} onClickLogout={onClickLogout}/>}></Route>
@@ -54,9 +58,11 @@ function App({server}) {
         <Route path="/join" element={<Join server={server}/>}></Route>
         <Route path="/login" element={<Login server={server} checkLogin={checkLogin}/>}></Route>
         <Route path="/movies" exact element={<MovieList />}></Route>
+        <Route path="/reserve" exact element={<MovieReserve />}></Route>
       </Routes>
+      <Footer/>
     </BrowserRouter>
-    </>
+    </div>
   );
 }
 

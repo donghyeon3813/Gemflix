@@ -11,15 +11,14 @@ const Navbar = ({server, onClickLogout}) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        console.log("accessToken: " + user.accessToken);
         if(retryProfile){
             onClickProfile();
         }
-    }, [user.accessToken]);
+    }, [user]);
 
     const onClickProfile = () => {
         //server reqeust
-        server.profile(user.accessToken)
+        server.profile(user.token)
         .then(response => {
             switch(response){
                 case 1007: //accessToken 만료 -> 재발급
@@ -71,8 +70,12 @@ const Navbar = ({server, onClickLogout}) => {
         return (
             <>
             <nav className='navbar'>
-              <ul>
-                <li><Link to="/movies">movies</Link></li>
+              <ul className='navbar_menu'>
+                <li><Link to="/reserve">예매</Link></li>
+                <li><Link to="/movies">영화</Link></li>
+                <li><Link to="/">스토어</Link></li>
+              </ul>
+              <ul className='navbar_member_button'>
                 <li><button type='button' onClick={onClickProfile}>마이페이지</button></li>
                 <li><button type='button' onClick={onClickLogoutBtn}>로그아웃</button></li>
               </ul>
@@ -82,9 +85,13 @@ const Navbar = ({server, onClickLogout}) => {
     }else{
         return (
             <>
-            <nav>
-              <ul className='navbar'>
-                <li><Link to="/movies">movies</Link></li>
+            <nav className='navbar'>
+              <ul className='navbar_menu'>
+                <li><Link to="/reserve">예매</Link></li>
+                <li><Link to="/movies">영화</Link></li>
+                <li><Link to="/">스토어</Link></li>
+              </ul>
+              <ul className='navbar_member_button'>
                 <li><button type='button' onClick={()=> { navigate('/join'); }}>회원가입</button></li>
                 <li><button type='button' onClick={()=> { navigate('/login'); }}>로그인</button></li>
               </ul>

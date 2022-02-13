@@ -1,5 +1,3 @@
-import axios from "axios";
-
 class AuthService{
     constructor(httpClient){
         this.server = httpClient;
@@ -35,16 +33,43 @@ class AuthService{
         });
     }
 
-    //인증 (accessToken, refreshToken 유효성 검사 및 accessToken 재발급)
-    async authenticate() {
-        return await this.server.post('/authenticate')
+    //accessToken 재발급 요청
+    async refresh() {
+        return await this.server.post('/auth/refresh')
         .then(function (success) {
             return success.data;
         })
         .catch(function (error) {
-            return error.request.response;
+            const response = error.request.response;
+            const json = JSON.parse(response);
+            if(json.status === 401){
+                return json.message.errorCode;
+            }else{
+                return null;
+            }
         });
     }
+
+    //회원 프로필
+    async profile(accessToken) {
+        return await this.server.post('/member/profile', {}, {
+            headers: {Authorization: 'Bearer ' + accessToken}
+        })
+        .then(function (success) {
+            return success.data;
+        })
+        .catch(function (error) {
+            //return
+            const response = error.request.response;
+            const json = JSON.parse(response);
+            if(json.status === 401){
+                return json.message.errorCode;
+            }else{
+                return null;
+            }
+        });
+    }
+    
 }
 
 export default AuthService;
