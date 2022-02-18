@@ -1,5 +1,6 @@
 package com.movie.Gemflix.controller;
 
+import com.movie.Gemflix.dto.movie.MovieDetailDto;
 import com.movie.Gemflix.dto.movie.MovieListDto;
 import com.movie.Gemflix.dto.movie.MovieSearchDto;
 import com.movie.Gemflix.service.MovieService;
@@ -18,15 +19,44 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/movie")
-@CrossOrigin("*")
 public class MovieController {
 
     private final MovieService movieService;
 
     @GetMapping("/list")
     public ResponseEntity<?> findMovieList(MovieSearchDto movieSearchDto, Pageable pageable){
-        log.info("method :{}","findMovieList");
-        Page<MovieListDto> movieListDtos = movieService.findMovieList(movieSearchDto,pageable);
-        return ResponseEntity.ok(movieListDtos);
+        log.info("method :{} parameter :{},{}","findMovieList",movieSearchDto,pageable);
+        log.info("parameter :{},{}",movieSearchDto,pageable);
+        try {
+
+            Page<MovieListDto> movieListDtos = movieService.findMovieList(movieSearchDto,pageable);
+            log.info("Result : {}",movieListDtos);
+            return ResponseEntity.ok(movieListDtos);
+        }catch (Exception e){
+            log.info("FindMovieList Error ");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("등록된 영화정보가 없습니다.");
+        }
+
+    }
+
+    @GetMapping("/details")
+    public ResponseEntity<?> findMovieDetails(MovieSearchDto movieSearchDto) {
+        log.info("method :{}","findMovieDetails");
+        log.info("parameter :{}",movieSearchDto);
+
+        try {
+            MovieDetailDto movieDetailDto = movieService.findMovieDetails(movieSearchDto);
+            log.info("Result : {}",movieDetailDto);
+            return ResponseEntity.ok(movieDetailDto);
+
+        } catch (Exception e){
+            log.info("FindMovieDetails Error ");
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("등록된 영화정보가 없습니다.");
+        }
+
     }
 }

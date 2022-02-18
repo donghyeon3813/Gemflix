@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 @Data
 public class MovieSearchDto{
     private String title;
-    private Pageable pageable;
+    private Long mvId;
 }

@@ -11,7 +11,7 @@ const Pagenation = (props) => {
   return (
     <>
       <nav>
-        <button onClick={() => setPage(page - 1)} disabled={page === 1}>
+        <button onClick={() => setPage(page - 1)} disabled={page === 0}>
           &lt;
         </button>
         {Array(numPages)
@@ -25,7 +25,10 @@ const Pagenation = (props) => {
               {i + 1}
             </button>
           ))}
-        <button onClick={() => setPage(page + 1)} disabled={page === numPages}>
+        <button
+          onClick={() => setPage(page + 1)}
+          disabled={page + 1 === numPages}
+        >
           &gt;
         </button>
       </nav>

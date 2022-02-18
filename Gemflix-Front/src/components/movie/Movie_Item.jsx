@@ -1,3 +1,4 @@
+import axios from "axios";
 const MovieItem = (props) => {
   const movieInfo = props.info;
   const movieItemStyle = {
@@ -7,6 +8,7 @@ const MovieItem = (props) => {
     width: "200px",
     height: "280px",
   };
+
   return (
     <div key={movieInfo.mvId} style={movieItemStyle}>
       <img src={movieInfo.imgUrl} style={imgStyle}></img>
