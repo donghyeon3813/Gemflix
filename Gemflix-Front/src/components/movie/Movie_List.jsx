@@ -15,7 +15,6 @@ const MovieList = () => {
   const [totalMovie, setTotalMovie] = useState(0);
   const [title, setTitle] = useState("");
   const [contentIndex, setContentIndex] = useState(0);
-  const [movieDetailInfo, setMovieDetailInfo] = useState(null);
 
   function handleGetMovieList(page) {
     console.log(page);
@@ -29,10 +28,9 @@ const MovieList = () => {
         },
       })
       .then(function (response) {
-        console.log(response.data.content);
-        setMovieListInfo(response.data.content);
-        setTotalMovie(response.data.totalElements);
-        setMovieDetailInfo(null);
+        console.log(response.data.data.content);
+        setMovieListInfo(response.data.data.content);
+        setTotalMovie(response.data.data.totalElements);
         console.log("성공");
       })
       .catch(function (error) {
@@ -51,8 +49,7 @@ const MovieList = () => {
       })
       .then(function (response) {
         console.log(response.data);
-        setMovieDetailInfo(response.data);
-        navigate("/movies/view", { state: { movieInfo: response.data } });
+        navigate("/movies/view", { state: { movieInfo: response.data.data } });
 
         console.log("성공");
         // handleDetailPosition(index);
