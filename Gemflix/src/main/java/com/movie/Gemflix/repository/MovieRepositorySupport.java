@@ -6,6 +6,7 @@ import com.movie.Gemflix.dto.movie.MovieListDto;
 import com.movie.Gemflix.dto.movie.MovieSearchDto;
 import com.movie.Gemflix.entity.QGenre;
 import com.movie.Gemflix.entity.QMovie;
+import com.movie.Gemflix.entity.QTrailer;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -24,6 +25,7 @@ public class MovieRepositorySupport {
     private final JPAQueryFactory query;
     private QMovie movie = QMovie.movie;
     private QGenre genre = QGenre.genre;
+    private QTrailer trailer = QTrailer.trailer;
 
 
     public Page<MovieListDto> findMovieList(MovieSearchDto movieSearchDto, Pageable pageable) throws Exception{
@@ -48,7 +50,7 @@ public class MovieRepositorySupport {
 
     }
     public MovieDetailDto findMovieDetails(MovieSearchDto movieSearchDto) throws Exception {
-        return query
+        MovieDetailDto movieDetailDto = query
                 .select(Projections.fields(MovieDetailDto.class,
                         movie.mvId.as("mvId"),
                         movie.genre.grNm.as("grNm"),
@@ -62,6 +64,14 @@ public class MovieRepositorySupport {
                 .from(movie)
                 .where(movie.mvId.eq(movieSearchDto.getMvId()))
                 .fetchOne();
+
+        List<String> trLocations = query
+                .select(trailer.trLocation)
+                .from(trailer)
+                .where(trailer.movie.mvId.eq(movieSearchDto.getMvId()))
+                .fetch();
+        movieDetailDto.setTrailerList(trLocations);
+        return movieDetailDto;
     }
 
 

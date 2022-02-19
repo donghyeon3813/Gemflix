@@ -1,9 +1,11 @@
 package com.movie.Gemflix.dto.movie;
 
+import com.movie.Gemflix.entity.Trailer;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class MovieDetailDto {
@@ -16,5 +18,6 @@ public class MovieDetailDto {
     private String imgUrl;
     private String backImgUrl;
     private Date openDt;
+    private List<String> trailerList;
 
 }

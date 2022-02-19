@@ -25,6 +25,7 @@ public class MovieDataScheduler {
             movieUpdateService.theMovieGetMovie();
             movieUpdateService.theMovieGetPeople();
             movieUpdateService.theMovieFilmography();
+            movieUpdateService.theMovieVideo();
         }catch (Exception e){
             log.info("Scheduler update Error {}",e);
             e.printStackTrace();
