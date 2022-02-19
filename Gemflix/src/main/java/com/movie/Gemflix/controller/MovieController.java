@@ -1,5 +1,6 @@
 package com.movie.Gemflix.controller;
 
+import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.dto.movie.MovieDetailDto;
 import com.movie.Gemflix.dto.movie.MovieListDto;
 import com.movie.Gemflix.dto.movie.MovieSearchDto;
@@ -31,7 +32,13 @@ public class MovieController {
 
             Page<MovieListDto> movieListDtos = movieService.findMovieList(movieSearchDto,pageable);
             log.info("Result : {}",movieListDtos);
-            return ResponseEntity.ok(movieListDtos);
+            return CommonResponse.createResponse(
+                    CommonResponse.builder()
+                            .code("100")
+                            .message("성공")
+                            .data(movieListDtos)
+                            .build(),HttpStatus.OK
+            );
         }catch (Exception e){
             log.info("FindMovieList Error ");
             e.printStackTrace();
@@ -49,7 +56,13 @@ public class MovieController {
         try {
             MovieDetailDto movieDetailDto = movieService.findMovieDetails(movieSearchDto);
             log.info("Result : {}",movieDetailDto);
-            return ResponseEntity.ok(movieDetailDto);
+            return CommonResponse.createResponse(
+                    CommonResponse.builder()
+                    .code("100")
+                    .message("성공")
+                    .data(movieDetailDto)
+                    .build(),HttpStatus.OK
+                    );
 
         } catch (Exception e){
             log.info("FindMovieDetails Error ");
