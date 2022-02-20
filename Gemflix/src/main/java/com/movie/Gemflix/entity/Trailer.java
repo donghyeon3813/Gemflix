@@ -1,6 +1,6 @@
 package com.movie.Gemflix.entity;
 
-import com.sun.org.glassfish.gmbal.ManagedAttribute;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,5 +35,8 @@ public class Trailer {
 
     @Column(name = "TR_LOCATION")
     private String trLocation;
+
+    @Column(name = "IMG_LOCATION")
+    private String imgLocation;
 
 }

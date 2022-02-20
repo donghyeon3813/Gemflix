@@ -1,3 +1,4 @@
+import MoveTrailer from "./movie_trailer";
 const MovieDetail = (prorps) => {
   const movieDetailInfo = prorps.movieDetailInfo;
 
@@ -41,7 +42,7 @@ const MovieDetail = (prorps) => {
         <div style={darkBox}></div>
       </div>
       <p>{movieDetailInfo.content}</p>
-
+      <MoveTrailer trailerList={movieDetailInfo.trailerList} />
       <button>리뷰</button>
     </>
   );

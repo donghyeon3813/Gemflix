@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Pagenation from "../pagenation/pagenation";
-import MovieItem from "./Movie_Item";
-import MovieSearch from "./Movie_Search";
-import MovieDetail from "./Movie_Detail";
+import MovieItem from "./movie_item";
+import MovieSearch from "./movie_search";
+import MovieDetail from "./movie_detail";
 import { useNavigate } from "react-router";
 
 const MovieList = () => {

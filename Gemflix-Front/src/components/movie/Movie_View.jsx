@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import MovieDetail from "./Movie_Detail";
+import MovieDetail from "./movie_detail";
 
 const MovieView = () => {
   const location = useLocation();

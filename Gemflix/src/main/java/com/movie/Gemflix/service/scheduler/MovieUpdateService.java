@@ -316,12 +316,14 @@ public class MovieUpdateService {
             JSONArray trailerList = result.getJSONArray("results");
             for(int i = 0; i<trailerList.size(); i++){
                 String key = trailerList.getJSONObject(i).get("key").toString();
-                String trLocation = "https://www.youtube.com/embed/"+key+"?autoplay=1";
+                String trLocation = "https://www.youtube.com/embed/"+key+"?autoplay=0";
+                String imgLocation = "https://img.youtube.com/vi/"+key+"/hqdefault.jpg";
                 Optional<Trailer> trailerInfo = trailerRepository.findByTrLocation(trLocation);
                 if(!trailerInfo.isPresent()){
                     Trailer trailer = Trailer.builder()
                             .movie(movie)
                             .trLocation(trLocation)
+                            .imgLocation(imgLocation)
                             .build();
                     saveTrailerList.add(trailer);
                 }else{

@@ -7,6 +7,7 @@ import com.movie.Gemflix.dto.movie.MovieSearchDto;
 import com.movie.Gemflix.entity.QGenre;
 import com.movie.Gemflix.entity.QMovie;
 import com.movie.Gemflix.entity.QTrailer;
+import com.movie.Gemflix.entity.Trailer;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -65,12 +66,14 @@ public class MovieRepositorySupport {
                 .where(movie.mvId.eq(movieSearchDto.getMvId()))
                 .fetchOne();
 
-        List<String> trLocations = query
-                .select(trailer.trLocation)
+        List<Trailer> trailerList = query
+                .select(Projections.fields(Trailer.class,
+                        trailer.trLocation.as("trLocation"),
+                        trailer.imgLocation.as("imgLocation")))
                 .from(trailer)
                 .where(trailer.movie.mvId.eq(movieSearchDto.getMvId()))
                 .fetch();
-        movieDetailDto.setTrailerList(trLocations);
+        movieDetailDto.setTrailerList(trailerList);
         return movieDetailDto;
     }
 

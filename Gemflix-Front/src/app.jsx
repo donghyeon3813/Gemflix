@@ -8,8 +8,8 @@ import { React, useEffect } from "react";
 import { userLogin, userLogout } from "./store/actions";
 import { useCookies } from "react-cookie";
 import { useDispatch, useSelector } from "react-redux";
-import MovieList from "./components/movie/Movie_List";
-import MovieView from "./components/movie/Movie_View";
+import MovieList from "./components/movie/movie_list";
+import MovieView from "./components/movie/movie_view";
 
 function App({ server }) {
   const [cookies, setCookie, removeCookie] = useCookies(["user"]);

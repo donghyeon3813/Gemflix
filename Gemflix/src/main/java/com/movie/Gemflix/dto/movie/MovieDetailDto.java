@@ -18,6 +18,6 @@ public class MovieDetailDto {
     private String imgUrl;
     private String backImgUrl;
     private Date openDt;
-    private List<String> trailerList;
+    private List<Trailer> trailerList;
 
 }
