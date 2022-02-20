@@ -3,15 +3,13 @@ package com.movie.Gemflix.service;
 import com.movie.Gemflix.common.ApiResponseMessage;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.common.ErrorType;
-import com.movie.Gemflix.dto.ProductDTO;
-import com.movie.Gemflix.entity.Member;
+import com.movie.Gemflix.dto.product.ProductDto;
 import com.movie.Gemflix.entity.Product;
 import com.movie.Gemflix.entity.QProduct;
 import com.movie.Gemflix.repository.ProductRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tika.io.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,7 +20,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.List;
@@ -45,7 +42,7 @@ public class ProductService {
 
 
     @Transactional
-    public ApiResponseMessage createProduct(ProductDTO productDTO) throws Exception{
+    public ApiResponseMessage createProduct(ProductDto productDTO) throws Exception{
 
         //파일 확장자 검사
         MultipartFile file = productDTO.getFile();
@@ -75,16 +72,16 @@ public class ProductService {
         return new ApiResponseMessage(HttpStatus.OK.value(), "Product Register Success");
     }
 
-    public List<ProductDTO> getProducts() throws Exception{
+    public List<ProductDto> getProducts() throws Exception{
         List<Product> products = productRepository.findAll();
         if(products.size() == 0) return null;
 
-        List<ProductDTO> productDtos = products.stream()
+        List<ProductDto> productDtos = products.stream()
                 .map(product -> {
-                    ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+                    ProductDto productDTO = modelMapper.map(product, ProductDto.class);
                     InputStream imageStream = null;
                     try {
-                        String oldLocation = productDTO.getImgLocation();
+                        /*String oldLocation = productDTO.getImgLocation();
                         System.out.println("oldLocation: " + oldLocation);
                         byte[] binary = getFileBinary(oldLocation);
                         System.out.println("binary: " + binary);
@@ -93,7 +90,7 @@ public class ProductService {
 
                         //imageUrl
 
-                        imageStream.close();
+                        imageStream.close();*/
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

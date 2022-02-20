@@ -1,6 +1,7 @@
 HELP.md
 Gemflix/.gradle
 Gemflix/build/
+
 !Gemflix/gradle/wrapper/gradle-wrapper.jar
 !Gemflix/**/src/main/**/build/
 !Gemflix/**/src/test/**/build/

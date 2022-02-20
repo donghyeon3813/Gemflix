@@ -1,7 +1,7 @@
 package com.movie.Gemflix.security.service;
 
-import com.movie.Gemflix.dto.KakaoProfile;
-import com.movie.Gemflix.dto.OAuthToken;
+import com.movie.Gemflix.dto.member.KakaoProfileDto;
+import com.movie.Gemflix.dto.member.OAuthToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +42,7 @@ public class KakaoApiService {
                 HttpMethod.POST, kakaoTokenRequest, OAuthToken.class).getBody();
     }
 
-    public KakaoProfile userInfoRequest(OAuthToken oAuthToken) {
+    public KakaoProfileDto userInfoRequest(OAuthToken oAuthToken) {
         ///유저정보 요청
         RestTemplate restTemplate = new RestTemplate();
 
@@ -54,6 +54,6 @@ public class KakaoApiService {
         //HttpHeader와 HttpBody 담기기
         HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers);
         return restTemplate.exchange("https://kapi.kakao.com/v2/user/me",
-                HttpMethod.POST, kakaoProfileRequest, KakaoProfile.class).getBody();
+                HttpMethod.POST, kakaoProfileRequest, KakaoProfileDto.class).getBody();
     }
 }

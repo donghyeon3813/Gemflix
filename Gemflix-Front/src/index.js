@@ -24,10 +24,10 @@ ReactDOM.render(
     <CookiesProvider>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <App server={server}/>
+          <App server={server} />
         </PersistGate>
       </Provider>
     </CookiesProvider>
   </React.StrictMode>,
-  document.getElementById('root')
-)
+  document.getElementById("root")
+);

@@ -1,4 +1,4 @@
-package com.movie.Gemflix.dto;
+package com.movie.Gemflix.dto.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDTO {
+public class ProductDto {
 
     @NotBlank
     @Size(min = 1, max = 20, message = "제목은 20자 이내로 입력해주세요.")

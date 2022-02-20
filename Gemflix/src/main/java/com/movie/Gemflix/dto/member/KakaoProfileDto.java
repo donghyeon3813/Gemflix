@@ -1,9 +1,9 @@
-package com.movie.Gemflix.dto;
+package com.movie.Gemflix.dto.member;
 
 import lombok.Data;
 
 @Data
-public class KakaoProfile {
+public class KakaoProfileDto {
     public Integer id;
     public String connected_at;
     public Properties properties;

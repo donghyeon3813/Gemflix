@@ -2,7 +2,7 @@ package com.movie.Gemflix.security.service;
 
 import com.movie.Gemflix.common.ApiResponseMessage;
 import com.movie.Gemflix.common.ErrorType;
-import com.movie.Gemflix.dto.MemberDTO;
+import com.movie.Gemflix.dto.member.MemberDto;
 import com.movie.Gemflix.entity.Member;
 import com.movie.Gemflix.entity.MemberRole;
 import com.movie.Gemflix.entity.QMember;
@@ -40,7 +40,7 @@ public class AuthService {
     private EntityManager entityManager;
 
     @Transactional
-    public ApiResponseMessage registerMember(MemberDTO memberDTO) throws Exception{
+    public ApiResponseMessage registerMember(MemberDto memberDTO) throws Exception{
         //ID 중복 검사
         Optional<Member> optMember = memberRepository.findById(memberDTO.getId());
         if(optMember.isPresent()) return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), ErrorType.DUPLICATED_MEMBER_ID);

@@ -1,18 +1,14 @@
 package com.movie.Gemflix.security.service;
 
-import com.movie.Gemflix.dto.MemberDTO;
-import com.movie.Gemflix.entity.Member;
-import com.movie.Gemflix.entity.MemberRole;
+import com.movie.Gemflix.dto.member.MemberDto;
 import com.movie.Gemflix.repository.MemberRepository;
 import com.movie.Gemflix.security.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -28,7 +24,7 @@ public class EmailService {
     private static final String MAIL_SUBJECT = "[Gemflix] 회원가입 인증메일입니다.";
     private static final Long LINK_EXPIRE_TIME = 60 * 30L; //30분
 
-    public boolean sendVerificationMail(MemberDTO memberDTO) throws Exception{
+    public boolean sendVerificationMail(MemberDto memberDTO) throws Exception{
         try {
             String uuid = UUID.randomUUID().toString();
             String memberId = memberDTO.getId();

@@ -1,12 +1,11 @@
 package com.movie.Gemflix.controller;
 
 import com.movie.Gemflix.common.ApiResponseMessage;
-import com.movie.Gemflix.dto.ProductDTO;
+import com.movie.Gemflix.dto.product.ProductDto;
 import com.movie.Gemflix.service.CommonService;
 import com.movie.Gemflix.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tika.io.IOUtils;
 import org.springframework.http.*;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -14,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.InputStream;
 import java.util.List;
 
 @Slf4j
@@ -46,7 +44,7 @@ public class ProductController {
     public ResponseEntity<?> getProducts(){
 
         try{
-            List<ProductDTO> productDtos = productService.getProducts();
+            List<ProductDto> productDtos = productService.getProducts();
             if(productDtos == null){
                 ApiResponseMessage apiRm =
                         new ApiResponseMessage(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.getReasonPhrase());
@@ -63,7 +61,7 @@ public class ProductController {
 
     @Secured("ROLE_ADMIN")
     @PostMapping("product")
-    public ResponseEntity<ApiResponseMessage> createProduct(@ModelAttribute @Valid ProductDTO productDTO,
+    public ResponseEntity<ApiResponseMessage> createProduct(@ModelAttribute @Valid ProductDto productDTO,
                                                             BindingResult bindingResult){
 
         try{

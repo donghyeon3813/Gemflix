@@ -1,4 +1,4 @@
-package com.movie.Gemflix.dto;
+package com.movie.Gemflix.dto.member;
 
 import com.movie.Gemflix.entity.MemberRole;
 import lombok.*;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberDTO {
+public class MemberDto {
 
     @NotBlank
     @Size(min = 8, max = 30, message = "아이디는 8~30자 이내로 입력해주세요.")

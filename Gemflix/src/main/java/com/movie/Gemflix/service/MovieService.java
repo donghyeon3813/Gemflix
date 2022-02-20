@@ -1,5 +1,6 @@
 package com.movie.Gemflix.service;
 
+import com.movie.Gemflix.dto.movie.MovieDetailDto;
 import com.movie.Gemflix.dto.movie.MovieListDto;
 import com.movie.Gemflix.dto.movie.MovieSearchDto;
 import com.movie.Gemflix.repository.MovieRepositorySupport;
@@ -17,8 +18,14 @@ public class MovieService {
 
     private final MovieRepositorySupport movieRepositorySupport;
 
-    public Page<MovieListDto> findMovieList(MovieSearchDto movieSearchDto, Pageable pageable) {
+    public Page<MovieListDto> findMovieList(MovieSearchDto movieSearchDto, Pageable pageable) throws Exception {
 
         return movieRepositorySupport.findMovieList(movieSearchDto, pageable);
+    }
+
+    public MovieDetailDto findMovieDetails(MovieSearchDto movieSearchDto) throws Exception {
+
+        return movieRepositorySupport.findMovieDetails(movieSearchDto);
+
     }
 }

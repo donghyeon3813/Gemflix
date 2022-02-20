@@ -1,9 +1,8 @@
 package com.movie.Gemflix.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.movie.Gemflix.common.ApiResponseMessage;
-import com.movie.Gemflix.dto.KakaoProfile;
-import com.movie.Gemflix.dto.OAuthToken;
+import com.movie.Gemflix.dto.member.KakaoProfileDto;
+import com.movie.Gemflix.dto.member.OAuthToken;
 import com.movie.Gemflix.entity.Member;
 import com.movie.Gemflix.entity.MemberRole;
 import com.movie.Gemflix.repository.MemberRepository;
@@ -35,7 +34,7 @@ public class SocialAuthenticationController {
         try{
             OAuthToken oAuthToken = kaKaoApiService.tokenRequest(code); //토큰 가져오기
             log.info("oAuthToken: {}", oAuthToken);
-            KakaoProfile kakaoProfile = kaKaoApiService.userInfoRequest(oAuthToken); //유저정보 가져오기
+            KakaoProfileDto kakaoProfile = kaKaoApiService.userInfoRequest(oAuthToken); //유저정보 가져오기
 
             if(kakaoProfile != null){
                 String id = kakaoProfile.getId().toString();

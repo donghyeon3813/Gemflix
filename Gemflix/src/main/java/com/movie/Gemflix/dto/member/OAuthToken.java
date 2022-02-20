@@ -1,4 +1,4 @@
-package com.movie.Gemflix.dto;
+package com.movie.Gemflix.dto.member;
 
 import lombok.Data;
 import lombok.ToString;

@@ -4,14 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.movie.Gemflix.config.ApiProperties;
 import com.movie.Gemflix.dto.theMovie.TheMovie;
-import com.movie.Gemflix.entity.Filmography;
-import com.movie.Gemflix.entity.Genre;
-import com.movie.Gemflix.entity.Movie;
-import com.movie.Gemflix.entity.People;
-import com.movie.Gemflix.repository.FilmographyRepository;
-import com.movie.Gemflix.repository.GenreRepository;
-import com.movie.Gemflix.repository.MovieRepository;
-import com.movie.Gemflix.repository.PeopleRepository;
+import com.movie.Gemflix.entity.*;
+import com.movie.Gemflix.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,8 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +32,7 @@ public class MovieUpdateService {
     private final FilmographyRepository filmographyRepository;
     private final WebClient webClient;
     private final ApiProperties apiProperties;
+    private final TrailerRepository trailerRepository;
 
     public String getapi(){
         String api = "api_key="+apiProperties.getKey();
@@ -302,6 +296,43 @@ public class MovieUpdateService {
             if(saveFilmographyList.size()>0){
                 log.info("insertGenreList :{}",saveFilmographyList);
                 filmographyRepository.saveAll(saveFilmographyList);
+            }
+        }
+
+    }
+    // 예고편
+    public void theMovieVideo() throws Exception{
+        String apiAndLanguage = getapi();
+        List<Trailer> saveTrailerList = new ArrayList<>();
+        List<Movie> movieList = movieRepository.findAll();
+        for (Movie movie: movieList) {
+            String movieApiKey = movie.getApiId();
+            JSONObject result = webClient
+                    .get()
+                    .uri("movie/"+movieApiKey+"/videos?"+apiAndLanguage)
+                    .retrieve()
+                    .bodyToMono(JSONObject.class)
+                    .block();
+            JSONArray trailerList = result.getJSONArray("results");
+            for(int i = 0; i<trailerList.size(); i++){
+                String key = trailerList.getJSONObject(i).get("key").toString();
+                String trLocation = "https://www.youtube.com/embed/"+key+"?autoplay=0";
+                String imgLocation = "https://img.youtube.com/vi/"+key+"/hqdefault.jpg";
+                Optional<Trailer> trailerInfo = trailerRepository.findByTrLocation(trLocation);
+                if(!trailerInfo.isPresent()){
+                    Trailer trailer = Trailer.builder()
+                            .movie(movie)
+                            .trLocation(trLocation)
+                            .imgLocation(imgLocation)
+                            .build();
+                    saveTrailerList.add(trailer);
+                }else{
+                    continue;
+                }
+            }
+            if(saveTrailerList.size()>0){
+                log.info("insertTrailerList :{}",saveTrailerList);
+                trailerRepository.saveAll(saveTrailerList);
             }
         }
 

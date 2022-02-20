@@ -2,7 +2,7 @@ package com.movie.Gemflix.controller;
 
 import com.movie.Gemflix.common.ApiResponseMessage;
 import com.movie.Gemflix.common.ErrorType;
-import com.movie.Gemflix.dto.MemberDTO;
+import com.movie.Gemflix.dto.member.MemberDto;
 import com.movie.Gemflix.entity.MemberRole;
 import com.movie.Gemflix.security.service.AuthService;
 import com.movie.Gemflix.security.util.CookieUtil;
@@ -12,16 +12,10 @@ import com.movie.Gemflix.security.model.JwtResponse;
 import com.movie.Gemflix.security.service.UserDetailsServiceImpl;
 import com.movie.Gemflix.security.util.RedisUtil;
 import com.movie.Gemflix.service.CommonService;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.minidev.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,7 +48,7 @@ public class JwtAuthenticationController {
 
     //회원가입 & 인증메일 발송
     @PostMapping("/register")
-    public ResponseEntity<ApiResponseMessage> registerMember(@RequestBody @Valid MemberDTO memberDTO,
+    public ResponseEntity<ApiResponseMessage> registerMember(@RequestBody @Valid MemberDto memberDTO,
                                                              BindingResult bindingResult){
 
         try {

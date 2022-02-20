@@ -5,7 +5,6 @@ import Profile from './components/login/profile';
 import Login from './components/login/login';
 import Join from './components/login/join';
 import { React, useEffect, useState  } from 'react';
-import MovieList from "./components/movie/list";
 import { useCookies } from 'react-cookie';
 import { userLogout, userLogin } from './store/actions';
 import Header from './components/home/header';
@@ -15,6 +14,8 @@ import KakaoAuth from './components/login/kakao_auth';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import ProductCreateForm from './components/product/product_create_form';
 import ProductList from './components/product/product_list';
+import MovieView from "./components/movie/movie_view";
+import MovieList from "./components/movie/movie_list";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -89,67 +90,72 @@ function App({server}) {
         setLoading(false);
         window.location.href = "/login";
     }
-}
+  }
 
-if(!loading){
-    return (
-      <div className='app'>
-      <BrowserRouter>
-        <Header/>
-        <Routes>
-          {/* home */}
-          <Route path="/" exact element={
-            <Home server={server} onClickLogout={onClickLogout}/>}>
-          </Route>
-          <Route path="/home" element={
-            <Home server={server} onClickLogout={onClickLogout}/>}>
-          </Route>
+  if(!loading){
+      return (
+        <div className='app'>
+        <BrowserRouter>
+          <Header/>
+          <Routes>
+            {/* home */}
+            <Route path="/" exact element={
+              <Home server={server} onClickLogout={onClickLogout}/>}>
+            </Route>
+            <Route path="/home" element={
+              <Home server={server} onClickLogout={onClickLogout}/>}>
+            </Route>
 
-          {/* login */}
-          <Route path="/profile" element={
-            <Profile />}>
-          </Route>
-          <Route path="/join" element={
-            <Join server={server}/>}>
-          </Route>
-          <Route path="/login" element={
-            <Login server={server} kakaoLoginUrl={kakaoLoginUrl} settingAccessToken={settingAccessToken}/>}>
-          </Route>
-          <Route exact path="kakaoLoginUrl" element={
-            <Home server={server}onClickLogout={onClickLogout}/>}>
-          </Route>
-          <Route path="/auth/callback/kakao" element={
-            <KakaoAuth server={server} settingAccessToken={settingAccessToken}/>}>
-          </Route>
+            {/* login */}
+            <Route path="/profile" element={
+              <Profile />}>
+            </Route>
+            <Route path="/join" element={
+              <Join server={server}/>}>
+            </Route>
+            <Route path="/login" element={
+              <Login server={server} kakaoLoginUrl={kakaoLoginUrl} settingAccessToken={settingAccessToken}/>}>
+            </Route>
+            <Route exact path="kakaoLoginUrl" element={
+              <Home server={server}onClickLogout={onClickLogout}/>}>
+            </Route>
+            <Route path="/auth/callback/kakao" element={
+              <KakaoAuth server={server} settingAccessToken={settingAccessToken}/>}>
+            </Route>
 
-          {/* movie */}
-          <Route path="/movies" exact element={
-            <MovieList />}>
-          </Route>
-          <Route path="/reserve" exact element={
-            <MovieReserve />}>
-          </Route>
+            {/* movie */}
+            <Route path="/movies" exact element={
+              <MovieList />}>
+            </Route>
+            <Route path="/movies/view" exact element={
+              <MovieView />}>
+            </Route>
+            <Route path="/reserve" exact element={
+              <MovieReserve />}>
+            </Route>
 
-          {/* product */}
-          <Route path="/product" element={
-            <ProductList server={server}/>}>
-          </Route>
-          <Route path="/product/create" element={
-            <ProductCreateForm server={server}/>}>
-          </Route>
+            {/* product */}
+            <Route path="/product" element={
+              <ProductList server={server}/>}>
+            </Route>
+            <Route path="/product/create" element={
+              <ProductCreateForm server={server}/>}>
+            </Route>
 
-        </Routes>
-        <Footer/>
-      </BrowserRouter>
-      </div>
-    );
-  }else{
-    return (
-      <div>
-        Loading ....
-      </div>
-    )
-}
-}
+          </Routes>
+          <Footer/>
+        </BrowserRouter>
+        </div>
+      );
+    }else{
+      return (
+        <div>
+          Loading ....
+        </div>
+      );
+    }
+  }
+
+
 
 export default App;
