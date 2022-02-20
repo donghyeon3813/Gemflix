@@ -1,7 +1,6 @@
 import React from 'react';
 import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Footer from '../home/footer';
 
 const Join = ({server}) => {
     const navigate = useNavigate();
@@ -15,21 +14,20 @@ const Join = ({server}) => {
     const [requestCnt, setRequestCnt] = useState(0);
     const [loading , setLoading] = useState(false);
 
-    const onJoinClick = (event) => {
+    const onClickJoin = (event) => {
         setLoading(true);
-        event.preventDefault();
         const id = idInputRef.current.value;
         const password = passwordInputRef.current.value;
         const phone = phoneInputRef.current.value;
         const email = emailInputRef.current.value;
 
         if(id && password && phone && email){
-            console.log("[Join] id: " + id + ", password: " + password + ", phone: " + phone + ", email: " + email);
             //server reqeust
             server.register(id, password, phone, email)
             .then(response => {
                 setReponse(response);
                 setRequestCnt(requestCnt + 1);
+                setLoading(false);
             });
         }else{
             alert("모든 정보를 입력해주세요.");
@@ -51,33 +49,43 @@ const Join = ({server}) => {
                 const json = JSON.parse(response);
                 const errorCode = json.message.errorCode;
                 const errorMessage = json.message.errorMessage;
-                console.log("errorCode: "+errorCode);
-                if(errorCode === 1001){
-                    alert("이미 사용중인 아이디입니다.");
-                }else{
-                    alert(errorMessage);
+                switch(errorCode){
+                    case 1001:
+                        alert("이미 사용중인 아이디입니다.");
+                        break;
+                    case 1010:
+                        alert("이미 사용중인 이메일입니다.");
+                        break;
+                    default:
+                        alert(errorMessage);
+                        break;
                 }
             }
         }
-        setLoading(false);
-      }, [requestCnt]);
+    }, [requestCnt]);
+
+    const handleKeyPress = (event) => {
+        if (event.key === "Enter") {
+            onClickJoin();
+        }
+    };
 
     if(!loading){
         return (
             <>
             <div>
                 <h2>회원가입 페이지</h2>
-                <form ref={joinFormRef} className="join-form" onSubmit={onJoinClick}>
+                <form ref={joinFormRef} className="join-form" onSubmit={onClickJoin}>
                     <label>아이디 : </label>
-                    <input ref={idInputRef} type="text" placeholder="id" name='input_id'/><br />
+                    <input ref={idInputRef} type="text" placeholder="id"/><br />
                     <label>비밀번호 : </label>
-                    <input ref={passwordInputRef} type="password" placeholder="password" name='input_password'/><br />
+                    <input ref={passwordInputRef} type="password" placeholder="password"/><br />
                     <label>핸드폰 번호 : </label>
-                    <input ref={phoneInputRef} type="tel" placeholder="phone" name='input_phone'/><br />
+                    <input ref={phoneInputRef} type="tel" placeholder="phone"/><br />
                     <label>이메일 : </label>
-                    <input ref={emailInputRef} type="email" placeholder="email" name='input_email'/>
+                    <input ref={emailInputRef} type="email" placeholder="email" onKeyPress={handleKeyPress}/>
                 </form>
-                <button type="button" className="join-button" onClick={onJoinClick}>가입하기</button>
+                <button type="button" className="join-button" onClick={onClickJoin}>가입하기</button>
             </div>
             </>
         );
@@ -87,7 +95,7 @@ const Join = ({server}) => {
             Loading ....
           </div>
         )
-      }
+    }
 };
 
 export default Join;

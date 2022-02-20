@@ -15,18 +15,18 @@ import java.util.function.Function;
 @Component
 public class JwtUtil{
 
-//    public static final long JWT_ACCESS_TOKEN_EXPIRE = 2 * 60 * 60 * 1000; //2시간
-//    public static final long JWT_REFRESH_TOKEN_EXPIRE = 6 * 60 * 60 * 1000; //6시간
+    public static final long JWT_ACCESS_TOKEN_EXPIRE = 2 * 60 * 60 * 1000; //2시간
+    public static final long JWT_REFRESH_TOKEN_EXPIRE = 6 * 60 * 60 * 1000; //6시간
 
     //for test
-    public static final long JWT_ACCESS_TOKEN_EXPIRE = 30 * 1000; //30초
-    public static final long JWT_REFRESH_TOKEN_EXPIRE = 2 * 60 * 1000; //2분
+//    public static final long JWT_ACCESS_TOKEN_EXPIRE = 30 * 1000; //30초
+//    public static final long JWT_REFRESH_TOKEN_EXPIRE = 2 * 60 * 1000; //2분
 
     public static final String ACCESS_TOKEN_NAME = "accessToken";
     public static final String REFRESH_TOKEN_NAME = "refreshToken";
 
     @Value("${jwt.secret.key}")
-    private String SECRET_KEY;
+    private String secretKey;
 
     //create access token
     public String generateToken(String username) {
@@ -44,7 +44,7 @@ public class JwtUtil{
                 .setSubject(username) //subject: Token (sub에 사용자 이름 넣기)
                 .setIssuedAt(new Date(System.currentTimeMillis())) //issuedate: Token 발급 시간
                 .setExpiration(new Date(System.currentTimeMillis() + expiredTime)) //expiration: Token 만료 시간
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact(); //알고리즘, 비밀키
+                .signWith(SignatureAlgorithm.HS256, secretKey).compact(); //알고리즘, 비밀키
     }
 
 
@@ -64,7 +64,7 @@ public class JwtUtil{
     }
 
     private Claims getAllClaimsFromToken(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
     }
 
     //check if the token has expired

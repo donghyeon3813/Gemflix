@@ -24,7 +24,7 @@ public class EmailService {
     private final RedisUtil redisUtil;
     private final MemberRepository memberRepository;
 
-    private static final String MAIL_VERIFICATION_LINK = "http://localhost:9091/verify/";
+    private static final String MAIL_VERIFICATION_LINK = "http://localhost:9090/auth/verify/";
     private static final String MAIL_SUBJECT = "[Gemflix] 회원가입 인증메일입니다.";
     private static final Long LINK_EXPIRE_TIME = 60 * 30L; //30분
 

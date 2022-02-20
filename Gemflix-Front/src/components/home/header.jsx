@@ -6,7 +6,7 @@ const Header = memo(() => {
 
     return (
         <div className='header' onClick={()=> { navigate('/'); }}>
-            Gemflix
+            Header
         </div>
     );
 });

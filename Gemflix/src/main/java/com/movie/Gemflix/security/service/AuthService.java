@@ -29,10 +29,10 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
-    private final MemberRepository memberRepository;
     private final EmailService emailService;
     private final RedisUtil redisUtil;
     private final JPAQueryFactory queryFactory;
+    private final MemberRepository memberRepository;
 
     private QMember qMember = QMember.member;
 
@@ -41,9 +41,13 @@ public class AuthService {
 
     @Transactional
     public ApiResponseMessage registerMember(MemberDTO memberDTO) throws Exception{
-        //ID중복 검사
-        Optional<Member> isExists = memberRepository.findById(memberDTO.getId());
-        if(isExists.isPresent()) return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), ErrorType.DUPLICATED_MEMBER_ID);
+        //ID 중복 검사
+        Optional<Member> optMember = memberRepository.findById(memberDTO.getId());
+        if(optMember.isPresent()) return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), ErrorType.DUPLICATED_MEMBER_ID);
+
+        //EMAIL 중복 검사
+        Optional<Member> optMember02 = memberRepository.findByEmail(memberDTO.getEmail());
+        if(optMember02.isPresent()) return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), ErrorType.DUPLICATED_MEMBER_EMAIL);
 
         //Email 인증
         if(!emailService.sendVerificationMail(memberDTO)){
@@ -52,8 +56,7 @@ public class AuthService {
         //회원 등록
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
         Member member = modelMapper.map(memberDTO, Member.class);
-        Member regMember = memberRepository.save(member);
-        log.info("regMember: {}", regMember);
+        memberRepository.save(member);
         return new ApiResponseMessage(HttpStatus.OK.value(), "Member Register Success");
     }
 
@@ -63,7 +66,7 @@ public class AuthService {
         if(memberId == null){
             return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), ErrorType.INVALID_MEMBER_ID);
         }else{
-            modifyUserRole(memberId);
+            modifyUserRole(memberId);authHeader:
             redisUtil.deleteData(RedisUtil.PREFIX_EMAIL_KEY + key);
             return new ApiResponseMessage(HttpStatus.OK.value(), "Member Email Permission Success");
         }

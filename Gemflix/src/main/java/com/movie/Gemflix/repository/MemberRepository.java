@@ -5,9 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Integer> {
+public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    //회원 한명 불러오기
     Optional<Member> findById(String id);
+    Optional<Member> findByEmail(String email);
 
 }

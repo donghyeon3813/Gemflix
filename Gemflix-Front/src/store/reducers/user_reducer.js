@@ -1,6 +1,8 @@
 const defaultState = {
     loggedIn: false,
-    token: null
+    token: null,
+    memberId: null,
+    memberRole: null
 }
 
 const userReducer = (state = defaultState, action) => {
@@ -8,10 +10,11 @@ const userReducer = (state = defaultState, action) => {
         case "LOGIN":
             return {
                 loggedIn: true,
-                token: action.payload
+                token: action.accessToken,
+                memberId: action.memberId,
+                memberRole: action.memberRole
             }
         case "LOGOUT":
-            localStorage.clear()
             return {
                 loggedIn: false,
                 token: null

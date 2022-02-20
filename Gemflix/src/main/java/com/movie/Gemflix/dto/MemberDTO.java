@@ -37,6 +37,7 @@ public class MemberDTO {
     private MemberRole authority = MemberRole.NO_PERMISSION;
     private String grade = "1";
     private String delStatus = "0";
+    private String fromSocial;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
 

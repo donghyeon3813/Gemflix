@@ -1,21 +1,13 @@
 package com.movie.Gemflix.security.filter;
 
-import com.movie.Gemflix.common.ApiResponseMessage;
 import com.movie.Gemflix.common.ErrorType;
-import com.movie.Gemflix.security.model.JwtResponse;
-import com.movie.Gemflix.security.util.CookieUtil;
 import com.movie.Gemflix.security.util.JwtUtil;
 import com.movie.Gemflix.security.service.UserDetailsServiceImpl;
-import com.movie.Gemflix.security.util.RedisUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -25,12 +17,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Enumeration;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -40,8 +30,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private final UserDetailsServiceImpl userDetailsService;
     private final JwtUtil jwtUtil;
-    private final CookieUtil cookieUtil;
-    private final RedisUtil redisUtil;
 
 
     @Override

@@ -62,7 +62,6 @@ const Navbar = ({server, onClickLogout}) => {
     }
 
     const onClickLogoutBtn = () => {
-        console.log("=== onClickLogout");
         onClickLogout(false);
     }
 
@@ -73,9 +72,10 @@ const Navbar = ({server, onClickLogout}) => {
               <ul className='navbar_menu'>
                 <li><Link to="/reserve">예매</Link></li>
                 <li><Link to="/movies">영화</Link></li>
-                <li><Link to="/">스토어</Link></li>
+                <li><Link to="/product">스토어</Link></li>
               </ul>
               <ul className='navbar_member_button'>
+                <li>{user.memberId} 님</li>
                 <li><button type='button' onClick={onClickProfile}>마이페이지</button></li>
                 <li><button type='button' onClick={onClickLogoutBtn}>로그아웃</button></li>
               </ul>
@@ -89,10 +89,9 @@ const Navbar = ({server, onClickLogout}) => {
               <ul className='navbar_menu'>
                 <li><Link to="/reserve">예매</Link></li>
                 <li><Link to="/movies">영화</Link></li>
-                <li><Link to="/">스토어</Link></li>
+                <li><Link to="/product">스토어</Link></li>
               </ul>
               <ul className='navbar_member_button'>
-                <li><button type='button' onClick={()=> { navigate('/join'); }}>회원가입</button></li>
                 <li><button type='button' onClick={()=> { navigate('/login'); }}>로그인</button></li>
               </ul>
             </nav>

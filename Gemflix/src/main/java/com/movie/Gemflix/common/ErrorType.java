@@ -11,6 +11,13 @@ public enum ErrorType {
     ACCESS_TOKEN_EXPIRED(1007, "access token expired"), //access token 유효시간 만료
     REFRESH_TOKEN_EXPIRED(1008, "refresh token expired"), //refresh token 유효시간 만료
     REFRESH_IS_NULL(1009, "refresh token is null"), //refresh token is null
+    DUPLICATED_MEMBER_EMAIL(1010, "duplicated email"), //email 중복
+    INVALID_EXTENSION(1011, "invalid extension"), //file 확장자 검사 실패
+
+    STORE_NAME_IS_TOO_LONG(1012, "name is too long"), //제목 유효성 검사 실패
+    STORE_CONTENT_IS_TOO_LONG(1013, "content is too long"), //상세설명 유효성 검사 실패
+    STORE_INVALID_PRICE(1014, "invalid price"), //가격 유효성 검사 실패
+    STORE_FAILED_TO_UPLOAD_FILE(1015, "failed to upload file"), //상품 파일 업로드 실패
 
     ETC_FAIL(1999, "fail...") //그 외 오류
     ;

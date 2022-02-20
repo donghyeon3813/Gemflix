@@ -1,8 +1,8 @@
 // Action Creators
-export const userLogin = (payload) => {
+export const userLogin = (accessToken, memberId, memberRole) => {
     return {
         type: "LOGIN",
-        payload
+        accessToken, memberId, memberRole
     }
 }
 

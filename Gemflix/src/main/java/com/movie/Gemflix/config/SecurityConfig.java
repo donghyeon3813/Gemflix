@@ -28,7 +28,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSecurity //SpringSecurityFilterChain이 자동으로 포함
-@EnableGlobalMethodSecurity(prePostEnabled = true) //@PreAuthorize, @PostAuthorize 을 사용하여 인가 처리를 하고 싶을때 사용하는 옵션
+@EnableGlobalMethodSecurity(securedEnabled=true, prePostEnabled=true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsServiceImpl userDetailsService;

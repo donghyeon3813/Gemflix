@@ -33,9 +33,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.PrintWriter;
+import java.util.Collection;
 
 @Slf4j
 @RestController
@@ -91,7 +90,8 @@ public class JwtAuthenticationController {
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest jwtRequest){
         try {
             log.info("username: {}, password: {}", jwtRequest.getUsername(), jwtRequest.getPassword());
-            if(!checkMemberAuth(jwtRequest)) {
+            String authority = checkMemberAuth(jwtRequest);
+            if(authority == null) {
                 ApiResponseMessage apiRm = new ApiResponseMessage(HttpStatus.UNAUTHORIZED.value(), ErrorType.INVALID_MEMBER);
                 return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));
             }
@@ -101,10 +101,11 @@ public class JwtAuthenticationController {
             String refreshToken = jwtUtil.generateRefreshToken(username);
 
             //Redis에 Refresh Token 저장 후 만료시간 설정
-            redisUtil.setStringDataExpire(
-                    RedisUtil.PREFIX_REFRESH_TOKEN_KEY + refreshToken, username, JwtUtil.JWT_REFRESH_TOKEN_EXPIRE/1000);
+            redisUtil.setStringDataExpire(RedisUtil.PREFIX_REFRESH_TOKEN_KEY + refreshToken,
+                    username, JwtUtil.JWT_REFRESH_TOKEN_EXPIRE/1000);
 
-            return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken));
+            return ResponseEntity.ok(new JwtResponse(
+                    accessToken, refreshToken, username, authority, JwtUtil.JWT_ACCESS_TOKEN_EXPIRE/1000));
 
         }catch (Exception e){
             e.printStackTrace();
@@ -143,10 +144,18 @@ public class JwtAuthenticationController {
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
+                //getAuthority
+                String username = userDetails.getUsername();
+                String authority = null;
+                Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+                for (GrantedAuthority auth : authorities) {
+                    authority = auth.toString().replace("ROLE_","");
+                }
+
                 //새로운 accessToken 발급
                 String newAccessToken = jwtUtil.generateToken(refreshUsername);
-                log.info("newAccessToken: {}", newAccessToken);
-                return ResponseEntity.ok(new JwtResponse(newAccessToken, refreshToken));
+                return ResponseEntity.ok(new JwtResponse(
+                        newAccessToken, refreshToken, username, authority, JwtUtil.JWT_ACCESS_TOKEN_EXPIRE/1000));
             }else{
                 ApiResponseMessage apiRm = new ApiResponseMessage(HttpStatus.UNAUTHORIZED.value(), ErrorType.INVALID_MEMBER);
                 return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));
@@ -154,7 +163,8 @@ public class JwtAuthenticationController {
         }
     }
 
-    private boolean checkMemberAuth(JwtRequest jwtRequest) {
+    private String checkMemberAuth(JwtRequest jwtRequest) {
+        String authority = null;
         String id = jwtRequest.getUsername();
         String password = jwtRequest.getPassword();
         final UserDetails userDetails = userDetailsService.loadUserByUsername(id);
@@ -162,9 +172,18 @@ public class JwtAuthenticationController {
         String realPassword = userDetails.getPassword();
         boolean isValidMember = id.equals(realId) && passwordEncoder.matches(password, realPassword);
 
-        if(!isValidMember) return false; //유효하지않은 회원
-        String authority = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toString();
-        return !("ROLE_" + MemberRole.NONE).equals(authority); //비회원은 로그인 불가
+        if(!isValidMember){
+            return null; //유효하지않은 회원
+        }
+        Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
+        for (GrantedAuthority auth : authorities) {
+            authority = auth.toString().replace("ROLE_","");
+        }
+        if(String.valueOf(MemberRole.NONE).equals(authority)){ //비회원은 로그인 불가
+            return null;
+        }else{
+            return authority;
+        }
     }
 
 }

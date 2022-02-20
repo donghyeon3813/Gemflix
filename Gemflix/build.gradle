@@ -25,7 +25,6 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.security:spring-security-oauth2-client:5.6.1'
 	implementation 'org.springframework.boot:spring-boot-starter-validation:2.6.2'
 	implementation 'org.modelmapper:modelmapper:2.4.4'
@@ -58,10 +57,21 @@ dependencies {
 	implementation 'com.querydsl:querydsl-apt:5.0.0'
 	implementation 'com.querydsl:querydsl-jpa:5.0.0'
 
+	//file
+	implementation group: 'commons-codec', name: 'commons-codec', version: '1.9'
+	implementation group: 'commons-io', name: 'commons-io', version: '1.4'
+	implementation group: 'org.apache.tika', name: 'tika-core', version: '1.14'
+
 	//test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 
+}
+
+compileJava.options.encoding = 'UTF-8'
+
+tasks.withType(JavaCompile) {
+	options.encoding = 'UTF-8'
 }
 
 
@@ -87,4 +97,3 @@ configurations {
 compileQuerydsl {
 	options.annotationProcessorPath = configurations.querydsl
 }
-

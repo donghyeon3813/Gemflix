@@ -18,7 +18,7 @@ public class Member extends BaseEntity {
     @Id
     @SequenceGenerator(name = "M_ID_SEQ_GEN", sequenceName = "M_ID_SEQ", initialValue = 1, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "M_ID_SEQ_GEN")
-    private int mId;
+    private Long mId;
 
     private String id;
     private String password;
@@ -29,5 +29,6 @@ public class Member extends BaseEntity {
     private MemberRole authority;
     private String grade;
     private String delStatus;
+    private String fromSocial;
 
 }

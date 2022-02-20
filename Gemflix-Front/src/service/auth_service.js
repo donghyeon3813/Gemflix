@@ -50,16 +50,30 @@ class AuthService{
         });
     }
 
+    //카카오 로그인
+    async kakaoLogin(code) {
+        return await this.server.post('/auth/callback/kakao', {
+            code: code
+        })
+        .then(function (success) {
+            return success.data;
+        })
+        .catch(function (error) {
+            return error.request.response;
+        });
+    }
+
     //회원 프로필
     async profile(accessToken) {
         return await this.server.post('/member/profile', {}, {
             headers: {Authorization: 'Bearer ' + accessToken}
         })
         .then(function (success) {
+            console.log("success: " + success);
             return success.data;
         })
         .catch(function (error) {
-            //return
+            console.log("error: " + error);
             const response = error.request.response;
             const json = JSON.parse(response);
             if(json.status === 401){
@@ -69,7 +83,39 @@ class AuthService{
             }
         });
     }
-    
+
+    //상품 등록
+    async productCreate(accessToken, formData) {
+        return await this.server.post('/product', formData,
+        {
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            }
+        })
+        .then(function (success) {
+            return success.data.status;
+        })
+        .catch(function (error) {
+            return error.request.response;
+        });
+    }
+
+    //상품 목록
+    async products(accessToken) {
+        return await this.server.get('/products',
+        {
+            headers: {
+                Authorization: 'Bearer ' + accessToken
+            }
+        })
+        .then(function (success) {
+            return success.data;
+        })
+        .catch(function (error) {
+            return error.request.response;
+        });
+    }
+
 }
 
 export default AuthService;
