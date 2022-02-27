@@ -1,6 +1,7 @@
 package com.movie.Gemflix.controller;
 
-import com.movie.Gemflix.common.ApiResponseMessage;
+import com.movie.Gemflix.common.CommonResponse;
+import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.dto.member.MemberDto;
 import com.movie.Gemflix.entity.MemberRole;
@@ -48,46 +49,68 @@ public class JwtAuthenticationController {
 
     //회원가입 & 인증메일 발송
     @PostMapping("/register")
-    public ResponseEntity<ApiResponseMessage> registerMember(@RequestBody @Valid MemberDto memberDTO,
-                                                             BindingResult bindingResult){
+    public ResponseEntity<?> registerMember(@RequestBody @Valid MemberDto memberDTO,
+                                            BindingResult bindingResult){
 
         try {
             log.info("[registerMember] memberDTO: {}", memberDTO);
-            ApiResponseMessage apiRm = commonService.checkError(bindingResult);
-            if (apiRm != null) return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));
+            CommonResponse response = commonService.checkError(bindingResult);
+            if (response != null){
+                return CommonResponse.createResponse(response, HttpStatus.BAD_REQUEST);
+            }
 
             //회원 등록
-            apiRm = authService.registerMember(memberDTO);
-            return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));
+            response = authService.registerMember(memberDTO);
+            if(response != null){
+                return CommonResponse.createResponse(response, HttpStatus.OK);
+            }
+
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(Constant.Success.SUCCESS_CODE)
+                    .message("Member Register Success")
+                    .build(), HttpStatus.OK);
         }catch (Exception e){
             log.error("registerMember Exception!!");
             e.printStackTrace();
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(ErrorType.ETC_FAIL.getErrorCode())
+                    .message(ErrorType.ETC_FAIL.getErrorMessage())
+                    .build(), HttpStatus.BAD_REQUEST);
         }
-        return null;
     }
 
     //인증메일 확인
     @GetMapping("/verify/{key}")
-    public ResponseEntity<ApiResponseMessage> getEmailVerify(@PathVariable String key) {
+    public ResponseEntity<?> getEmailVerify(@PathVariable String key) {
         try {
-            ApiResponseMessage apiRm = authService.verifyEmail(key);
-            return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));
+            CommonResponse response = authService.verifyEmail(key);
+            if(response != null){
+                return CommonResponse.createResponse(response, HttpStatus.BAD_REQUEST);
+            }
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(Constant.Success.SUCCESS_CODE)
+                    .message("Member Email Permission Success")
+                    .build(), HttpStatus.OK);
         } catch (Exception e) {
             log.error("registerMember Exception!!");
             e.printStackTrace();
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(ErrorType.ETC_FAIL.getErrorCode())
+                    .message(ErrorType.ETC_FAIL.getErrorMessage())
+                    .build(), HttpStatus.BAD_REQUEST);
         }
-        return null;
     }
 
     //인증 후 accessToken, refreshToken 발급
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest jwtRequest){
         try {
-            log.info("username: {}, password: {}", jwtRequest.getUsername(), jwtRequest.getPassword());
             String authority = checkMemberAuth(jwtRequest);
-            if(authority == null) {
-                ApiResponseMessage apiRm = new ApiResponseMessage(HttpStatus.UNAUTHORIZED.value(), ErrorType.INVALID_MEMBER);
-                return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));
+            if(authority == null){
+                return CommonResponse.createResponse(CommonResponse.builder()
+                        .code(ErrorType.INVALID_MEMBER.getErrorCode())
+                        .message(ErrorType.INVALID_MEMBER.getErrorMessage())
+                        .build(), HttpStatus.UNAUTHORIZED);
             }
 
             String username = jwtRequest.getUsername();
@@ -98,13 +121,20 @@ public class JwtAuthenticationController {
             redisUtil.setStringDataExpire(RedisUtil.PREFIX_REFRESH_TOKEN_KEY + refreshToken,
                     username, JwtUtil.JWT_REFRESH_TOKEN_EXPIRE/1000);
 
-            return ResponseEntity.ok(new JwtResponse(
-                    accessToken, refreshToken, username, authority, JwtUtil.JWT_ACCESS_TOKEN_EXPIRE/1000));
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(Constant.Success.SUCCESS_CODE)
+                    .message("Member Login Success")
+                    .data(new JwtResponse(accessToken, refreshToken, username, authority,
+                            JwtUtil.JWT_REFRESH_TOKEN_EXPIRE/1000))
+                    .build(), HttpStatus.OK);
 
         }catch (Exception e){
+            log.error("Member Login Exception!!");
             e.printStackTrace();
-            ApiResponseMessage apiRm = new ApiResponseMessage(HttpStatus.UNAUTHORIZED.value(), ErrorType.INVALID_MEMBER);
-            return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(ErrorType.INVALID_MEMBER.getErrorCode())
+                    .message(ErrorType.INVALID_MEMBER.getErrorMessage())
+                    .build(), HttpStatus.UNAUTHORIZED);
         }
     }
 
@@ -122,13 +152,17 @@ public class JwtAuthenticationController {
 
         //refreshToken 유효성 검사
         if(refreshToken == null){
-            ApiResponseMessage apiRm = new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), ErrorType.REFRESH_IS_NULL);
-            return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(ErrorType.REFRESH_IS_NULL.getErrorCode())
+                    .message(ErrorType.REFRESH_IS_NULL.getErrorMessage())
+                    .build(), HttpStatus.BAD_REQUEST);
         }
         refreshUsername = redisUtil.getStringData(RedisUtil.PREFIX_REFRESH_TOKEN_KEY + refreshToken);
         if(refreshUsername == null){ //refreshToken 유효시간 만료
-            ApiResponseMessage apiRm = new ApiResponseMessage(HttpStatus.UNAUTHORIZED.value(), ErrorType.REFRESH_TOKEN_EXPIRED);
-            return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(ErrorType.REFRESH_TOKEN_EXPIRED.getErrorCode())
+                    .message(ErrorType.REFRESH_TOKEN_EXPIRED.getErrorMessage())
+                    .build(), HttpStatus.UNAUTHORIZED);
 
         }else{
             if(refreshUsername.equals(jwtUtil.getUsernameFromToken(refreshToken))) {
@@ -148,11 +182,17 @@ public class JwtAuthenticationController {
 
                 //새로운 accessToken 발급
                 String newAccessToken = jwtUtil.generateToken(refreshUsername);
-                return ResponseEntity.ok(new JwtResponse(
-                        newAccessToken, refreshToken, username, authority, JwtUtil.JWT_ACCESS_TOKEN_EXPIRE/1000));
+                return CommonResponse.createResponse(CommonResponse.builder()
+                        .code(Constant.Success.SUCCESS_CODE)
+                        .message("AccessToken Refresh Success")
+                        .data(new JwtResponse(newAccessToken, refreshToken, username, authority,
+                                JwtUtil.JWT_REFRESH_TOKEN_EXPIRE / 1000))
+                        .build(), HttpStatus.OK);
             }else{
-                ApiResponseMessage apiRm = new ApiResponseMessage(HttpStatus.UNAUTHORIZED.value(), ErrorType.INVALID_MEMBER);
-                return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));
+                return CommonResponse.createResponse(CommonResponse.builder()
+                        .code(ErrorType.INVALID_MEMBER.getErrorCode())
+                        .message(ErrorType.INVALID_MEMBER.getErrorMessage())
+                        .build(), HttpStatus.UNAUTHORIZED);
             }
         }
     }

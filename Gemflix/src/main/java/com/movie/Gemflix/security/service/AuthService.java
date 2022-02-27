@@ -1,6 +1,6 @@
 package com.movie.Gemflix.security.service;
 
-import com.movie.Gemflix.common.ApiResponseMessage;
+import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.dto.member.MemberDto;
 import com.movie.Gemflix.entity.Member;
@@ -12,7 +12,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,35 +39,43 @@ public class AuthService {
     private EntityManager entityManager;
 
     @Transactional
-    public ApiResponseMessage registerMember(MemberDto memberDTO) throws Exception{
+    public CommonResponse registerMember(MemberDto memberDTO) throws Exception{
         //ID 중복 검사
         Optional<Member> optMember = memberRepository.findById(memberDTO.getId());
-        if(optMember.isPresent()) return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), ErrorType.DUPLICATED_MEMBER_ID);
+        if(optMember.isPresent()){
+            return new CommonResponse(ErrorType.DUPLICATED_MEMBER_ID.getErrorCode(),
+                    ErrorType.DUPLICATED_MEMBER_ID.getErrorMessage());
+        }
 
         //EMAIL 중복 검사
         Optional<Member> optMember02 = memberRepository.findByEmail(memberDTO.getEmail());
-        if(optMember02.isPresent()) return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), ErrorType.DUPLICATED_MEMBER_EMAIL);
+        if(optMember02.isPresent()){
+            return new CommonResponse(ErrorType.DUPLICATED_MEMBER_EMAIL.getErrorCode(),
+                    ErrorType.DUPLICATED_MEMBER_EMAIL.getErrorMessage());
+        }
 
         //Email 인증
         if(!emailService.sendVerificationMail(memberDTO)){
-            return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), ErrorType.INVALID_MEMBER_EMAIL);
+            return new CommonResponse(ErrorType.INVALID_MEMBER_EMAIL.getErrorCode(),
+                    ErrorType.INVALID_MEMBER_EMAIL.getErrorMessage());
         }
         //회원 등록
         memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
         Member member = modelMapper.map(memberDTO, Member.class);
         memberRepository.save(member);
-        return new ApiResponseMessage(HttpStatus.OK.value(), "Member Register Success");
+        return null;
     }
 
     @Transactional
-    public ApiResponseMessage verifyEmail(String key) throws Exception {
+    public CommonResponse verifyEmail(String key) throws Exception {
         String memberId = redisUtil.getStringData(RedisUtil.PREFIX_EMAIL_KEY + key);
         if(memberId == null){
-            return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), ErrorType.INVALID_MEMBER_ID);
+            return new CommonResponse(ErrorType.INVALID_MEMBER_ID.getErrorCode(),
+                    ErrorType.INVALID_MEMBER_ID.getErrorMessage());
         }else{
             modifyUserRole(memberId);authHeader:
             redisUtil.deleteData(RedisUtil.PREFIX_EMAIL_KEY + key);
-            return new ApiResponseMessage(HttpStatus.OK.value(), "Member Email Permission Success");
+            return null;
         }
     }
 

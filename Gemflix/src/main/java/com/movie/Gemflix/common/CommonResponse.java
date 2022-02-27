@@ -10,16 +10,16 @@ import org.springframework.http.ResponseEntity;
 @Setter
 @Builder
 public class CommonResponse<T> {
-    private String code;
+    private int code;
     private String message;
     private T data;
 
-    public CommonResponse(String code, String message, T data) {
+    public CommonResponse(int code, String message, T data) {
         this.code = code;
         this.message = message;
         this.data = data;
     }
-    public CommonResponse(String code, String message) {
+    public CommonResponse(int code, String message) {
         this.code = code;
         this.message = message;
     }

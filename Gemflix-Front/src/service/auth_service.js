@@ -12,10 +12,10 @@ class AuthService{
             email: email
         })
         .then(function (success) {
-            return success.data.status;
+            return success.data;
         })
         .catch(function (error) {
-            return error.request.response;
+            return JSON.parse(error.request.response);
         });
     }
 
@@ -40,13 +40,7 @@ class AuthService{
             return success.data;
         })
         .catch(function (error) {
-            const response = error.request.response;
-            const json = JSON.parse(response);
-            if(json.status === 401){
-                return json.message.errorCode;
-            }else{
-                return null;
-            }
+            return JSON.parse(error.request.response);
         });
     }
 
@@ -65,22 +59,14 @@ class AuthService{
 
     //회원 프로필
     async profile(accessToken) {
-        return await this.server.post('/member/profile', {}, {
+        return await this.server.get('/member/profile', {
             headers: {Authorization: 'Bearer ' + accessToken}
         })
         .then(function (success) {
-            console.log("success: " + success);
             return success.data;
         })
         .catch(function (error) {
-            console.log("error: " + error);
-            const response = error.request.response;
-            const json = JSON.parse(response);
-            if(json.status === 401){
-                return json.message.errorCode;
-            }else{
-                return null;
-            }
+            return JSON.parse(error.request.response);
         });
     }
 
@@ -93,10 +79,10 @@ class AuthService{
             }
         })
         .then(function (success) {
-            return success.data.status;
+            return success.data;
         })
         .catch(function (error) {
-            return error.request.response;
+            return JSON.parse(error.request.response);
         });
     }
 
@@ -112,7 +98,7 @@ class AuthService{
             return success.data;
         })
         .catch(function (error) {
-            return error.request.response;
+            return JSON.parse(error.request.response);
         });
     }
 

@@ -34,10 +34,10 @@ function App({server}) {
   let alreadyLogout = false;
 
   useEffect(() => {
-    if(user.loggedIn && user.token){
+    if(user.loggedIn === true && user.token){
         checkLogin();
     }
-  }, [user]);
+  }, [user.loggedIn]);
 
   function checkLogin() {
     console.log("checkLogin");
@@ -67,28 +67,29 @@ function App({server}) {
   }
 
   const settingAccessToken = (response) => {
-    if(response.accessToken){
-        const accessToken = response.accessToken;
-        const refreshToken = response.refreshToken;
-        const memberId = response.memberId;
-        const memberRole = response.memberRole;
-        const expire = response.expire;
+    const code = response.code;
+    if(code === 1000){ //success
+      const accessToken = response.data.accessToken;
+      const refreshToken = response.data.refreshToken;
+      const memberId = response.data.memberId;
+      const memberRole = response.data.memberRole;
+      const expire = response.data.expire;
 
-        if(accessToken && refreshToken){
-          setCookie('refreshToken', refreshToken, {
-            path: '/'
-            , secure: true
-            , maxAge: expire
-            // , httpOnly: true //도메인에만 적용가능
-          });
-          dispatch(userLogin(accessToken, memberId, memberRole));
-          alert(memberId + "님 환영합니다!");
-          window.location.href = "/";
-        }
-    }else{
-        alert("아이디와 비밀번호를 정확히 입력해주세요.");
-        setLoading(false);
-        window.location.href = "/login";
+      if(accessToken && refreshToken){
+        setCookie('refreshToken', refreshToken, {
+          path: '/'
+          , secure: true
+          , maxAge: expire
+          // , httpOnly: true //도메인에만 적용가능
+        });
+        dispatch(userLogin(accessToken, memberId, memberRole));
+        alert(memberId + "님 환영합니다!");
+        window.location.href = "/";
+      }
+    }else{ //fail
+      alert("아이디와 비밀번호를 정확히 입력해주세요.");
+      setLoading(false);
+      window.location.href = "/login";
     }
   }
 
@@ -135,7 +136,7 @@ function App({server}) {
             </Route>
 
             {/* product */}
-            <Route path="/product" element={
+            <Route path="/products" element={
               <ProductList server={server}/>}>
             </Route>
             <Route path="/product/create" element={

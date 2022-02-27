@@ -1,6 +1,6 @@
 package com.movie.Gemflix.service;
 
-import com.movie.Gemflix.common.ApiResponseMessage;
+import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.security.service.UserDetailsServiceImpl;
 import com.movie.Gemflix.security.util.JwtUtil;
@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -30,7 +28,7 @@ public class CommonService {
     private final UserDetailsServiceImpl userDetailsService;
 
 
-    public ApiResponseMessage checkError(BindingResult bindingResult) {
+    public CommonResponse checkError(BindingResult bindingResult) {
         log.info("bindingResult: {}", bindingResult);
         if(bindingResult.hasErrors()) {
             FieldError fieldError = (FieldError) bindingResult.getAllErrors().get(0);
@@ -40,21 +38,28 @@ public class CommonService {
 
             switch (field){
                 case "id":
-                    return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), message, ErrorType.INVALID_MEMBER_ID);
+                    return new CommonResponse(ErrorType.INVALID_MEMBER_ID.getErrorCode(),
+                            ErrorType.INVALID_MEMBER_ID.getErrorMessage());
                 case "password":
-                    return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), message, ErrorType.INVALID_MEMBER_PASSWORD);
+                    return new CommonResponse(ErrorType.INVALID_MEMBER_PASSWORD.getErrorCode(),
+                            ErrorType.INVALID_MEMBER_PASSWORD.getErrorMessage());
                 case "phone":
-                    return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), message, ErrorType.INVALID_MEMBER_PHONE);
+                    return new CommonResponse(ErrorType.INVALID_MEMBER_PHONE.getErrorCode(),
+                            ErrorType.INVALID_MEMBER_PHONE.getErrorMessage());
                 case "email":
-                    return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), message, ErrorType.INVALID_MEMBER_EMAIL);
+                    return new CommonResponse(ErrorType.INVALID_MEMBER_EMAIL.getErrorCode(),
+                            ErrorType.INVALID_MEMBER_EMAIL.getErrorMessage());
                 case "name":
-                    return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), message, ErrorType.STORE_NAME_IS_TOO_LONG);
+                    return new CommonResponse(ErrorType.STORE_NAME_IS_TOO_LONG.getErrorCode(),
+                            ErrorType.STORE_NAME_IS_TOO_LONG.getErrorMessage());
                 case "content":
-                    return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), message, ErrorType.STORE_CONTENT_IS_TOO_LONG);
+                    return new CommonResponse(ErrorType.STORE_CONTENT_IS_TOO_LONG.getErrorCode(),
+                            ErrorType.STORE_CONTENT_IS_TOO_LONG.getErrorMessage());
                 case "price":
-                    return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), message, ErrorType.STORE_INVALID_PRICE);
+                    return new CommonResponse(ErrorType.STORE_INVALID_PRICE.getErrorCode(),
+                            ErrorType.STORE_INVALID_PRICE.getErrorMessage());
                 default:
-                    return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(), ErrorType.ETC_FAIL);
+                    return new CommonResponse(ErrorType.ETC_FAIL.getErrorCode(), ErrorType.ETC_FAIL.getErrorMessage());
             }
         }else{
             return null;

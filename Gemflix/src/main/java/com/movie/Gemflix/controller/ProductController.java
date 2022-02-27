@@ -1,11 +1,16 @@
 package com.movie.Gemflix.controller;
 
-import com.movie.Gemflix.common.ApiResponseMessage;
+import com.movie.Gemflix.common.CommonResponse;
+import com.movie.Gemflix.common.Constant;
+import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.dto.product.ProductDto;
 import com.movie.Gemflix.service.CommonService;
 import com.movie.Gemflix.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -13,72 +18,109 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class ProductController {
 
     private final CommonService commonService;
     private final ProductService productService;
 
-    /*@GetMapping("/imageUrl")
-    public ResponseEntity<byte[]> getImageAsResponseEntity(@RequestParam String filePath) {
-        HttpHeaders headers = new HttpHeaders();
-        byte[] media = null;
-        try{
-            InputStream in = getClass().getResourceAsStream(filePath);
-            media = IOUtils.toByteArray(in);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-
-        ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(media, headers, HttpStatus.OK);
-        return responseEntity;
-    }*/
-
-    @Secured("ROLE_ADMIN")
     @GetMapping("products")
     public ResponseEntity<?> getProducts(){
 
         try{
             List<ProductDto> productDtos = productService.getProducts();
             if(productDtos == null){
-                ApiResponseMessage apiRm =
-                        new ApiResponseMessage(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.getReasonPhrase());
-                return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));
+                return CommonResponse.createResponse(CommonResponse.builder()
+                        .code(ErrorType.STORE_NONE_PRODUCT.getErrorCode())
+                        .message(ErrorType.STORE_NONE_PRODUCT.getErrorMessage())
+                        .build(), HttpStatus.NO_CONTENT);
             }else{
-                return ResponseEntity.ok(productDtos);
+                return CommonResponse.createResponse(CommonResponse.builder()
+                        .code(Constant.Success.SUCCESS_CODE)
+                        .message("Success Get Products")
+                        .data(productDtos)
+                        .build(), HttpStatus.OK);
             }
         }catch (Exception e){
             log.error("getProducts Exception!!");
             e.printStackTrace();
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(ErrorType.ETC_FAIL.getErrorCode())
+                    .message(ErrorType.ETC_FAIL.getErrorMessage())
+                    .build(), HttpStatus.BAD_REQUEST);
         }
-        return null;
     }
 
     @Secured("ROLE_ADMIN")
     @PostMapping("product")
-    public ResponseEntity<ApiResponseMessage> createProduct(@ModelAttribute @Valid ProductDto productDTO,
-                                                            BindingResult bindingResult){
+    public ResponseEntity<?> createProduct(@ModelAttribute @Valid ProductDto productDTO,
+                                           BindingResult bindingResult){
 
         try{
             log.info("[createProduct] productDTO: {}", productDTO);
-            ApiResponseMessage apiRm = commonService.checkError(bindingResult);
-            log.info("apiRm: {}", apiRm);
-            if(apiRm != null) return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));
+            CommonResponse response = commonService.checkError(bindingResult);
+            log.info("response: {}", response);
+            if(response != null){
+                return CommonResponse.createResponse(response, HttpStatus.BAD_REQUEST);
+            }
 
-            apiRm = productService.createProduct(productDTO);
-            log.info("apiRm: {}", apiRm);
-            return new ResponseEntity<>(apiRm, HttpStatus.valueOf(apiRm.getStatus()));
+            response = productService.createProduct(productDTO);
+            log.info("response: {}", response);
+            if(response != null){
+                return CommonResponse.createResponse(response, HttpStatus.BAD_REQUEST);
+            }
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(Constant.Success.SUCCESS_CODE)
+                    .message("Product Register Success")
+                    .build(), HttpStatus.OK);
 
         }catch (Exception e){
             log.error("createStore Exception!!");
             e.printStackTrace();
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(ErrorType.ETC_FAIL.getErrorCode())
+                    .message(ErrorType.ETC_FAIL.getErrorMessage())
+                    .build(), HttpStatus.BAD_REQUEST);
         }
-        return null;
+    }
+
+    @GetMapping("/showImage")
+    public ResponseEntity<?> showImage(@RequestParam("imgLocation") String imgLocation) {
+
+        // Resorce를 사용해서 로컬 서버에 저장된 이미지 경로 및 파일 명을 지정
+        Resource resource = new FileSystemResource(imgLocation);
+
+        // 로컬 서버에 저장된 이미지 파일이 없을 경우
+        if(!resource.exists()){
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(ErrorType.FILE_DELETED.getErrorCode())
+                    .message(ErrorType.FILE_DELETED.getErrorMessage())
+                    .build(), HttpStatus.NOT_FOUND);
+        }
+
+        // 로컬 서버에 저장된 이미지가 있는 경우 로직 처리
+        HttpHeaders header = new HttpHeaders();
+        Path filePath = null;
+        try {
+            filePath = Paths.get(imgLocation);
+            // 인풋으로 들어온 파일명 .png / .jpg 에 맞게 헤더 타입 설정
+            header.add("Content-Type", Files.probeContentType(filePath));
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        // 이미지 리턴 실시 [브라우저에서 get 주소 확인 가능]
+        return new ResponseEntity<>(resource, header, HttpStatus.OK);
     }
 
 }

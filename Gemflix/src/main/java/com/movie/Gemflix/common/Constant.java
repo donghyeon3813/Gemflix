@@ -6,12 +6,16 @@ import java.util.Set;
 
 public class Constant {
 
+    public static class Success{
+        public static final int SUCCESS_CODE = 1000;
+    }
+
     public static class FileExtension{
-        public static final String[] JPG_AND_PNG = {"jpg", "png"};
+        public static final String[] JPG_AND_PNG = {"jpg", "jpeg", "png"};
     }
 
     public static class FilePath{
-//        public static final String PATH_STORE = "C:/z_crim/toy/Gemflix/Gemflix-Front/public/images/upload/";
+        //        public static final String PATH_STORE = "C:/z_crim/toy/Gemflix/Gemflix-Front/public/images/upload/";
         public static final String PATH_STORE = "C:/TestFolder/";
     }
 

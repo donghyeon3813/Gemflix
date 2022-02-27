@@ -45,18 +45,15 @@ const ProductCreateForm = ({server}) => {
 
     const onClickCreate = () => {
         setLoading(true);
-        
+
         if(name && price && content && status && category){
-            console.log("price: " + price);
             const formData = new FormData();
-            formData.append("file", imgFile);
+            formData.append("multiPartFile", imgFile);
             formData.append("name", name);
             formData.append("price", parseInt(price.replace(/,/g,"")));
             formData.append("content", content);
             formData.append("status", status);
             formData.append("memberId", user.memberId);
-
-            console.log("price: " + parseInt(price.replace(/,/g,"")));
             
             switch(category){
                 case '스낵바':
@@ -69,7 +66,6 @@ const ProductCreateForm = ({server}) => {
                     formData.append("category", "2");
                     break;
             }
-    
             server.productCreate(user.token, formData)
             .then(response => {
                 setReponse(response);
@@ -87,18 +83,14 @@ const ProductCreateForm = ({server}) => {
         if(!mounted.current){
             mounted.current = true;
         } else { //success
-            if(response === 200){
+            const code = response.code;
+            if(code === 1000){ //success
                 alert("상품 등록이 완료되었습니다.");
                 //목록페이지로 이동
-                navigate('/product');
+                navigate('/products');
+
             }else{ //fail
-                const json = JSON.parse(response);
-                const errorCode = json.message.errorCode;
-                const errorMessage = json.message.errorMessage;
-                console.log("json: " + json);
-                console.log("errorCode: " + errorCode);
-                console.log("errorMessage: " + errorMessage);
-                alert(errorMessage);
+                alert(response.message);
             }
         }
         setLoading(false);

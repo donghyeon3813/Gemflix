@@ -10,6 +10,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.File;
 
 @Data
 @ToString
@@ -29,10 +30,12 @@ public class ProductDto {
     @Max(value = 1000000, message = "100만원 이하만 가능합니다.")
     private String price;
 
+    private int prId;
     private String status;
     private String imgLocation;
     private String category;
-    private MultipartFile file;
+    private MultipartFile multiPartFile;
+    private String base64;
     private String memberId;
 
 }

@@ -1,8 +1,9 @@
 package com.movie.Gemflix.service;
 
-import com.movie.Gemflix.common.ApiResponseMessage;
+import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.common.ErrorType;
+import com.movie.Gemflix.controller.ProductController;
 import com.movie.Gemflix.dto.product.ProductDto;
 import com.movie.Gemflix.entity.Product;
 import com.movie.Gemflix.entity.QProduct;
@@ -10,18 +11,27 @@ import com.movie.Gemflix.repository.ProductRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Base64;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,17 +52,19 @@ public class ProductService {
 
 
     @Transactional
-    public ApiResponseMessage createProduct(ProductDto productDTO) throws Exception{
+    public CommonResponse createProduct(ProductDto productDTO) throws Exception{
 
         //파일 확장자 검사
-        MultipartFile file = productDTO.getFile();
+        MultipartFile file = productDTO.getMultiPartFile();
         if(!commonService.checkFile(file, Constant.FileExtension.JPG_AND_PNG)){
-            return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), ErrorType.INVALID_EXTENSION);
+            return new CommonResponse(ErrorType.INVALID_EXTENSION.getErrorCode(),
+                    ErrorType.INVALID_EXTENSION.getErrorMessage());
         }
         //파일 업로드
         String imgLocation = commonService.uploadFile(file, Constant.FilePath.PATH_STORE + productDTO.getMemberId() + "/");
         if(imgLocation == null){
-            return new ApiResponseMessage(HttpStatus.BAD_REQUEST.value(), ErrorType.STORE_FAILED_TO_UPLOAD_FILE);
+            return new CommonResponse(ErrorType.STORE_FAILED_TO_UPLOAD_FILE.getErrorCode(),
+                    ErrorType.STORE_FAILED_TO_UPLOAD_FILE.getErrorMessage());
         }
         //상품 등록
         String status = productDTO.getStatus();
@@ -69,28 +81,24 @@ public class ProductService {
         Product product = modelMapper.map(productDTO, Product.class);
         log.info("product: {}", product);
         productRepository.save(product);
-        return new ApiResponseMessage(HttpStatus.OK.value(), "Product Register Success");
+        return null;
     }
 
     public List<ProductDto> getProducts() throws Exception{
-        List<Product> products = productRepository.findAll();
+
+        List<Product> products = productRepository.findByStatusIsOrderByCategoryAscRegDateDesc("1");
         if(products.size() == 0) return null;
 
         List<ProductDto> productDtos = products.stream()
                 .map(product -> {
                     ProductDto productDTO = modelMapper.map(product, ProductDto.class);
-                    InputStream imageStream = null;
+                    String location = productDTO.getImgLocation();
+
                     try {
-                        /*String oldLocation = productDTO.getImgLocation();
-                        System.out.println("oldLocation: " + oldLocation);
-                        byte[] binary = getFileBinary(oldLocation);
-                        System.out.println("binary: " + binary);
-                        String base64data = Base64.getEncoder().encodeToString(binary);
-                        System.out.println("base64data: " + base64data);
-
-                        //imageUrl
-
-                        imageStream.close();*/
+                        Resource resource = new FileSystemResource(location);
+                        File file = resource.getFile();
+                        String base64 = fileToString(file);
+                        productDTO.setBase64(base64);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -99,17 +107,34 @@ public class ProductService {
         return productDtos;
     }
 
-    // 파일 읽어드리는 함수
-    private static byte[] getFileBinary(String filepath) {
-        File file = new File(filepath);
-        byte[] data = new byte[(int) file.length()];
-        try (FileInputStream stream = new FileInputStream(file)) {
-            stream.read(data, 0, data.length);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        return data;
-    }
+    public String fileToString(File file) throws IOException {
 
+        String fileName = file.getName();
+        String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+
+        String fileString = "";
+        FileInputStream inputStream =  null;
+        ByteArrayOutputStream byteOutStream = null;
+
+        try {
+            inputStream = new FileInputStream(file);
+            byteOutStream = new ByteArrayOutputStream();
+
+            int len = 0;
+            byte[] buf = new byte[1024];
+            while ((len = inputStream.read(buf)) != -1) {
+                byteOutStream.write(buf, 0, len);
+            }
+            byte[] fileArray = byteOutStream.toByteArray();
+            fileString = new String(Base64.encodeBase64(fileArray));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            inputStream.close();
+            byteOutStream.close();
+        }
+        return "data:image/" + extension + ";base64," + fileString;
+    }
 
 }

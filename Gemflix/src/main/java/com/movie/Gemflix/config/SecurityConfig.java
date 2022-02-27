@@ -23,7 +23,10 @@ import org.springframework.security.web.access.expression.DefaultWebSecurityExpr
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 @Configuration
 @RequiredArgsConstructor
@@ -65,7 +68,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override //허가 필요한 리소스 설정
     protected void configure(HttpSecurity http) throws Exception {
-
         http
                 //cors 허용 적용
                 .cors().configurationSource(corsConfigurationSource())
@@ -86,6 +88,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // authenticate 외 나머지는 모두 인증 필요
                 .and()
                 .authorizeRequests()
+                //CORS preflight 요청은 인증처리를 하지 않겠다
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+
                 .expressionHandler(expressionHandler())
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/movie/**").permitAll()
@@ -97,15 +102,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
         ;
-
-        http.formLogin(); //문제시 로그인 화면으로
-        http.logout();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);

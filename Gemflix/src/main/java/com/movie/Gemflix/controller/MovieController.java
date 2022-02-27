@@ -34,7 +34,7 @@ public class MovieController {
             log.info("Result : {}",movieListDtos);
             return CommonResponse.createResponse(
                     CommonResponse.builder()
-                            .code("100")
+                            .code(100)
                             .message("성공")
                             .data(movieListDtos)
                             .build(),HttpStatus.OK
@@ -58,7 +58,7 @@ public class MovieController {
             log.info("Result : {}",movieDetailDto);
             return CommonResponse.createResponse(
                     CommonResponse.builder()
-                    .code("100")
+                    .code(100)
                     .message("성공")
                     .data(movieDetailDto)
                     .build(),HttpStatus.OK
