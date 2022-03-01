@@ -6,13 +6,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper.scss";
 import "swiper/components/navigation/navigation.scss"; // *
 import "swiper/components/pagination/pagination.scss"; // *
-import "swiper/components/scrollbar/scrollbar.scss"; // *
 
 import "./css/movie_trailer.css";
 
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import SwiperCore, { Navigation, Pagination, A11y } from "swiper";
 
-SwiperCore.use([Navigation, Pagination, Scrollbar, A11y]);
+SwiperCore.use([Navigation, Pagination, A11y]);
 
 const MoveTrailer = (props) => {
   const trailerList = props.trailerList;
@@ -22,6 +21,10 @@ const MoveTrailer = (props) => {
   const handleSetPop = (trLocation) => {
     setTrLocation(trLocation);
     setTrailerPop(true);
+  };
+
+  const handleClosePop = () => {
+    setTrailerPop(false);
   };
 
   const carouselBox = {
@@ -58,7 +61,12 @@ const MoveTrailer = (props) => {
         ))}
       </Swiper>
 
-      {trailerPop && <MoveTrailerPopUp trLocation={trLocation} />}
+      {trailerPop && (
+        <MoveTrailerPopUp
+          trLocation={trLocation}
+          handleClosePop={handleClosePop}
+        />
+      )}
     </>
   );
 };
