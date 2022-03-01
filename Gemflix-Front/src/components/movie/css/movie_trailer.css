@@ -1,0 +1,11 @@
+.swiper-pagination {
+  position: absolute;
+  bottom: 0px;
+}
+.swiper-container {
+  height: 400px;
+}
+.swiper-slide {
+  width: 480px;
+  height: 360px;
+}
