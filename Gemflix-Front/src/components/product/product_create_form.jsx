@@ -1,10 +1,11 @@
 import { React, useState, useRef, useEffect } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const ProductCreateForm = ({server}) => {
-
+    
     const navigate = useNavigate();
+    const location = useLocation();
     const user = useSelector(store => store.userReducer, shallowEqual);
     const [imgBase64, setImgBase64] = useState([]); //파일 base64
     const [imgFile, setImgFile] = useState(null); //파일
@@ -16,10 +17,18 @@ const ProductCreateForm = ({server}) => {
     const [requestCnt, setRequestCnt] = useState(0);
     const [loading , setLoading] = useState(false);
 
-    const selectList = ["스낵바", "관람권", "포토티켓"];
-    const [category, setCategory] = useState("스낵바");
+    const [categories, setCategories] = useState([]);
+    const [category, setCategory] = useState('');
+    const [categoryIdx, setCategoryIdx] = useState(0);
 
     const storeFormRef = useRef();
+
+    useEffect(() => {
+        const tempCategories = location.state.categories;
+        setCategories(tempCategories);
+        setCategory(tempCategories.get(0));
+        setCategoryIdx(0);
+    }, [])
 
     const handleChangeFile = (event) => {
         const files = event.target.files;
@@ -46,30 +55,30 @@ const ProductCreateForm = ({server}) => {
     const onClickCreate = () => {
         setLoading(true);
 
-        if(name && price && content && status && category){
+        if(name && price && content && status && categories.has(categoryIdx)){
+            setCategory(categories.get(categoryIdx));
+
             const formData = new FormData();
+            formData.append("cgName", category);
+            formData.append("cgId", categoryIdx);
             formData.append("multiPartFile", imgFile);
             formData.append("name", name);
             formData.append("price", parseInt(price.replace(/,/g,"")));
             formData.append("content", content);
             formData.append("status", status);
             formData.append("memberId", user.memberId);
+            console.log("formData" + formData);
             
-            switch(category){
-                case '스낵바':
-                    formData.append("category", "0");
-                    break;
-                case '관람권':
-                    formData.append("category", "1");
-                    break;
-                case '포토티켓':
-                    formData.append("category", "2");
-                    break;
-            }
-            server.productCreate(user.token, formData)
+            server.createProduct(user.token, formData)
             .then(response => {
                 setReponse(response);
                 setRequestCnt(requestCnt + 1);
+            })
+            .catch(ex => {
+                console.log("createProduct requset fail : " + ex);
+            })
+            .finally(() => {
+                console.log("createProduct request end");
             });
         }else{
             alert("모든 정보를 입력해주세요.");
@@ -103,7 +112,7 @@ const ProductCreateForm = ({server}) => {
             setStatus(null);
             setImgBase64([]);
             setPrice('');
-            setCategory('스낵바');
+            setCategory(categories.get(0));
             setName('');
             setContent('');
         }
@@ -154,7 +163,8 @@ const ProductCreateForm = ({server}) => {
     };
 
     const handleSelect = (event) => {
-        setCategory(event.target.value);
+        const value = Number(event.target.value);
+        setCategoryIdx(value);
     };
 
     if(!loading){
@@ -162,12 +172,12 @@ const ProductCreateForm = ({server}) => {
             <div>
                 <form ref={storeFormRef} className="store_form">
                     <div>
-                        <select name="category" onChange={handleSelect} value={category}>
-                            {selectList.map((item) => (
-                                <option value={item} key={item}>
-                                    {item}
-                                </option>
-                            ))}
+                        <select name="category" onChange={handleSelect} value={categoryIdx}>
+                        {[...categories.keys()].map(key => (
+                            <option value={key} key={key}>
+                                {categories.get(key)}
+                            </option>
+                        ))}
                         </select>
     
                         <h4>상품명</h4>

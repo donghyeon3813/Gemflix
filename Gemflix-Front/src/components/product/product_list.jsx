@@ -7,15 +7,32 @@ const ProductList = ({server}) => {
 
     const navigate = useNavigate();
     const user = useSelector(store => store.userReducer, shallowEqual);
-    const [snacks, setSnacks] = useState([]);
-    const [tickets, setTickets] = useState([]);
-    const [photoTickets, setPhotoTickets] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [textCategories, setTextCategories] = useState([]);
+    const [categories, setCategories] = useState(new Map());
 
     const onClickCreate = () => {
-        navigate('/product/create');
+        navigate('/product/create', { state: { categories: categories } });
     }
 
     useEffect(() => {
+        //get category
+        server.category(user.token)
+        .then(response => {
+            const data = response.data;
+            data.map(category => {
+                setCategories(categories.set(category.cgId, category.cgName));
+            });
+            console.log(categories);
+        })
+        .catch(ex => {
+            console.log("category requset fail : " + ex);
+        })
+        .finally(() => {
+            console.log("category request end");
+        });
+
+        //get product
         getProducts();
     }, []);
 
@@ -23,15 +40,22 @@ const ProductList = ({server}) => {
         server.products(user.token)
         .then(response => {
             const products = response.data;
-            setSnacks(products.filter(product => product.category === "0"));
-            setTickets(products.filter(product => product.category === "1"));
-            setPhotoTickets(products.filter(product => product.category === "2"));
+            setProducts(products);
+            
+            const tempCt = [...categories.values()];
+            setTextCategories(tempCt);
         })
+        .catch(ex => {
+            console.log("products requset fail : " + ex);
+        })
+        .finally(() => {
+            console.log("products request end");
+        });
     }
 
 
     if(user.memberRole === 'ADMIN'){
-        if(snacks == null && tickets == null && photoTickets == null){
+        if(products == null){
             return (
                 <div className='product'>
                     <div className='product_buttons'>
@@ -47,7 +71,35 @@ const ProductList = ({server}) => {
                         <button type="button" onClick={onClickCreate}>상품추가</button>
                     </div>
                     <div>
-                        {snacks.length === 0 ? <></> : 
+                        {/* const getEntries = Object.entries(subjects).map((entrie, idx) => {
+                        return console.log(entrie, idx);
+                        }); */}
+                        {/* {categories} {products} 
+                        categories.entries().next().value
+                        Object.values(categories)
+                        */}
+
+                        {
+                        textCategories.map((category) => (
+                            <>
+                            <div className='product_category'>{category}</div>
+                            <ul className='product_list'>
+                                {
+                                products
+                                .filter((product) => (product.category.cgName === category))
+                                .map((product) => (
+                                    <ProductItem key={product.prId} name={product.name} price={product.price} base64={product.base64}/>   
+                                ))
+                                }
+                            </ul>
+                            </>
+                        ))
+                        }
+                        
+
+
+
+                        {/* {snacks.length === 0 ? <></> : 
                             <>
                             <div className='product_category'>스낵바</div>
                             <ul className='product_list'>
@@ -56,27 +108,8 @@ const ProductList = ({server}) => {
                                 ))}
                             </ul>
                             </>
-                        }
-                        {tickets.length === 0 ? <></> : 
-                            <>
-                            <div className='product_category'>관람권</div>
-                            <ul className='product_list'>
-                                {tickets.map(product => (
-                                <ProductItem key={product.prId} name={product.name} price={product.price} base64={product.base64}/>
-                                ))}
-                            </ul>
-                            </>
-                        }
-                        {photoTickets.length === 0 ? <></> : 
-                            <>
-                            <div className='product_category'>포토티켓</div>
-                            <ul className='product_list'>
-                                {photoTickets.map(product => (
-                                <ProductItem key={product.prId} name={product.name} price={product.price} base64={product.base64}/>
-                                ))}
-                            </ul>
-                            </>
-                        }
+                        } */}
+                        
                     </div>
                 </div>
             );
@@ -87,9 +120,7 @@ const ProductList = ({server}) => {
             <div className='product'>
                 <div>
                     <ul className='product_list'>
-                        {snacks.map(product => (
-                        <ProductItem key={product.prId} name={product.name} price={product.price} base64={product.base64}/>
-                        ))}
+                        
                     </ul>
                 </div>
             </div>

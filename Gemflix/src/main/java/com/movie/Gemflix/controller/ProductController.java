@@ -3,14 +3,20 @@ package com.movie.Gemflix.controller;
 import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.common.ErrorType;
+import com.movie.Gemflix.dto.product.CategoryDto;
 import com.movie.Gemflix.dto.product.ProductDto;
+import com.movie.Gemflix.entity.Category;
+import com.movie.Gemflix.entity.Product;
+import com.movie.Gemflix.repository.CategoryRepository;
 import com.movie.Gemflix.service.CommonService;
 import com.movie.Gemflix.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -30,8 +36,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductController {
 
+    private final ModelMapper modelMapper;
     private final CommonService commonService;
     private final ProductService productService;
+    private final CategoryRepository categoryRepository;
 
     @GetMapping("products")
     public ResponseEntity<?> getProducts(){
@@ -52,6 +60,25 @@ public class ProductController {
             }
         }catch (Exception e){
             log.error("getProducts Exception!!");
+            e.printStackTrace();
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(ErrorType.ETC_FAIL.getErrorCode())
+                    .message(ErrorType.ETC_FAIL.getErrorMessage())
+                    .build(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("category")
+    public ResponseEntity<?> getCategory(){
+        try{
+            List<Category> category = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "cgId"));
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(Constant.Success.SUCCESS_CODE)
+                    .message("Success Get Category")
+                    .data(category)
+                    .build(), HttpStatus.OK);
+        }catch (Exception e){
+            log.error("getCategory Exception!!");
             e.printStackTrace();
             return CommonResponse.createResponse(CommonResponse.builder()
                     .code(ErrorType.ETC_FAIL.getErrorCode())

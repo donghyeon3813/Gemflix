@@ -25,6 +25,9 @@ public class Product extends BaseEntity{
     private int price;
     private String status;
     private String imgLocation;
-    private String category;
+
+    @ManyToOne
+    @JoinColumn(name = "CG_ID")
+    private Category category;
 
 }

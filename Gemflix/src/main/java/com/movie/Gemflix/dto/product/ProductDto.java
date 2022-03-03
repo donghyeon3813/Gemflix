@@ -1,5 +1,6 @@
 package com.movie.Gemflix.dto.product;
 
+import com.movie.Gemflix.entity.Category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,9 +34,12 @@ public class ProductDto {
     private int prId;
     private String status;
     private String imgLocation;
-    private String category;
     private MultipartFile multiPartFile;
     private String base64;
     private String memberId;
+
+    private CategoryDto category;
+    private long cgId;
+    private String cgName;
 
 }

@@ -4,10 +4,13 @@ import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.controller.ProductController;
+import com.movie.Gemflix.dto.product.CategoryDto;
 import com.movie.Gemflix.dto.product.ProductDto;
+import com.movie.Gemflix.entity.Category;
 import com.movie.Gemflix.entity.Product;
 import com.movie.Gemflix.entity.QProduct;
 import com.movie.Gemflix.repository.ProductRepository;
+import com.movie.Gemflix.repository.ProductRepositorySupport;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +36,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -42,6 +46,7 @@ public class ProductService {
 
     private final CommonService commonService;
     private final ProductRepository productRepository;
+    private final ProductRepositorySupport productRepositorySupport;
     private final ModelMapper modelMapper;
     private final JPAQueryFactory queryFactory;
 
@@ -52,33 +57,40 @@ public class ProductService {
 
 
     @Transactional
-    public CommonResponse createProduct(ProductDto productDTO) throws Exception{
+    public CommonResponse createProduct(ProductDto productDto) throws Exception{
 
         //파일 확장자 검사
-        MultipartFile file = productDTO.getMultiPartFile();
+        MultipartFile file = productDto.getMultiPartFile();
         if(!commonService.checkFile(file, Constant.FileExtension.JPG_AND_PNG)){
             return new CommonResponse(ErrorType.INVALID_EXTENSION.getErrorCode(),
                     ErrorType.INVALID_EXTENSION.getErrorMessage());
         }
         //파일 업로드
-        String imgLocation = commonService.uploadFile(file, Constant.FilePath.PATH_STORE + productDTO.getMemberId() + "/");
+        String imgLocation = commonService.uploadFile(file, Constant.FilePath.PATH_STORE + productDto.getMemberId() + "/");
         if(imgLocation == null){
             return new CommonResponse(ErrorType.STORE_FAILED_TO_UPLOAD_FILE.getErrorCode(),
                     ErrorType.STORE_FAILED_TO_UPLOAD_FILE.getErrorMessage());
         }
         //상품 등록
-        String status = productDTO.getStatus();
+        String status = productDto.getStatus();
         switch (status){
             case "Y":
-                productDTO.setStatus("1");
+                productDto.setStatus("1");
                 break;
             case "N":
-                productDTO.setStatus("0");
+                productDto.setStatus("0");
                 break;
         }
+        productDto.setImgLocation(imgLocation);
 
-        productDTO.setImgLocation(imgLocation);
-        Product product = modelMapper.map(productDTO, Product.class);
+        //setting category
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setCgId(productDto.getCgId());
+        categoryDto.setCgName(productDto.getCgName());
+        productDto.setCategory(categoryDto);
+
+        //setting product
+        Product product = modelMapper.map(productDto, Product.class);
         log.info("product: {}", product);
         productRepository.save(product);
         return null;
@@ -86,7 +98,7 @@ public class ProductService {
 
     public List<ProductDto> getProducts() throws Exception{
 
-        List<Product> products = productRepository.findByStatusIsOrderByCategoryAscRegDateDesc("1");
+        List<Product> products = productRepositorySupport.findByStatusProductAndCategory("1");
         if(products.size() == 0) return null;
 
         List<ProductDto> productDtos = products.stream()

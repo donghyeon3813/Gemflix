@@ -20,6 +20,7 @@ public enum ErrorType {
     STORE_FAILED_TO_UPLOAD_FILE(1015, "파일 업로드에 실패했습니다."), //상품 파일 업로드 실패
     STORE_NONE_PRODUCT(1016, "판매중인 상품이 없습니다."), //등록된 상품 없음
     FILE_DELETED(1017, "해당 이미지가 존재하지 않습니다."), //해당 이미지 조회 실패
+    STORE_NONE_CATEGORY(1018, "등록된 카테고리가 없습니다."), //등록된 카테고리 없음
 
 
     ETC_FAIL(1999, "서버 내부 오류로 실패했습니다.") //그 외 오류

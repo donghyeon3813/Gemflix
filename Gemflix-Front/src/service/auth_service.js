@@ -70,8 +70,21 @@ class AuthService{
         });
     }
 
+    //상품 카테고리
+    async category(accessToken) {
+        return await this.server.get('/category', {
+            headers: {Authorization: 'Bearer ' + accessToken}
+        })
+        .then(function (success) {
+            return success.data;
+        })
+        .catch(function (error) {
+            return JSON.parse(error.request.response);
+        });
+    }
+
     //상품 등록
-    async productCreate(accessToken, formData) {
+    async createProduct(accessToken, formData) {
         return await this.server.post('/product', formData,
         {
             headers: {
