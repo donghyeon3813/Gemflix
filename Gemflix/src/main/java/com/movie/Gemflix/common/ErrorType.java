@@ -22,6 +22,7 @@ public enum ErrorType {
     FILE_DELETED(1017, "해당 이미지가 존재하지 않습니다."), //해당 이미지 조회 실패
     STORE_NONE_CATEGORY(1018, "등록된 카테고리가 없습니다."), //등록된 카테고리 없음
 
+    MOVIE_DETAIL_NOT_FOUND(1100,"영화 상세정보를 찾을 수 없습니다."),
 
     ETC_FAIL(1999, "서버 내부 오류로 실패했습니다.") //그 외 오류
     ;

@@ -72,7 +72,7 @@ class AuthService{
 
     //상품 카테고리
     async category(accessToken) {
-        return await this.server.get('/category', {
+        return await this.server.get('/none/category', {
             headers: {Authorization: 'Bearer ' + accessToken}
         })
         .then(function (success) {
@@ -101,7 +101,7 @@ class AuthService{
 
     //상품 목록
     async products(accessToken) {
-        return await this.server.get('/products',
+        return await this.server.get('/none/products',
         {
             headers: {
                 Authorization: 'Bearer ' + accessToken

@@ -93,6 +93,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .expressionHandler(expressionHandler())
                 .antMatchers("/auth/**").permitAll()
+                .antMatchers("/none/**").permitAll()
                 .antMatchers("/movie/**").permitAll()
                 .antMatchers("/member/**").hasRole("NO_PERMISSION")
                 .antMatchers("/admin/**").hasRole("ADMIN")

@@ -1,0 +1,52 @@
+/*영화 캐러셀 */
+.swiper-pagination {
+  position: absolute;
+  bottom: 0px;
+}
+.swiper-container {
+  height: 400px;
+}
+.swiper-slide {
+  width: 480px;
+  height: 360px;
+}
+
+/*영화 모달 css*/
+
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 3;
+}
+
+.modal-content {
+  background-color: white;
+  position: absolute;
+  top: 25%;
+  left: 23%;
+  height: 570px;
+  width: 970px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.modal-head {
+  height: 25px;
+  width: 100%;
+}
+.modal-head {
+  text-align: right;
+  padding-right: 10px;
+}
+
+.modal-item {
+  margin: auto;
+  height: 520px;
+  width: 920px;
+  margin-bottom: 25px;
+}

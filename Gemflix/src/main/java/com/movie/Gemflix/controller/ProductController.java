@@ -41,7 +41,7 @@ public class ProductController {
     private final ProductService productService;
     private final CategoryRepository categoryRepository;
 
-    @GetMapping("products")
+    @GetMapping("none/products")
     public ResponseEntity<?> getProducts(){
 
         try{
@@ -68,7 +68,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("category")
+    @GetMapping("none/category")
     public ResponseEntity<?> getCategory(){
         try{
             List<Category> category = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "cgId"));
@@ -87,7 +87,6 @@ public class ProductController {
         }
     }
 
-    @Secured("ROLE_ADMIN")
     @PostMapping("product")
     public ResponseEntity<?> createProduct(@ModelAttribute @Valid ProductDto productDTO,
                                            BindingResult bindingResult){
