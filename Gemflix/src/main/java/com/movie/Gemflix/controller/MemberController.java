@@ -32,7 +32,6 @@ public class MemberController {
     private final CommonService commonService;
     private final MemberRepository memberRepository;
 
-    @Secured("ROLE_NO_PERMISSION")
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile(HttpServletRequest request, HttpServletResponse response){
         String memberId = commonService.getRequesterId(request);

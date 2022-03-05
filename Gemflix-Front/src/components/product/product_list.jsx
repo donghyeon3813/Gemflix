@@ -71,14 +71,6 @@ const ProductList = ({server}) => {
                         <button type="button" onClick={onClickCreate}>상품추가</button>
                     </div>
                     <div>
-                        {/* const getEntries = Object.entries(subjects).map((entrie, idx) => {
-                        return console.log(entrie, idx);
-                        }); */}
-                        {/* {categories} {products} 
-                        categories.entries().next().value
-                        Object.values(categories)
-                        */}
-
                         {
                         textCategories.map((category) => (
                             <>
@@ -95,21 +87,6 @@ const ProductList = ({server}) => {
                             </>
                         ))
                         }
-                        
-
-
-
-                        {/* {snacks.length === 0 ? <></> : 
-                            <>
-                            <div className='product_category'>스낵바</div>
-                            <ul className='product_list'>
-                                {snacks.map((product) => (
-                                    <ProductItem key={product.prId} name={product.name} price={product.price} base64={product.base64}/>   
-                                ))}
-                            </ul>
-                            </>
-                        } */}
-                        
                     </div>
                 </div>
             );
@@ -119,9 +96,22 @@ const ProductList = ({server}) => {
         return (
             <div className='product'>
                 <div>
-                    <ul className='product_list'>
-                        
-                    </ul>
+                    {
+                    textCategories.map((category) => (
+                        <>
+                        <div className='product_category'>{category}</div>
+                        <ul className='product_list'>
+                            {
+                            products
+                            .filter((product) => (product.category.cgName === category))
+                            .map((product) => (
+                                <ProductItem key={product.prId} name={product.name} price={product.price} base64={product.base64}/>   
+                            ))
+                            }
+                        </ul>
+                        </>
+                    ))
+                    }
                 </div>
             </div>
         );
