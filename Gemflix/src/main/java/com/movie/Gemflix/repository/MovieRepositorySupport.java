@@ -80,7 +80,7 @@ public class MovieRepositorySupport {
 
     // 동적쿼리 제목
      BooleanExpression eqTitle(String title){
-        if(title == null && title.trim().equals("")){
+        if(title == null || title.trim().equals("")){
             return null;
         }
          return movie.title.contains(title);

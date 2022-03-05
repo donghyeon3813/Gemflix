@@ -1,11 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 const MoveTrailerItem = (props) => {
   const handleSetPop = props.handleSetPop;
   const imgLocation = props.imgLocation;
   const trLocation = props.trLocation;
+  const imgRef = useRef(null);
+  useEffect(() => {
+    console.log(imgRef);
+    console.log(imgRef.current.height);
+    if (imgRef.current.height === 90) {
+    }
+  });
+
   return (
     <>
       <img
+        ref={imgRef}
         src={imgLocation}
         alt=""
         onClick={() => {

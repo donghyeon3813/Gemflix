@@ -5,7 +5,9 @@ import MovieItem from "./movie_item";
 import MovieSearch from "./movie_search";
 import MovieDetail from "./movie_detail";
 import { useNavigate } from "react-router";
+import MovieService from "../../service/movie_service";
 
+const movieService = new MovieService();
 const MovieList = () => {
   const navigate = useNavigate();
 
@@ -18,46 +20,20 @@ const MovieList = () => {
 
   function handleGetMovieList(page) {
     console.log(page);
-    const url = "http://localhost:9090/movie/list";
-    axios
-      .get(url, {
-        params: {
-          page: page,
-          size: limit,
-          title: title,
-        },
-      })
-      .then(function (response) {
-        console.log(response.data.data.content);
-        setMovieListInfo(response.data.data.content);
-        setTotalMovie(response.data.data.totalElements);
-        console.log("성공");
-      })
-      .catch(function (error) {
-        console.log("실패");
-        console.log(error);
-      });
+    const data = { page: page, size: limit, title: title };
+    movieService.movies(data).then((response) => {
+      setMovieListInfo(response.data.content);
+      setTotalMovie(response.data.totalElements);
+    });
   }
   const handleGetMovieDetail = (e, mvId, index) => {
-    e.preventDefault();
-    const url = "http://localhost:9090/movie/details";
-    axios
-      .get(url, {
-        params: {
-          mvId: mvId,
-        },
-      })
-      .then(function (response) {
-        console.log(response.data);
-        navigate("/movies/view", { state: { movieInfo: response.data.data } });
-
-        console.log("성공");
-        // handleDetailPosition(index);
-      })
-      .catch(function (error) {
-        console.log("실패");
-        console.log(error);
-      });
+    const data = {
+      mvId: mvId,
+    };
+    console.log(data);
+    movieService.movieDetail(data).then((response) => {
+      navigate("/movies/view", { state: { movieInfo: response.data } });
+    });
   };
   const handleDetailPosition = (index) => {
     console.log(index);

@@ -19,6 +19,8 @@ public enum ErrorType {
     STORE_INVALID_PRICE(1014, "invalid price"), //가격 유효성 검사 실패
     STORE_FAILED_TO_UPLOAD_FILE(1015, "failed to upload file"), //상품 파일 업로드 실패
 
+    MOVIE_DETAIL_NOT_FOUND(1100,"영화 상세정보를 찾을 수 없습니다."),
+
     ETC_FAIL(1999, "fail...") //그 외 오류
     ;
 
