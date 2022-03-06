@@ -48,13 +48,6 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ProductRepositorySupport productRepositorySupport;
     private final ModelMapper modelMapper;
-    private final JPAQueryFactory queryFactory;
-
-    private QProduct qProduct = QProduct.product;
-
-    @PersistenceContext
-    private EntityManager entityManager;
-
 
     @Transactional
     public CommonResponse createProduct(ProductDto productDto) throws Exception{

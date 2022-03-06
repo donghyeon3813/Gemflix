@@ -1,6 +1,7 @@
 package com.movie.Gemflix.scheduler;
 
 
+import com.movie.Gemflix.service.ScreeningService;
 import com.movie.Gemflix.service.scheduler.MovieUpdateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class MovieDataScheduler {
 
     private final MovieUpdateService movieUpdateService;
+    private final ScreeningService screeningService;
 
     @Scheduled(cron = "0 0 10 * * *") //매일10시 설정
 //    @Scheduled(fixedDelay = 1000000) // 최초 실행후 주석처리
@@ -32,4 +34,10 @@ public class MovieDataScheduler {
         }
 
     }
+
+    @Scheduled(cron = "0 0 11 * * *") //매일11시 설정
+    private void settingMovieScreening() {
+        screeningService.settingMovieScreening();
+    }
+
 }

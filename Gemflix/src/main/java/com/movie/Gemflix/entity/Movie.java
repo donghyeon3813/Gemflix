@@ -61,4 +61,7 @@ public class Movie {
     @Column(name = "API_ID")
     private String apiId;
 
+    @Column(name = "STATUS")
+    private String status;
+
 }

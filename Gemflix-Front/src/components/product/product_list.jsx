@@ -75,7 +75,7 @@ const ProductList = ({server}) => {
                         textCategories.map((category) => (
                             <>
                             <div className='product_category'>{category}</div>
-                            <ul className='product_list'>
+                            <div className='product_list'>
                                 {
                                 products
                                 .filter((product) => (product.category.cgName === category))
@@ -83,7 +83,7 @@ const ProductList = ({server}) => {
                                     <ProductItem key={product.prId} name={product.name} price={product.price} base64={product.base64}/>   
                                 ))
                                 }
-                            </ul>
+                            </div>
                             </>
                         ))
                         }
@@ -100,7 +100,7 @@ const ProductList = ({server}) => {
                     textCategories.map((category) => (
                         <>
                         <div className='product_category'>{category}</div>
-                        <ul className='product_list'>
+                        <div className='product_list'>
                             {
                             products
                             .filter((product) => (product.category.cgName === category))
@@ -108,7 +108,7 @@ const ProductList = ({server}) => {
                                 <ProductItem key={product.prId} name={product.name} price={product.price} base64={product.base64}/>   
                             ))
                             }
-                        </ul>
+                        </div>
                         </>
                     ))
                     }
