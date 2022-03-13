@@ -92,12 +92,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
 
                 .expressionHandler(expressionHandler())
-                .antMatchers("/auth/**").permitAll()
-                .antMatchers("/none/**").permitAll()
-                .antMatchers("/movie/**").permitAll()
                 .antMatchers("/member/**").hasRole("NO_PERMISSION")
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
 
                 //jwtRequestFilter 를 addFilterBefore 로 등록 (UsernamePasswordAuthenticationFilter 필터 이전에 실행)
                 .and()

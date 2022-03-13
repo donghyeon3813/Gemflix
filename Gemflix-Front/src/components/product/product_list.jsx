@@ -17,13 +17,12 @@ const ProductList = ({server}) => {
 
     useEffect(() => {
         //get category
-        server.category(user.token)
+        server.category()
         .then(response => {
             const data = response.data;
             data.map(category => {
                 setCategories(categories.set(category.cgId, category.cgName));
             });
-            console.log(categories);
         })
         .catch(ex => {
             console.log("category requset fail : " + ex);
@@ -37,7 +36,7 @@ const ProductList = ({server}) => {
     }, []);
 
     const getProducts = () => {
-        server.products(user.token)
+        server.products()
         .then(response => {
             const products = response.data;
             setProducts(products);
@@ -72,19 +71,19 @@ const ProductList = ({server}) => {
                     </div>
                     <div>
                         {
-                        textCategories.map((category) => (
-                            <>
-                            <div className='product_category'>{category}</div>
-                            <div className='product_list'>
-                                {
-                                products
-                                .filter((product) => (product.category.cgName === category))
-                                .map((product) => (
-                                    <ProductItem key={product.prId} name={product.name} price={product.price} base64={product.base64}/>   
-                                ))
-                                }
+                        textCategories.map((category, index) => (
+                            <div key={index}>
+                                <div className='product_category'>{category}</div>
+                                <div className='product_list'>
+                                    {
+                                    products
+                                    .filter((product) => (product.category.cgName === category))
+                                    .map((product) => (
+                                        <ProductItem key={product.prId} name={product.name} price={product.price} base64={product.base64}/>   
+                                    ))
+                                    }
+                                </div>
                             </div>
-                            </>
                         ))
                         }
                     </div>
@@ -97,19 +96,19 @@ const ProductList = ({server}) => {
             <div className='product'>
                 <div>
                     {
-                    textCategories.map((category) => (
-                        <>
-                        <div className='product_category'>{category}</div>
-                        <div className='product_list'>
-                            {
-                            products
-                            .filter((product) => (product.category.cgName === category))
-                            .map((product) => (
-                                <ProductItem key={product.prId} name={product.name} price={product.price} base64={product.base64}/>   
-                            ))
-                            }
+                    textCategories.map((category, index) => (
+                        <div key={index}>
+                            <div className='product_category'>{category}</div>
+                            <div className='product_list'>
+                                {
+                                products
+                                .filter((product) => (product.category.cgName === category))
+                                .map((product) => (
+                                    <ProductItem key={product.prId} name={product.name} price={product.price} base64={product.base64}/>   
+                                ))
+                                }
+                            </div>
                         </div>
-                        </>
                     ))
                     }
                 </div>

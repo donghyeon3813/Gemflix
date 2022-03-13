@@ -69,7 +69,7 @@ const ProductCreateForm = ({server}) => {
             formData.append("memberId", user.memberId);
             console.log("formData" + formData);
             
-            server.createProduct(user.token, formData)
+            server.createProduct(formData)
             .then(response => {
                 setReponse(response);
                 setRequestCnt(requestCnt + 1);

@@ -1,6 +1,8 @@
+import setupInterceptors from "./setup_interceptors";
+
 class AuthService{
     constructor(httpClient){
-        this.server = httpClient;
+        this.server = setupInterceptors(httpClient);
     }
 
     //회원가입
@@ -33,17 +35,6 @@ class AuthService{
         });
     }
 
-    //accessToken 재발급 요청
-    async refresh() {
-        return await this.server.post('/auth/refresh')
-        .then(function (success) {
-            return success.data;
-        })
-        .catch(function (error) {
-            return JSON.parse(error.request.response);
-        });
-    }
-
     //카카오 로그인
     async kakaoLogin(code) {
         return await this.server.post('/auth/callback/kakao', {
@@ -58,10 +49,8 @@ class AuthService{
     }
 
     //회원 프로필
-    async profile(accessToken) {
-        return await this.server.get('/member/profile', {
-            headers: {Authorization: 'Bearer ' + accessToken}
-        })
+    async profile() {
+        return await this.server.get('/member/profile', {})
         .then(function (success) {
             return success.data;
         })
@@ -71,10 +60,8 @@ class AuthService{
     }
 
     //상품 카테고리
-    async category(accessToken) {
-        return await this.server.get('/none/category', {
-            headers: {Authorization: 'Bearer ' + accessToken}
-        })
+    async category() {
+        return await this.server.get('/category', {})
         .then(function (success) {
             return success.data;
         })
@@ -84,13 +71,8 @@ class AuthService{
     }
 
     //상품 등록
-    async createProduct(accessToken, formData) {
-        return await this.server.post('/product', formData,
-        {
-            headers: {
-                Authorization: 'Bearer ' + accessToken
-            }
-        })
+    async createProduct(formData) {
+        return await this.server.post('/product', formData, {})
         .then(function (success) {
             return success.data;
         })
@@ -100,13 +82,8 @@ class AuthService{
     }
 
     //상품 목록
-    async products(accessToken) {
-        return await this.server.get('/none/products',
-        {
-            headers: {
-                Authorization: 'Bearer ' + accessToken
-            }
-        })
+    async products() {
+        return await this.server.get('/products', {})
         .then(function (success) {
             return success.data;
         })

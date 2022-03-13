@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.Description;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Sort;
@@ -41,7 +42,8 @@ public class ProductController {
     private final ProductService productService;
     private final CategoryRepository categoryRepository;
 
-    @GetMapping("none/products")
+    //상품 목록 조회
+    @GetMapping("products")
     public ResponseEntity<?> getProducts(){
 
         try{
@@ -68,7 +70,8 @@ public class ProductController {
         }
     }
 
-    @GetMapping("none/category")
+    //상품 카테고라 목록 조회
+    @GetMapping("category")
     public ResponseEntity<?> getCategory(){
         try{
             List<Category> category = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "cgId"));
@@ -87,6 +90,8 @@ public class ProductController {
         }
     }
 
+    //상품 등록
+    @Secured("ROLE_ADMIN")
     @PostMapping("product")
     public ResponseEntity<?> createProduct(@ModelAttribute @Valid ProductDto productDTO,
                                            BindingResult bindingResult){
