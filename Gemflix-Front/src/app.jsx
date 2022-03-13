@@ -17,6 +17,7 @@ import ProductList from "./components/product/product_list";
 import MovieView from "./components/movie/movie_view";
 import MovieList from "./components/movie/movie_list";
 import dotenv from "dotenv";
+import CartList from "./components/cart/cart_list";
 dotenv.config();
 
 function App({ server }) {
@@ -103,43 +104,20 @@ function App({ server }) {
           <Header />
           <Routes>
             {/* home */}
-            <Route
-              path="/"
-              exact
-              element={<Home server={server} onClickLogout={onClickLogout} />}
-            ></Route>
-            <Route
-              path="/home"
-              element={<Home server={server} onClickLogout={onClickLogout} />}
-            ></Route>
+            <Route path="/" exact element={<Home server={server} onClickLogout={onClickLogout} />}></Route>
+            <Route path="/home" element={<Home server={server} onClickLogout={onClickLogout} />}></Route>
 
             {/* login */}
             <Route path="/profile" element={<Profile />}></Route>
+            <Route path="/cartList" element={<CartList />}></Route>
             <Route path="/join" element={<Join server={server} />}></Route>
-            <Route
-              path="/login"
-              element={
-                <Login
-                  server={server}
-                  kakaoLoginUrl={kakaoLoginUrl}
-                  settingAccessToken={settingAccessToken}
-                />
-              }
-            ></Route>
-            <Route
-              exact
-              path="kakaoLoginUrl"
-              element={<Home server={server} onClickLogout={onClickLogout} />}
-            ></Route>
-            <Route
-              path="/auth/callback/kakao"
-              element={
-                <KakaoAuth
-                  server={server}
-                  settingAccessToken={settingAccessToken}
-                />
-              }
-            ></Route>
+            <Route path="/login" element={
+                <Login server={server} kakaoLoginUrl={kakaoLoginUrl} settingAccessToken={settingAccessToken}/>
+              }></Route>
+            <Route exact path="kakaoLoginUrl" element={<Home server={server} onClickLogout={onClickLogout}/>}></Route>
+            <Route path="/auth/callback/kakao" element={
+                <KakaoAuth server={server} settingAccessToken={settingAccessToken}/>
+              }></Route>
 
             {/* movie */}
             <Route path="/movies" exact element={<MovieList />}></Route>
@@ -147,12 +125,8 @@ function App({ server }) {
             <Route path="/reserve" exact element={<MovieReserve />}></Route>
 
             {/* product */}
-            <Route path="/products" element={
-              <ProductList server={server}/>}>
-            </Route>
-            <Route path="/product/create" element={
-              <ProductCreateForm server={server}/>}>
-            </Route>
+            <Route path="/products" element={<ProductList server={server}/>}></Route>
+            <Route path="/product/create" element={<ProductCreateForm server={server}/>}></Route>
             
           </Routes>
           <Footer />

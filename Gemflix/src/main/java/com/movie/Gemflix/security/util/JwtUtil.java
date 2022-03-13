@@ -20,7 +20,7 @@ public class JwtUtil{
 
     //for test
 //    public static final long JWT_ACCESS_TOKEN_EXPIRE = 10 * 1000; //10초
-//    public static final long JWT_REFRESH_TOKEN_EXPIRE = 1 * 60 * 1000; //1분
+//    public static final long JWT_REFRESH_TOKEN_EXPIRE = 1 * 60 * 60 * 1000; //1시간
 
     public static final String ACCESS_TOKEN_NAME = "accessToken";
     public static final String REFRESH_TOKEN_NAME = "refreshToken";

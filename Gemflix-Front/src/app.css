@@ -153,3 +153,8 @@
   background-color: lightsteelblue;
   padding: 8px;
 }
+
+.cart_item {
+  display: flex;
+}
+

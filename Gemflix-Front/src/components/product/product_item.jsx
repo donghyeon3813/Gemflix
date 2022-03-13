@@ -9,6 +9,7 @@ const ProductItem = memo((props) => {
     const user = useSelector(store => store.userReducer, shallowEqual);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [count , setCount] = useState(1);
+    const [totalPrice , setTotalPrice] = useState(props.price);
 
     const onClickUpdate = () => {
         //TODO
@@ -19,7 +20,20 @@ const ProductItem = memo((props) => {
     }
 
     const changeCount = (event) => {
-        setCount(event.target.value);
+        const cnt = event.target.value;
+        const price = props.price;
+        if(cnt < 1 || 10 < cnt){
+            alert("수량은 1~10개만 가능합니다.");
+            setCount(1);
+            setTotalPrice(props.price);
+        }else{
+            setCount(cnt);
+            setTotalPrice(price*cnt);
+        }
+    }
+
+    const onClickAddCart = (props) => {
+        dispatch(addCart(props, count, totalPrice, props.key));
     }
 
     if(user.memberRole === 'ADMIN'){
@@ -75,10 +89,10 @@ const ProductItem = memo((props) => {
                             <label>수량 : </label>
                             <input className='product_count' value={count} type='number' min="1" max="10" onChange={changeCount}/><br/>
                             <label>총 금액 : </label>
-                            <p className='product_total_price'>원</p>
+                            <p className='product_total_price'>{totalPrice}원</p>
                         </form>
                     </div>
-                    <button type='button' onClick={() => dispatch(addCart(props))}>장바구니 담기</button>
+                    <button type='button' onClick={() => onClickAddCart(props)}>장바구니 담기</button>
                     <button type='button' onClick={()=> setModalIsOpen(false)}>취소</button>
                 </Modal>
             </>

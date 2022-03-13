@@ -12,10 +12,10 @@ export const userLogout = () => {
     }
 }
 
-export const addCart = (item) => {
+export const addCart = (item, count, totalPrice, key) => {
     return {
           type: "ADD_ITEM",
-          payload: item
+          payload: {item, count, totalPrice, key}
     }
 }
 

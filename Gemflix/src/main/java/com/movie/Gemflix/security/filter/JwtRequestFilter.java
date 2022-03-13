@@ -1,5 +1,6 @@
 package com.movie.Gemflix.security.filter;
 
+import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.security.util.JwtUtil;
 import com.movie.Gemflix.security.service.UserDetailsServiceImpl;
@@ -7,6 +8,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONObject;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -68,12 +70,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 //accessToken 만료시 401
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json;charset=utf-8");
-                JSONObject json02 = new JSONObject();
-                json02.put("errorCode", ErrorType.ACCESS_TOKEN_EXPIRED.getErrorCode());
-                json02.put("errorMessage", ErrorType.ACCESS_TOKEN_EXPIRED.getErrorMessage());
                 JSONObject json = new JSONObject();
-                json.put("status", HttpServletResponse.SC_UNAUTHORIZED);
-                json.put("message", json02);
+                json.put("code", ErrorType.ACCESS_TOKEN_EXPIRED.getErrorCode());
+                json.put("message", ErrorType.ACCESS_TOKEN_EXPIRED.getErrorMessage());
                 PrintWriter out = response.getWriter();
                 out.print(json);
                 return;

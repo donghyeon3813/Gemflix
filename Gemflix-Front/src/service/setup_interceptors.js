@@ -29,11 +29,12 @@ const setupInterceptors = (httpClient) => {
             response: { status },
         } = error;
         const originalRequest = config;
-        
+
+            console.log(status);
             if (status === 401) {
                 const response = error.response.data;
                 const code = response.code;
-        
+
                 if(code === 1007){ //accessToken 만료 -> 재발급
                     return axios.post('/auth/refresh')
                         .then(function (success) {

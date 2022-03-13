@@ -15,12 +15,11 @@ const Navbar = ({server, onClickLogout}) => {
             console.log("profile response code: " + code);
             
             switch(code){
-                case 1007: //interceptor에서 ccessToken 재발급
+                case 1007: //interceptor에서 accessToken 재발급
                     break;
 
                 case 1000: //success
-                    console.log("member: " + response.data.id + response.data.password + response.data.phone);
-                    navigate('/profile', { memeber: response.data });
+                    navigate('/profile', { state: { memberInfo: response.data } });
                     break;
 
                 case 1008: //refreshToken 만료 -> 로그아웃

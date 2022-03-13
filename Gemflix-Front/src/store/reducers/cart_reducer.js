@@ -1,5 +1,6 @@
+const defaultState = [];
 
-const cartReducer = (state = [], action) => {
+const cartReducer = (state = defaultState, action) => {
     switch(action.type){
         case "ADD_ITEM":
             return [...state, action.payload];
