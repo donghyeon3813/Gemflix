@@ -2,7 +2,7 @@ package com.movie.Gemflix.security.service;
 
 import com.movie.Gemflix.entity.Member;
 import com.movie.Gemflix.entity.MemberRole;
-import com.movie.Gemflix.repository.MemberRepository;
+import com.movie.Gemflix.repository.member.MemberRepository;
 import com.movie.Gemflix.security.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

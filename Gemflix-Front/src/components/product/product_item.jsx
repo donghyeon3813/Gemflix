@@ -2,10 +2,12 @@ import { memo, React, useState } from 'react';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import Modal from 'react-modal';
 import { addCart } from '../../store/actions';
+import { useNavigate } from 'react-router';
 
 const ProductItem = memo((props) => {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const user = useSelector(store => store.userReducer, shallowEqual);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [count , setCount] = useState(1);
@@ -33,8 +35,25 @@ const ProductItem = memo((props) => {
     }
 
     const onClickAddCart = (props) => {
-        dispatch(addCart(props, count, totalPrice, props.key));
+        dispatch(addCart(props, count, totalPrice, user.memberId));
+        if(window.confirm("해당 상품을 장바구니에 담았습니다.\n장바구니로 이동할까요?")){
+            navigate('/cartList');
+        }else{
+            navigate('/products');
+        }
     }
+
+    const inputPriceFormat = (str) => {
+        const comma = (str) => {
+          str = String(str);
+          return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, "$1,");
+        };
+        const uncomma = (str) => {
+          str = String(str);
+          return str.replace(/[^\d]+/g, "");
+        };
+        return comma(uncomma(str));
+    };
 
     if(user.memberRole === 'ADMIN'){
         return (
@@ -45,7 +64,7 @@ const ProductItem = memo((props) => {
                     </div>
                     <div className='product_text_box'>
                         <p className='product_name'>{props.name}</p>
-                        <p className='product_price'>{props.price}원</p>
+                        <p className='product_price'>{inputPriceFormat(props.price)}원</p>
                     </div>
                 </div>
                 <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} ariaHideApp={false}>
@@ -55,7 +74,7 @@ const ProductItem = memo((props) => {
                         </div>
                         <div className='product_text_box'>
                             <p className='product_name'>{props.name}</p>
-                            <p className='product_price'>{props.price}원</p>
+                            <p className='product_price'>{inputPriceFormat(props.price)}원</p>
                         </div>
                     </div>
                     <button type='button' onClick={onClickUpdate}>수정</button>
@@ -73,7 +92,7 @@ const ProductItem = memo((props) => {
                     </div>
                     <div className='product_text_box'>
                         <p className='product_name'>{props.name}</p>
-                        <p className='product_price'>{props.price}원</p>
+                        <p className='product_price'>{inputPriceFormat(props.price)}원</p>
                     </div>
                 </div>
                 <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} ariaHideApp={false}>
@@ -83,13 +102,13 @@ const ProductItem = memo((props) => {
                         </div>
                         <div className='product_text_box'>
                             <p className='product_name'>{props.name}</p>
-                            <p className='product_price'>{props.price}원</p>
+                            <p className='product_price'>{inputPriceFormat(props.price)}원</p>
                         </div>
                         <form className='cart_form'>
                             <label>수량 : </label>
                             <input className='product_count' value={count} type='number' min="1" max="10" onChange={changeCount}/><br/>
                             <label>총 금액 : </label>
-                            <p className='product_total_price'>{totalPrice}원</p>
+                            <p className='product_total_price'>{inputPriceFormat(totalPrice)}원</p>
                         </form>
                     </div>
                     <button type='button' onClick={() => onClickAddCart(props)}>장바구니 담기</button>
@@ -106,7 +125,7 @@ const ProductItem = memo((props) => {
                     </div>
                     <div className='product_text_box'>
                         <p className='product_name'>{props.name}</p>
-                        <p className='product_price'>{props.price}원</p>
+                        <p className='product_price'>{inputPriceFormat(props.price)}원</p>
                     </div>
                 </div>
                 <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} ariaHideApp={false}>
@@ -116,7 +135,7 @@ const ProductItem = memo((props) => {
                         </div>
                         <div className='product_text_box'>
                             <p className='product_name'>{props.name}</p>
-                            <p className='product_price'>{props.price}원</p>
+                            <p className='product_price'>{inputPriceFormat(props.price)}원</p>
                         </div>
                     </div>
                     <button type='button' onClick={()=> setModalIsOpen(false)}>취소</button>

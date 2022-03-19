@@ -3,33 +3,26 @@ package com.movie.Gemflix.controller;
 import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.common.ErrorType;
-import com.movie.Gemflix.dto.product.CategoryDto;
 import com.movie.Gemflix.dto.product.ProductDto;
 import com.movie.Gemflix.entity.Category;
-import com.movie.Gemflix.entity.Product;
-import com.movie.Gemflix.repository.CategoryRepository;
+import com.movie.Gemflix.repository.product.CategoryRepository;
 import com.movie.Gemflix.service.CommonService;
 import com.movie.Gemflix.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.modelmapper.ModelMapper;
-import org.springframework.context.annotation.Description;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j

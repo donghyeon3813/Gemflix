@@ -1,4 +1,4 @@
-package com.movie.Gemflix.repository;
+package com.movie.Gemflix.repository.product;
 
 
 import com.movie.Gemflix.entity.*;
@@ -20,7 +20,7 @@ public class ProductRepositorySupport {
         List<Product> products = query.select(product)
                 .from(product)
                 .leftJoin(product.category, category)
-                .on(product.status.eq(status))
+                .where(product.status.eq(status))
                 .orderBy(category.cgId.asc())
                 .orderBy(product.regDate.desc())
                 .fetch();

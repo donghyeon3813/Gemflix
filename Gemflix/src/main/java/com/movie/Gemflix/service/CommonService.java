@@ -29,6 +29,7 @@ public class CommonService {
     private final UserDetailsServiceImpl userDetailsService;
 
 
+
     public CommonResponse checkError(BindingResult bindingResult) {
         log.info("bindingResult: {}", bindingResult);
         if(bindingResult.hasErrors()) {

@@ -6,7 +6,7 @@ import com.movie.Gemflix.dto.member.MemberDto;
 import com.movie.Gemflix.entity.Member;
 import com.movie.Gemflix.entity.MemberRole;
 import com.movie.Gemflix.entity.QMember;
-import com.movie.Gemflix.repository.MemberRepository;
+import com.movie.Gemflix.repository.member.MemberRepository;
 import com.movie.Gemflix.security.util.RedisUtil;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

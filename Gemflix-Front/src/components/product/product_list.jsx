@@ -1,11 +1,13 @@
 import { React, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector, shallowEqual } from 'react-redux';
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import ProductItem from './product_item';
+import { deleteCart } from '../../store/actions';
 
 const ProductList = ({server}) => {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const user = useSelector(store => store.userReducer, shallowEqual);
     const [products, setProducts] = useState([]);
     const [textCategories, setTextCategories] = useState([]);

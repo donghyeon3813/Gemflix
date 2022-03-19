@@ -3,10 +3,9 @@ package com.movie.Gemflix.controller;
 import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.common.ErrorType;
-import com.movie.Gemflix.dto.movie.MovieDetailDto;
-import com.movie.Gemflix.dto.movie.MovieListDto;
-import com.movie.Gemflix.dto.movie.MovieSearchDto;
+import com.movie.Gemflix.dto.movie.*;
 import com.movie.Gemflix.security.util.JwtUtil;
+import com.movie.Gemflix.service.CommonService;
 import com.movie.Gemflix.service.MovieService;
 import com.movie.Gemflix.service.scheduler.MovieUpdateService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +27,7 @@ import java.util.List;
 public class MovieController {
 
     private final MovieService movieService;
-    private final JwtUtil jwtUtil;
+    private final CommonService commonService;
 
 
     @GetMapping("/list")
@@ -100,28 +99,58 @@ public class MovieController {
     }
 
     @PostMapping("/review")
-    public ResponseEntity<?> reviewRegister(String msg, HttpServletRequest request){
+    public ResponseEntity<?> reviewRegister(@RequestBody ReviewDto reviewDto, HttpServletRequest request){
+        log.info("method :{}","reviewRegister");
+        log.info("parameter :{}",reviewDto);
         try {
-            String authHeader = request.getHeader("Authorization");
-            String accessToken = authHeader.substring(7);
-            log.info("accessToken: {}", accessToken);
-            jwtUtil.getUsernameFromToken(accessToken);
-
-        }catch (Exception e){
+            CommonResponse response = movieService.reviewRegister(reviewDto, request);
+            if(response!= null){
+                return CommonResponse.createResponse(response, HttpStatus.BAD_REQUEST);
+            }
             return CommonResponse.createResponse(
                     CommonResponse.builder()
-                            .code(1201)
-                            .message("Fail")
-                            .build(),HttpStatus.UNAUTHORIZED
+                            .code(Constant.Success.SUCCESS_CODE)
+                            .message("Success")
+                            .build(),HttpStatus.OK
+            );
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return CommonResponse.createResponse(
+                    CommonResponse.builder()
+                            .code(ErrorType.ETC_FAIL.getErrorCode())
+                            .message(ErrorType.ETC_FAIL.getErrorMessage())
+                            .build(), HttpStatus.INTERNAL_SERVER_ERROR
             );
         }
 
+    }
 
-        return CommonResponse.createResponse(
-                CommonResponse.builder()
-                        .code(Constant.Success.SUCCESS_CODE)
-                        .message("Success")
-                        .build(),HttpStatus.OK
-        );
+    @GetMapping("/reviews")
+    public ResponseEntity<?> findReviewList(@RequestParam("mvId") Long mvId, Pageable pageable){
+        log.info("method :{} ","findReviewList");
+        log.info("parameter :{},{}",mvId,pageable);
+        try {
+
+            Page<ReviewListDto> reviewListDto = movieService.findReviewList(mvId,pageable);
+            log.info("Result : {}",reviewListDto);
+            return CommonResponse.createResponse(
+                    CommonResponse.builder()
+                            .code(Constant.Success.SUCCESS_CODE)
+                            .message("Success")
+                            .data(reviewListDto)
+                            .build(),HttpStatus.OK
+            );
+        }catch (Exception e){
+            log.info("findReviewList Error ");
+            e.printStackTrace();
+            return CommonResponse.createResponse(
+                    CommonResponse.builder()
+                            .code(ErrorType.ETC_FAIL.getErrorCode())
+                            .message(ErrorType.ETC_FAIL.getErrorMessage())
+                            .build(), HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+
     }
 }

@@ -9,7 +9,7 @@ const MoveTrailerItem = (props) => {
     console.log(imgRef.current.height);
     if (imgRef.current.height === 90) {
     }
-  });
+  }, []);
 
   return (
     <>

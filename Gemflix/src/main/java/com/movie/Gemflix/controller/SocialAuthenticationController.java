@@ -5,7 +5,7 @@ import com.movie.Gemflix.dto.member.KakaoProfileDto;
 import com.movie.Gemflix.dto.member.OAuthToken;
 import com.movie.Gemflix.entity.Member;
 import com.movie.Gemflix.entity.MemberRole;
-import com.movie.Gemflix.repository.MemberRepository;
+import com.movie.Gemflix.repository.member.MemberRepository;
 import com.movie.Gemflix.security.model.JwtRequest;
 import com.movie.Gemflix.security.service.KakaoApiService;
 import lombok.RequiredArgsConstructor;

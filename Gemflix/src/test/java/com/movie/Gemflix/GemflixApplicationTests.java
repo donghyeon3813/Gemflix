@@ -2,16 +2,13 @@ package com.movie.Gemflix;
 
 import com.movie.Gemflix.entity.Member;
 import com.movie.Gemflix.entity.MemberRole;
-import com.movie.Gemflix.repository.MemberRepository;
-import org.hibernate.type.LocalDateTimeType;
+import com.movie.Gemflix.repository.member.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Description;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;

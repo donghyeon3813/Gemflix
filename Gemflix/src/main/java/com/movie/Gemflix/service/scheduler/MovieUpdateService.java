@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.movie.Gemflix.config.ApiProperties;
 import com.movie.Gemflix.dto.theMovie.TheMovie;
 import com.movie.Gemflix.entity.*;
-import com.movie.Gemflix.repository.*;
+import com.movie.Gemflix.repository.movie.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

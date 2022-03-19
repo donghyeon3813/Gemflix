@@ -1,4 +1,4 @@
-package com.movie.Gemflix.repository;
+package com.movie.Gemflix.repository.member;
 
 import com.movie.Gemflix.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

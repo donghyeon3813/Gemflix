@@ -1,7 +1,7 @@
 package com.movie.Gemflix.security.service;
 
 import com.movie.Gemflix.dto.member.MemberDto;
-import com.movie.Gemflix.repository.MemberRepository;
+import com.movie.Gemflix.repository.member.MemberRepository;
 import com.movie.Gemflix.security.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
