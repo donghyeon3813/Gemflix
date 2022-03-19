@@ -27,13 +27,7 @@ const MovieList = () => {
     });
   }
   const handleGetMovieDetail = (e, mvId, index) => {
-    const data = {
-      mvId: mvId,
-    };
-    console.log(data);
-    movieService.movieDetail(data).then((response) => {
-      navigate("/movies/view", { state: { movieInfo: response.data } });
-    });
+    navigate("/movies/view", { state: { mvId: mvId } });
   };
   const handleDetailPosition = (index) => {
     console.log(index);

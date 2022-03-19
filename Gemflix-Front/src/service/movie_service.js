@@ -36,6 +36,18 @@ class MovieService {
         return success.data;
       })
       .catch(function (error) {
+        return JSON.parse(error.request.response);
+      });
+  }
+
+  async reviews(data) {
+    return await httpClient
+      .get("/movie/reviews", { params: data })
+      .then(function (success) {
+        console.log(success);
+        return success.data;
+      })
+      .catch(function (error) {
         return error.request.response;
       });
   }
