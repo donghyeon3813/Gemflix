@@ -21,6 +21,7 @@ public enum ErrorType {
     STORE_NONE_PRODUCT(1016, "판매중인 상품이 없습니다."), //등록된 상품 없음
     FILE_DELETED(1017, "해당 이미지가 존재하지 않습니다."), //해당 이미지 조회 실패
     STORE_NONE_CATEGORY(1018, "등록된 카테고리가 없습니다."), //등록된 카테고리 없음
+    STORE_INVALID_FILE(1019, "첨부된 파일이 없습니다."), //첨부파일 오류
 
     MOVIE_DETAIL_NOT_FOUND(1100,"영화 상세정보를 찾을 수 없습니다."),
     MOVIE_REVIEW_NOT_TICKET(1101, "관람평 작성 가능한 관람권이 없습니다."),

@@ -18,6 +18,7 @@ import MovieView from "./components/movie/movie_view";
 import MovieList from "./components/movie/movie_list";
 import dotenv from "dotenv";
 import CartList from "./components/cart/cart_list";
+import ProductModifyForm from "./components/product/product_modify_form";
 dotenv.config();
 
 function App({ server }) {
@@ -127,6 +128,7 @@ function App({ server }) {
             {/* product */}
             <Route path="/products" element={<ProductList server={server}/>}></Route>
             <Route path="/product/create" element={<ProductCreateForm server={server}/>}></Route>
+            <Route path="/product/modify" element={<ProductModifyForm server={server}/>}></Route>
             
           </Routes>
           <Footer />

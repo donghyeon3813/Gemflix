@@ -157,3 +157,11 @@
 .cart_item {
   display: flex;
 }
+
+.product_modal {
+  margin: 20px;
+}
+
+.ReactModal__Content {
+  margin: 5% 20% 5% 20%;
+}

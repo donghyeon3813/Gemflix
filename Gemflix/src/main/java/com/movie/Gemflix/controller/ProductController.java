@@ -6,6 +6,7 @@ import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.dto.product.ProductDto;
 import com.movie.Gemflix.entity.Category;
 import com.movie.Gemflix.repository.product.CategoryRepository;
+import com.movie.Gemflix.repository.product.ProductRepository;
 import com.movie.Gemflix.service.CommonService;
 import com.movie.Gemflix.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,9 @@ public class ProductController {
     private final ModelMapper modelMapper;
     private final CommonService commonService;
     private final ProductService productService;
+
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     //상품 목록 조회
     @GetMapping("products")
@@ -86,18 +89,18 @@ public class ProductController {
     //상품 등록
     @Secured("ROLE_ADMIN")
     @PostMapping("product")
-    public ResponseEntity<?> createProduct(@ModelAttribute @Valid ProductDto productDTO,
+    public ResponseEntity<?> createProduct(@ModelAttribute @Valid ProductDto productDto,
                                            BindingResult bindingResult){
 
         try{
-            log.info("[createProduct] productDTO: {}", productDTO);
+            log.info("[createProduct] productDTO: {}", productDto);
             CommonResponse response = commonService.checkError(bindingResult);
             log.info("response: {}", response);
             if(response != null){
                 return CommonResponse.createResponse(response, HttpStatus.BAD_REQUEST);
             }
 
-            response = productService.createProduct(productDTO);
+            response = productService.createProduct(productDto);
             log.info("response: {}", response);
             if(response != null){
                 return CommonResponse.createResponse(response, HttpStatus.BAD_REQUEST);
@@ -105,6 +108,65 @@ public class ProductController {
             return CommonResponse.createResponse(CommonResponse.builder()
                     .code(Constant.Success.SUCCESS_CODE)
                     .message("Product Register Success")
+                    .build(), HttpStatus.OK);
+
+        }catch (Exception e){
+            log.error("createStore Exception!!");
+            e.printStackTrace();
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(ErrorType.ETC_FAIL.getErrorCode())
+                    .message(ErrorType.ETC_FAIL.getErrorMessage())
+                    .build(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //상품수정
+    @Secured("ROLE_ADMIN")
+    @PutMapping("product")
+    public ResponseEntity<?> modifyProduct(@ModelAttribute @Valid ProductDto productDto,
+                                           BindingResult bindingResult){
+
+        try{
+            log.info("[modifyProduct] productDTO: {}", productDto);
+            CommonResponse response = commonService.checkError(bindingResult);
+            log.info("response: {}", response);
+            if(response != null){
+                if(response.getCode() != ErrorType.STORE_INVALID_FILE.getErrorCode()){
+                    return CommonResponse.createResponse(response, HttpStatus.BAD_REQUEST);
+                }
+            }
+
+            response = productService.modifyProduct(productDto);
+            log.info("response: {}", response);
+            if(response != null){
+                return CommonResponse.createResponse(response, HttpStatus.BAD_REQUEST);
+            }
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(Constant.Success.SUCCESS_CODE)
+                    .message("Product Modify Success")
+                    .build(), HttpStatus.OK);
+
+        }catch (Exception e){
+            log.error("createStore Exception!!");
+            e.printStackTrace();
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(ErrorType.ETC_FAIL.getErrorCode())
+                    .message(ErrorType.ETC_FAIL.getErrorMessage())
+                    .build(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //상품삭제
+    @Secured("ROLE_ADMIN")
+    @DeleteMapping("product")
+    public ResponseEntity<?> deleteProduct(@RequestParam("prId") Long prId){
+
+        try{
+            log.info("[deleteProduct] prId: {}", prId);
+            productRepository.deleteById(prId);
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(Constant.Success.SUCCESS_CODE)
+                    .message("Product Delete Success")
                     .build(), HttpStatus.OK);
 
         }catch (Exception e){

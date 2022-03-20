@@ -60,6 +60,9 @@ public class CommonService {
                 case "price":
                     return new CommonResponse(ErrorType.STORE_INVALID_PRICE.getErrorCode(),
                             ErrorType.STORE_INVALID_PRICE.getErrorMessage());
+                case "multiPartFile":
+                    return new CommonResponse(ErrorType.STORE_INVALID_FILE.getErrorCode(),
+                            ErrorType.STORE_INVALID_FILE.getErrorMessage());
                 default:
                     return new CommonResponse(ErrorType.ETC_FAIL.getErrorCode(), ErrorType.ETC_FAIL.getErrorMessage());
             }

@@ -59,6 +59,8 @@ const CartList = (props) => {
         });
         console.log(deleteAfterCarts);
         dispatch(deleteCart(deleteAfterCarts));
+        setMemberCarts([]);
+        setCheckList([]);
     }
 
     const onClickOrderCart = () => {

@@ -1,4 +1,4 @@
-import { memo, React, useState } from 'react';
+import { memo, React, useRef, useState, useEffect } from 'react';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import Modal from 'react-modal';
 import { addCart } from '../../store/actions';
@@ -12,13 +12,20 @@ const ProductItem = memo((props) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [count , setCount] = useState(1);
     const [totalPrice , setTotalPrice] = useState(props.price);
+    
 
     const onClickUpdate = () => {
-        //TODO
+        navigate('/product/modify', { 
+            state: { 
+                product: props, 
+                categories: props.categories
+            } 
+        });
     }
 
-    const onClickDelete = () => {
-        //TODO
+    const onClickDelete = (prId) => {
+        console.log(prId);
+        //TODO: DELETE
     }
 
     const changeCount = (event) => {
@@ -68,18 +75,19 @@ const ProductItem = memo((props) => {
                     </div>
                 </div>
                 <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} ariaHideApp={false}>
-                    <div>
+                    <div className='product_modal'>
                         <div className='product_img_box'>
                             <img className='product_img' src={props.base64} alt="product thumbnail"/>
                         </div>
                         <div className='product_text_box'>
                             <p className='product_name'>{props.name}</p>
+                            <p className='product_name'>{props.content}</p>
                             <p className='product_price'>{inputPriceFormat(props.price)}원</p>
                         </div>
+                        <button type='button' onClick={onClickUpdate}>수정</button>
+                        <button type='button' onClick={() => onClickDelete(props.prId)}>삭제</button>
+                        <button type='button' onClick={()=> setModalIsOpen(false)}>취소</button>
                     </div>
-                    <button type='button' onClick={onClickUpdate}>수정</button>
-                    <button type='button' onClick={onClickDelete}>삭제</button>
-                    <button type='button' onClick={()=> setModalIsOpen(false)}>취소</button>
                 </Modal>
             </>
         );
@@ -96,12 +104,13 @@ const ProductItem = memo((props) => {
                     </div>
                 </div>
                 <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} ariaHideApp={false}>
-                    <div>
+                    <div className='product_modal'>
                         <div className='product_img_box'>
                             <img className='product_img' src={props.base64} alt="product thumbnail"/>
                         </div>
                         <div className='product_text_box'>
                             <p className='product_name'>{props.name}</p>
+                            <p className='product_name'>{props.content}</p>
                             <p className='product_price'>{inputPriceFormat(props.price)}원</p>
                         </div>
                         <form className='cart_form'>
@@ -110,9 +119,9 @@ const ProductItem = memo((props) => {
                             <label>총 금액 : </label>
                             <p className='product_total_price'>{inputPriceFormat(totalPrice)}원</p>
                         </form>
+                        <button type='button' onClick={() => onClickAddCart(props)}>장바구니 담기</button>
+                        <button type='button' onClick={()=> setModalIsOpen(false)}>취소</button>
                     </div>
-                    <button type='button' onClick={() => onClickAddCart(props)}>장바구니 담기</button>
-                    <button type='button' onClick={()=> setModalIsOpen(false)}>취소</button>
                 </Modal>
             </>
         );
@@ -129,16 +138,17 @@ const ProductItem = memo((props) => {
                     </div>
                 </div>
                 <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} ariaHideApp={false}>
-                    <div>
+                    <div className='product_modal'>
                         <div className='product_img_box'>
                             <img className='product_img' src={props.base64} alt="product thumbnail"/>
                         </div>
                         <div className='product_text_box'>
                             <p className='product_name'>{props.name}</p>
+                            <p className='product_name'>{props.content}</p>
                             <p className='product_price'>{inputPriceFormat(props.price)}원</p>
                         </div>
+                        <button type='button' onClick={()=> setModalIsOpen(false)}>취소</button>
                     </div>
-                    <button type='button' onClick={()=> setModalIsOpen(false)}>취소</button>
                 </Modal>
             </>
         );

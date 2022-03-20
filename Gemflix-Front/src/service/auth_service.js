@@ -92,6 +92,28 @@ class AuthService{
         });
     }
 
+    //상품 수정
+    async modifyProduct(formData) {
+        return await this.server.put('/product', formData, {})
+        .then(function (success) {
+            return success.data;
+        })
+        .catch(function (error) {
+            return JSON.parse(error.request.response);
+        });
+    }
+
+    //상품 삭제
+    async deleteProduct(prId) {
+        return await this.server.delete('/product', { params: prId })
+        .then(function (success) {
+            return success.data;
+        })
+        .catch(function (error) {
+            return JSON.parse(error.request.response);
+        });
+    }
+
 }
 
 export default AuthService;

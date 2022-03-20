@@ -72,6 +72,49 @@ public class ProductService {
         return null;
     }
 
+    @Transactional
+    public CommonResponse modifyProduct(ProductDto productDto) throws Exception{
+
+        //파일 확장자 검사
+        String imgLocation = null;
+        if(productDto.getMultiPartFile() != null){
+            MultipartFile file = productDto.getMultiPartFile();
+            if(!commonService.checkFile(file, Constant.FileExtension.JPG_AND_PNG)){
+                return new CommonResponse(ErrorType.INVALID_EXTENSION.getErrorCode(),
+                        ErrorType.INVALID_EXTENSION.getErrorMessage());
+            }
+            //파일 업로드
+            imgLocation = commonService.uploadFile(file, Constant.FilePath.PATH_STORE + productDto.getMemberId() + "/");
+            if(imgLocation == null){
+                return new CommonResponse(ErrorType.STORE_FAILED_TO_UPLOAD_FILE.getErrorCode(),
+                        ErrorType.STORE_FAILED_TO_UPLOAD_FILE.getErrorMessage());
+            }
+        }
+        //상품 수정
+        String status = productDto.getStatus();
+        switch (status){
+            case "Y":
+                productDto.setStatus("1");
+                break;
+            case "N":
+                productDto.setStatus("0");
+                break;
+        }
+        productDto.setImgLocation(imgLocation);
+
+        //setting category
+        CategoryDto categoryDto = new CategoryDto();
+        categoryDto.setCgId(productDto.getCgId());
+        categoryDto.setCgName(productDto.getCgName());
+        productDto.setCategory(categoryDto);
+
+        //setting product
+        Product product = modelMapper.map(productDto, Product.class);
+        log.info("product: {}", product);
+        productRepositorySupport.modifyProduct(product);
+        return null;
+    }
+
     public List<ProductDto> getProducts() throws Exception{
 
         List<Product> products = productRepositorySupport.findByStatusProductAndCategory("1");
@@ -124,5 +167,6 @@ public class ProductService {
         }
         return "data:image/" + extension + ";base64," + fileString;
     }
+
 
 }

@@ -1,8 +1,7 @@
-import { React, useEffect, useState } from 'react';
+import { React, useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import ProductItem from './product_item';
-import { deleteCart } from '../../store/actions';
 
 const ProductList = ({server}) => {
 
@@ -73,20 +72,26 @@ const ProductList = ({server}) => {
                     </div>
                     <div>
                         {
-                        textCategories.map((category, index) => (
-                            <div key={index}>
-                                <div className='product_category'>{category}</div>
-                                <div className='product_list'>
-                                    {
-                                    products
-                                    .filter((product) => (product.category.cgName === category))
-                                    .map((product) => (
-                                        <ProductItem key={product.prId} name={product.name} price={product.price} base64={product.base64}/>   
-                                    ))
-                                    }
+                        textCategories.map((category, index) => {
+                            if(products.filter((product) => (product.category.cgName === category)) != 0){
+                                return <div key={index}>
+                                    <div className='product_category'>{category}</div>
+                                    <div className='product_list'>
+                                        {
+                                        products
+                                        .filter((product) => (product.category.cgName === category))
+                                        .map((product) => (
+                                            <ProductItem 
+                                                key={product.prId} name={product.name} 
+                                                price={product.price} base64={product.base64} 
+                                                content={product.content} status={product.status} prId={product.prId}
+                                                categories={categories} category={category} categoryIdx={product.category.cgId}/>
+                                        ))
+                                        }
+                                    </div>
                                 </div>
-                            </div>
-                        ))
+                            }
+                        })
                         }
                     </div>
                 </div>
@@ -97,23 +102,29 @@ const ProductList = ({server}) => {
         return (
             <div className='product'>
                 <div>
-                    {
-                    textCategories.map((category, index) => (
-                        <div key={index}>
-                            <div className='product_category'>{category}</div>
-                            <div className='product_list'>
-                                {
-                                products
-                                .filter((product) => (product.category.cgName === category))
-                                .map((product) => (
-                                    <ProductItem key={product.prId} name={product.name} price={product.price} base64={product.base64}/>   
-                                ))
-                                }
-                            </div>
-                        </div>
-                    ))
-                    }
-                </div>
+                        {
+                        textCategories.map((category, index) => {
+                            if(products.filter((product) => (product.category.cgName === category)) != 0){
+                                return <div key={index}>
+                                    <div className='product_category'>{category}</div>
+                                    <div className='product_list'>
+                                        {
+                                        products
+                                        .filter((product) => (product.category.cgName === category))
+                                        .map((product) => (
+                                            <ProductItem 
+                                                key={product.prId} name={product.name} 
+                                                price={product.price} base64={product.base64} 
+                                                content={product.content} status={product.status} prId={product.prId}
+                                                categories={categories} category={category} categoryIdx={product.category.cgId}/>   
+                                        ))
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        })
+                        }
+                    </div>
             </div>
         );
     }

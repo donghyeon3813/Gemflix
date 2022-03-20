@@ -2,8 +2,8 @@ import { React, useState, useRef, useEffect } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const ProductCreateForm = ({server}) => {
-    
+const ProductModifyForm = ({server}) => {
+
     const navigate = useNavigate();
     const location = useLocation();
     const user = useSelector(store => store.userReducer, shallowEqual);
@@ -15,19 +15,25 @@ const ProductCreateForm = ({server}) => {
     const [price, setPrice] = useState('');
     const [response, setReponse] = useState([]);
     const [requestCnt, setRequestCnt] = useState(0);
-    const [loading , setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const [categories, setCategories] = useState([]);
     const [category, setCategory] = useState('');
     const [categoryIdx, setCategoryIdx] = useState(0);
-
+    const [prId, setPrId] = useState(0);
     const storeFormRef = useRef();
 
+    const product = location.state.product;
+    const categories = location.state.categories;
+
     useEffect(() => {
-        const tempCategories = location.state.categories;
-        setCategories(tempCategories);
-        setCategory(tempCategories.get(0));
-        setCategoryIdx(0);
+        setName(product.name);
+        setContent(product.content);
+        setPrice(product.price);
+        setStatus(product.status == 1 ? 'Y' : 'N');
+        setImgBase64(product.base64);
+        setCategoryIdx(product.categoryIdx);
+        setCategory(category);
+        setPrId(product.prId);
     }, [])
 
     const handleChangeFile = (event) => {
@@ -49,16 +55,16 @@ const ProductCreateForm = ({server}) => {
                 }
             }
         }
-        
     }
 
-    const onClickCreate = () => {
+    const onClickModify = () => {
         setLoading(true);
 
         if(name && price && content && status && categories.has(categoryIdx)){
             setCategory(categories.get(categoryIdx));
 
             const formData = new FormData();
+            formData.append("prId", prId);
             formData.append("cgName", category);
             formData.append("cgId", categoryIdx);
             formData.append("multiPartFile", imgFile);
@@ -69,16 +75,16 @@ const ProductCreateForm = ({server}) => {
             formData.append("memberId", user.memberId);
             console.log("formData" + formData);
             
-            server.createProduct(formData)
+            server.modifyProduct(formData)
             .then(response => {
                 setReponse(response);
                 setRequestCnt(requestCnt + 1);
             })
             .catch(ex => {
-                console.log("createProduct requset fail : " + ex);
+                console.log("modifyProduct requset fail : " + ex);
             })
             .finally(() => {
-                console.log("createProduct request end");
+                console.log("modifyProduct request end");
             });
         }else{
             alert("모든 정보를 입력해주세요.");
@@ -94,7 +100,7 @@ const ProductCreateForm = ({server}) => {
         } else { //success
             const code = response.code;
             if(code === 1000){ //success
-                alert("상품 등록이 완료되었습니다.");
+                alert("상품 수정이 완료되었습니다.");
                 //목록페이지로 이동
                 navigate('/products');
 
@@ -126,7 +132,7 @@ const ProductCreateForm = ({server}) => {
 
     const handleKeyPress = (event) => {
         if (event.key === "Enter") {
-            onClickCreate();
+            onClickModify();
         }
     };
 
@@ -205,7 +211,7 @@ const ProductCreateForm = ({server}) => {
                 </form>
     
                 <div>
-                    <button onClick={onClickCreate}>작성완료</button>
+                    <button onClick={onClickModify}>작성완료</button>
                     <button onClick={onClickReset}>모두 지우기</button>
                     <button onClick={onClickProductList}>목록으로</button>
                 </div>
@@ -220,4 +226,4 @@ const ProductCreateForm = ({server}) => {
     }
 };
 
-export default ProductCreateForm;
+export default ProductModifyForm;
