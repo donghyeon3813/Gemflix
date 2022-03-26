@@ -11,4 +11,6 @@ public class ReviewDto {
 
     private Float score;
 
+    private Long rvId;
+
 }

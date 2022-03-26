@@ -5,10 +5,8 @@ import MovieItem from "./movie_item";
 import MovieSearch from "./movie_search";
 import MovieDetail from "./movie_detail";
 import { useNavigate } from "react-router";
-import MovieService from "../../service/movie_service";
 
-const movieService = new MovieService();
-const MovieList = () => {
+const MovieList = ({ movieServer }) => {
   const navigate = useNavigate();
 
   const [movieListInfo, setMovieListInfo] = useState([]);
@@ -21,7 +19,7 @@ const MovieList = () => {
   function handleGetMovieList(page) {
     console.log(page);
     const data = { page: page, size: limit, title: title };
-    movieService.movies(data).then((response) => {
+    movieServer.movies(data).then((response) => {
       setMovieListInfo(response.data.content);
       setTotalMovie(response.data.totalElements);
     });

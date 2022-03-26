@@ -4,6 +4,7 @@ import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.dto.movie.*;
+import com.movie.Gemflix.entity.Filmography;
 import com.movie.Gemflix.security.util.JwtUtil;
 import com.movie.Gemflix.service.CommonService;
 import com.movie.Gemflix.service.MovieService;
@@ -153,4 +154,87 @@ public class MovieController {
         }
 
     }
+
+    @PutMapping("/review")
+    public ResponseEntity<?> reviewModify(@RequestBody ReviewDto reviewDto, HttpServletRequest request){
+        log.info("method :{}","reviewModify");
+        log.info("parameter :{}",reviewDto);
+        try {
+            CommonResponse response = movieService.reviewModify(reviewDto, request);
+            if(response!= null){
+                return CommonResponse.createResponse(response, HttpStatus.BAD_REQUEST);
+            }
+            return CommonResponse.createResponse(
+                    CommonResponse.builder()
+                            .code(Constant.Success.SUCCESS_CODE)
+                            .message("Success")
+                            .build(),HttpStatus.OK
+            );
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return CommonResponse.createResponse(
+                    CommonResponse.builder()
+                            .code(ErrorType.ETC_FAIL.getErrorCode())
+                            .message(ErrorType.ETC_FAIL.getErrorMessage())
+                            .build(), HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+
+    }
+    @DeleteMapping("/review/{rvId}")
+    public ResponseEntity<?> reviewDelete(@PathVariable("rvId") Long rvId, HttpServletRequest request){
+        log.info("method :{}","reviewDelete");
+        log.info("parameter :{}",rvId);
+        try {
+            CommonResponse response = movieService.reviewDelete(rvId, request);
+            if(response!= null){
+                return CommonResponse.createResponse(response, HttpStatus.BAD_REQUEST);
+            }
+            return CommonResponse.createResponse(
+                    CommonResponse.builder()
+                            .code(Constant.Success.SUCCESS_CODE)
+                            .message("Success")
+                            .build(),HttpStatus.OK
+            );
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return CommonResponse.createResponse(
+                    CommonResponse.builder()
+                            .code(ErrorType.ETC_FAIL.getErrorCode())
+                            .message(ErrorType.ETC_FAIL.getErrorMessage())
+                            .build(), HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+
+    }
+    @GetMapping("/filmographys/{peId}")
+    public ResponseEntity<?> findFilmographyList(@PathVariable("peId") Long peId){
+        log.info("method :{} ","findFilmographyList");
+        log.info("parameter :{}",peId);
+        try {
+
+            List<FilmographyList> filmographyList = movieService.findFilmographyList(peId);
+            log.info("Result : {}",filmographyList);
+            return CommonResponse.createResponse(
+                    CommonResponse.builder()
+                            .code(Constant.Success.SUCCESS_CODE)
+                            .message("Success")
+                            .data(filmographyList)
+                            .build(),HttpStatus.OK
+            );
+        }catch (Exception e){
+            log.info("FindMovieList Error ");
+            e.printStackTrace();
+            return CommonResponse.createResponse(
+                    CommonResponse.builder()
+                            .code(ErrorType.ETC_FAIL.getErrorCode())
+                            .message(ErrorType.ETC_FAIL.getErrorMessage())
+                            .build(), HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+
+    }
+
 }

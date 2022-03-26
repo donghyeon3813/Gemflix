@@ -1,4 +1,4 @@
-package com.movie.Gemflix.dto.theMovie;
+package com.movie.Gemflix.dto.movie;
 
 import lombok.Data;
 

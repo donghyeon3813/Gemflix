@@ -3,7 +3,7 @@ package com.movie.Gemflix.service.scheduler;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.movie.Gemflix.config.ApiProperties;
-import com.movie.Gemflix.dto.theMovie.TheMovie;
+import com.movie.Gemflix.dto.movie.TheMovie;
 import com.movie.Gemflix.entity.*;
 import com.movie.Gemflix.repository.movie.*;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +35,7 @@ public class MovieUpdateService {
     private final TrailerRepository trailerRepository;
 
     public String getapi(){
+
         String api = "api_key="+apiProperties.getKey();
         String language = "language=ko";
         String apiAndLanguage = api+"&"+language ;
@@ -49,7 +50,7 @@ public class MovieUpdateService {
         List<Genre> genreList = new ArrayList<>();
         JSONObject genreResult = webClient
                 .get()
-                .uri("genre/movie/list?"+apiAndLanguage)// 인기순 영화 리스트 가져오기
+                .uri("https://api.themoviedb.org/3/genre/movie/list?"+apiAndLanguage)// 인기순 영화 리스트 가져오기
                 .retrieve()
                 .bodyToMono(JSONObject.class)
                 .block();
@@ -84,10 +85,10 @@ public class MovieUpdateService {
         for(int i = 1; i<=page; i++){
             JSONObject movieListResult =
                     webClient
-                            .get().uri("movie/popular?"+apiAndLanguage+"&page="+i)// 인기순 영화 리스트 가져오기
-                            .retrieve()
-                            .bodyToMono(JSONObject.class)
-                            .block();
+                    .get().uri("https://api.themoviedb.org/3/movie/popular?"+apiAndLanguage+"&page="+i)// 인기순 영화 리스트 가져오기
+                    .retrieve()
+                    .bodyToMono(JSONObject.class)
+                    .block();
             JSONArray movieJsonArr = movieListResult.getJSONArray("results");
             for (int j = 0; j<movieJsonArr.size(); j++){
                 String movieId = movieJsonArr.getJSONObject(j).get("id").toString();
@@ -95,7 +96,7 @@ public class MovieUpdateService {
                 JSONObject movieDetail =
                         webClient
                                 .get()
-                                .uri("movie/"+movieId+"?"+apiAndLanguage+"&append_to_response=release_dates")// 인기순 영화 리스트 가져오기
+                                .uri("https://api.themoviedb.org/3/movie/"+movieId+"?"+apiAndLanguage+"&append_to_response=release_dates")// 인기순 영화 리스트 가져오기
                                 .retrieve()
                                 .bodyToMono(JSONObject.class)
                                 .block();
@@ -168,6 +169,7 @@ public class MovieUpdateService {
     public void theMovieGetPeople() throws Exception{
         String apiAndLanguage = getapi();
         List<Movie> movieList = movieRepository.findAll();
+
         for (Movie movie : movieList) {
             String apiId = movie.getApiId();
 
@@ -178,11 +180,11 @@ public class MovieUpdateService {
                     .bodyToMono(JSONObject.class)
                     .block();
             JSONArray castList = peopleListResult.getJSONArray("cast");
+            JSONArray crewList = peopleListResult.getJSONArray("crew");
             for(int i=0; i<castList.size(); i++){
                 String peopleApiId = castList.getJSONObject(i).get("id").toString();
-                if(castList.getJSONObject(i).get("known_for_department")== null){
-                    continue;
-                }else if(castList.getJSONObject(i).get("known_for_department").toString().equals("Acting")){
+                if(castList.getJSONObject(i).get("known_for_department") != null &&
+                        castList.getJSONObject(i).get("known_for_department").toString().equals("Acting")){
                     if(i<5){
                         String type = "2";
                         JSONObject peopleInfo = webClient
@@ -197,7 +199,6 @@ public class MovieUpdateService {
                         String nationality = null;
                         String name = peopleInfo.get("name").toString();
                         try {
-
                             if(peopleInfo.get("birthday")!=null && !peopleInfo.get("birthday").toString().equals("")) {
                                 birth = format.parse(peopleInfo.get("birthday").toString());
                             }
@@ -220,12 +221,20 @@ public class MovieUpdateService {
                             peopleRepository.save(people);
                         }
                     }
-                }else if(castList.getJSONObject(i).get("known_for_department").toString().equals("Directing")){
-
+                }
+            }
+            int directorCnt = 0;
+            for(int i=0; i<crewList.size(); i++) {
+                if(directorCnt!=0){
+                    continue;
+                }
+                String peopleApiId = crewList.getJSONObject(i).get("id").toString();
+                if (crewList.getJSONObject(i).get("department") != null &&
+                        crewList.getJSONObject(i).get("department").toString().equals("Directing")) {
                     String type = "1";
                     JSONObject peopleInfo = webClient
                             .get()
-                            .uri("https://api.themoviedb.org/3/person/"+peopleApiId+"?"+apiAndLanguage)
+                            .uri("https://api.themoviedb.org/3/person/" + peopleApiId + "?" + apiAndLanguage)
                             .retrieve()
                             .bodyToMono(JSONObject.class)
                             .block();
@@ -235,18 +244,18 @@ public class MovieUpdateService {
                     String nationality = null;
                     String name = peopleInfo.get("name").toString();
                     try {
-                        if(peopleInfo.get("birthday")!=null && !peopleInfo.get("birthday").toString().equals("")) {
+                        if (peopleInfo.get("birthday") != null && !peopleInfo.get("birthday").toString().equals("")) {
                             birth = format.parse(peopleInfo.get("birthday").toString());
                         }
-                        if(peopleInfo.get("place_of_birth")!=null){
+                        if (peopleInfo.get("place_of_birth") != null) {
                             place = peopleInfo.get("place_of_birth").toString().split(", ");
-                            nationality = place[place.length-1];
+                            nationality = place[place.length - 1];
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                     boolean peopleDup = peopleRepository.existsByApiId(peopleApiId);
-                    if(!peopleDup){
+                    if (!peopleDup) {
                         People people = People.builder()
                                 .name(name)
                                 .type(type)
@@ -255,8 +264,8 @@ public class MovieUpdateService {
                                 .apiId(peopleApiId)
                                 .build();
                         peopleRepository.save(people);
+                        directorCnt++;
                     }
-
                 }
             }
         }
@@ -269,14 +278,15 @@ public class MovieUpdateService {
             String peopleApiKey = people.getApiId();
             JSONObject result = webClient
                     .get()
-                    .uri("person/"+peopleApiKey+"/movie_credits?"+apiAndLanguage)
+                    .uri("https://api.themoviedb.org/3/person/"+peopleApiKey+"/movie_credits?"+apiAndLanguage)
                     .retrieve()
                     .bodyToMono(JSONObject.class)
                     .block();
             List<Filmography> saveFilmographyList = new ArrayList<>();
-            JSONArray filmographyList = result.getJSONArray("cast");
-            for(int i = 0; i<filmographyList.size(); i++){
-                String movieTitle = filmographyList.getJSONObject(i).get("title").toString();
+            JSONArray castFilmographyList = result.getJSONArray("cast");
+            JSONArray crewFilmographyList = result.getJSONArray("crew");
+            for(int i = 0; i<castFilmographyList.size(); i++){
+                String movieTitle = castFilmographyList.getJSONObject(i).get("title").toString();
                 Optional<Movie> movieInfo = movieRepository.findByTitle(movieTitle);
                 if(movieInfo.isPresent()){
                     Optional<Filmography> optFilmography =
@@ -287,6 +297,25 @@ public class MovieUpdateService {
                                 .movie(movieInfo.get())
                                 .people(people)
                                 .build();
+                        filmographyRepository.save(filmography);
+                        saveFilmographyList.add(filmography);
+                    }
+                }else{
+                    continue;
+                }
+            }
+            for(int i = 0; i<crewFilmographyList.size(); i++){
+                String movieTitle = crewFilmographyList.getJSONObject(i).get("title").toString();
+                Optional<Movie> movieInfo = movieRepository.findByTitle(movieTitle);
+                if(movieInfo.isPresent()){
+                    Optional<Filmography> optFilmography =
+                            filmographyRepository.findByMovieAndPeople(movieInfo.get(), people);
+                    if(!optFilmography.isPresent()){
+                        Filmography filmography = Filmography.builder()
+                                .movie(movieInfo.get())
+                                .people(people)
+                                .build();
+                        filmographyRepository.save(filmography);
                         saveFilmographyList.add(filmography);
                     }
                 }else{
@@ -309,7 +338,7 @@ public class MovieUpdateService {
             String movieApiKey = movie.getApiId();
             JSONObject result = webClient
                     .get()
-                    .uri("movie/"+movieApiKey+"/videos?"+apiAndLanguage)
+                    .uri("https://api.themoviedb.org/3/movie/"+movieApiKey+"/videos?"+apiAndLanguage)
                     .retrieve()
                     .bodyToMono(JSONObject.class)
                     .block();

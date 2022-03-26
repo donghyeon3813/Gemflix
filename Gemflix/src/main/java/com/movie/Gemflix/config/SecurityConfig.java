@@ -94,6 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .expressionHandler(expressionHandler())
                 .antMatchers("/member/**").hasRole("NO_PERMISSION")
                 .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/movie/**").permitAll()
                 .anyRequest().permitAll()
 
                 //jwtRequestFilter 를 addFilterBefore 로 등록 (UsernamePasswordAuthenticationFilter 필터 이전에 실행)
