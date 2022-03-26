@@ -283,9 +283,10 @@ public class MovieUpdateService {
                     .bodyToMono(JSONObject.class)
                     .block();
             List<Filmography> saveFilmographyList = new ArrayList<>();
-            JSONArray filmographyList = result.getJSONArray("cast");
-            for(int i = 0; i<filmographyList.size(); i++){
-                String movieTitle = filmographyList.getJSONObject(i).get("title").toString();
+            JSONArray castFilmographyList = result.getJSONArray("cast");
+            JSONArray crewFilmographyList = result.getJSONArray("crew");
+            for(int i = 0; i<castFilmographyList.size(); i++){
+                String movieTitle = castFilmographyList.getJSONObject(i).get("title").toString();
                 Optional<Movie> movieInfo = movieRepository.findByTitle(movieTitle);
                 if(movieInfo.isPresent()){
                     Optional<Filmography> optFilmography =
@@ -296,6 +297,25 @@ public class MovieUpdateService {
                                 .movie(movieInfo.get())
                                 .people(people)
                                 .build();
+                        filmographyRepository.save(filmography);
+                        saveFilmographyList.add(filmography);
+                    }
+                }else{
+                    continue;
+                }
+            }
+            for(int i = 0; i<crewFilmographyList.size(); i++){
+                String movieTitle = crewFilmographyList.getJSONObject(i).get("title").toString();
+                Optional<Movie> movieInfo = movieRepository.findByTitle(movieTitle);
+                if(movieInfo.isPresent()){
+                    Optional<Filmography> optFilmography =
+                            filmographyRepository.findByMovieAndPeople(movieInfo.get(), people);
+                    if(!optFilmography.isPresent()){
+                        Filmography filmography = Filmography.builder()
+                                .movie(movieInfo.get())
+                                .people(people)
+                                .build();
+                        filmographyRepository.save(filmography);
                         saveFilmographyList.add(filmography);
                     }
                 }else{
