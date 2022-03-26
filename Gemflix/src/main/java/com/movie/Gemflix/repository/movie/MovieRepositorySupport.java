@@ -4,12 +4,11 @@ package com.movie.Gemflix.repository.movie;
 import com.movie.Gemflix.dto.movie.MovieDetailDto;
 import com.movie.Gemflix.dto.movie.MovieListDto;
 import com.movie.Gemflix.dto.movie.MovieSearchDto;
-import com.movie.Gemflix.entity.QGenre;
-import com.movie.Gemflix.entity.QMovie;
-import com.movie.Gemflix.entity.QTrailer;
-import com.movie.Gemflix.entity.Trailer;
+import com.movie.Gemflix.entity.*;
+import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +26,10 @@ public class MovieRepositorySupport {
     private QMovie movie = QMovie.movie;
     private QGenre genre = QGenre.genre;
     private QTrailer trailer = QTrailer.trailer;
+    private QReview review = QReview.review;
+    private QTicket ticket = QTicket.ticket;
+    private QScreening screening = QScreening.screening;
+
 
 
     public Page<MovieListDto> findMovieList(MovieSearchDto movieSearchDto, Pageable pageable) throws Exception{
@@ -60,7 +63,13 @@ public class MovieRepositorySupport {
                         movie.extent.as("extent"),
                         movie.imgUrl.as("imgUrl"),
                         movie.backImgUrl.as("backImgUrl"),
-                        movie.openDt.as("openDt")
+                        movie.openDt.as("openDt"),
+                        ExpressionUtils.as(JPAExpressions.select(review.score.sum().divide(review.rvId.count()))
+                                .from(review)
+                                .innerJoin(review.ticket, ticket)
+                                .innerJoin(ticket.screening, screening)
+                                .innerJoin(screening.movie, movie)
+                                .where(movie.mvId.eq(movieSearchDto.getMvId())),"score")
                         ))
                 .from(movie)
                 .where(movie.mvId.eq(movieSearchDto.getMvId()))

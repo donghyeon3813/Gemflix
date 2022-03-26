@@ -20,7 +20,7 @@ import dotenv from "dotenv";
 import CartList from "./components/cart/cart_list";
 dotenv.config();
 
-function App({ server }) {
+function App({ server, movieServer }) {
   const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;
   const KAKAO_REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
 
@@ -33,9 +33,8 @@ function App({ server }) {
   let alreadyLogout = false;
 
   useEffect(() => {
-    if(user.loggedIn === true && user.token){
-        checkLogin();
-
+    if (user.loggedIn === true && user.token) {
+      checkLogin();
     }
   }, [user.loggedIn]);
 
@@ -71,18 +70,19 @@ function App({ server }) {
 
   const settingAccessToken = (response) => {
     const code = response.code;
-    if(code === 1000){ //success
+    if (code === 1000) {
+      //success
       const accessToken = response.data.accessToken;
       const refreshToken = response.data.refreshToken;
       const memberId = response.data.memberId;
       const memberRole = response.data.memberRole;
       const expire = response.data.expire;
 
-      if(accessToken && refreshToken){
-        setCookie('refreshToken', refreshToken, {
-          path: '/'
-          , secure: true
-          , maxAge: expire
+      if (accessToken && refreshToken) {
+        setCookie("refreshToken", refreshToken, {
+          path: "/",
+          secure: true,
+          maxAge: expire,
 
           // , httpOnly: true //도메인에만 적용가능
         });
@@ -90,7 +90,8 @@ function App({ server }) {
         alert(memberId + "님 환영합니다!");
         window.location.href = "/";
       }
-    }else{ //fail
+    } else {
+      //fail
       alert("아이디와 비밀번호를 정확히 입력해주세요.");
       setLoading(false);
       window.location.href = "/login";
@@ -104,30 +105,67 @@ function App({ server }) {
           <Header />
           <Routes>
             {/* home */}
-            <Route path="/" exact element={<Home server={server} onClickLogout={onClickLogout} />}></Route>
-            <Route path="/home" element={<Home server={server} onClickLogout={onClickLogout} />}></Route>
+            <Route
+              path="/"
+              exact
+              element={<Home server={server} onClickLogout={onClickLogout} />}
+            ></Route>
+            <Route
+              path="/home"
+              element={<Home server={server} onClickLogout={onClickLogout} />}
+            ></Route>
 
             {/* login */}
             <Route path="/profile" element={<Profile />}></Route>
             <Route path="/cartList" element={<CartList />}></Route>
             <Route path="/join" element={<Join server={server} />}></Route>
-            <Route path="/login" element={
-                <Login server={server} kakaoLoginUrl={kakaoLoginUrl} settingAccessToken={settingAccessToken}/>
-              }></Route>
-            <Route exact path="kakaoLoginUrl" element={<Home server={server} onClickLogout={onClickLogout}/>}></Route>
-            <Route path="/auth/callback/kakao" element={
-                <KakaoAuth server={server} settingAccessToken={settingAccessToken}/>
-              }></Route>
+            <Route
+              path="/login"
+              element={
+                <Login
+                  server={server}
+                  kakaoLoginUrl={kakaoLoginUrl}
+                  settingAccessToken={settingAccessToken}
+                />
+              }
+            ></Route>
+            <Route
+              exact
+              path="kakaoLoginUrl"
+              element={<Home server={server} onClickLogout={onClickLogout} />}
+            ></Route>
+            <Route
+              path="/auth/callback/kakao"
+              element={
+                <KakaoAuth
+                  server={server}
+                  settingAccessToken={settingAccessToken}
+                />
+              }
+            ></Route>
 
             {/* movie */}
-            <Route path="/movies" exact element={<MovieList />}></Route>
-            <Route path="/movies/view" exact element={<MovieView />}></Route>
+            <Route
+              path="/movies"
+              exact
+              element={<MovieList movieServer={movieServer} />}
+            ></Route>
+            <Route
+              path="/movies/view"
+              exact
+              element={<MovieView movieServer={movieServer} />}
+            ></Route>
             <Route path="/reserve" exact element={<MovieReserve />}></Route>
 
             {/* product */}
-            <Route path="/products" element={<ProductList server={server}/>}></Route>
-            <Route path="/product/create" element={<ProductCreateForm server={server}/>}></Route>
-            
+            <Route
+              path="/products"
+              element={<ProductList server={server} />}
+            ></Route>
+            <Route
+              path="/product/create"
+              element={<ProductCreateForm server={server} />}
+            ></Route>
           </Routes>
           <Footer />
         </BrowserRouter>

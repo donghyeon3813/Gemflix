@@ -6,7 +6,6 @@ const Pagenation = (props) => {
   const page = props.page;
   const setPage = props.setPage;
   const numPages = Math.ceil(total / limit);
-  console.log(numPages);
 
   return (
     <>

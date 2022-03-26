@@ -57,7 +57,6 @@ public class MovieService {
     public CommonResponse reviewRegister( ReviewDto reviewDto, HttpServletRequest request) throws  Exception{
         String id = commonService.getRequesterId(request);
         Optional<Member> member = memberRepository.findById(id);
-        System.out.println(member.get().getMId());
         if(member.isPresent()){
             Long mId = member.get().getMId();
             Long mvId = reviewDto.getMvId();
@@ -76,6 +75,42 @@ public class MovieService {
             reviewRepository.save(review);
             ticketRepositorySupport.ticketStateModify(ticketList.get(0).getTkId());
 
+            return null;
+        }
+        return new CommonResponse(ErrorType.INVALID_MEMBER.getErrorCode(),
+                ErrorType.INVALID_MEMBER.getErrorMessage());
+
+    }
+
+    @Transactional
+    public CommonResponse reviewModify( ReviewDto reviewDto, HttpServletRequest request) throws  Exception{
+        String id = commonService.getRequesterId(request);
+        Optional<Member> member = memberRepository.findById(id);
+        if(member.isPresent()){
+            Long mId = member.get().getMId();
+            long cnt = reviewRepositorySupport.reviewModify(reviewDto.getRvId(), reviewDto.getComment());
+            if(cnt == 0){
+                return new CommonResponse(ErrorType.INVALID_MEMBER.getErrorCode(),
+                        ErrorType.INVALID_MEMBER.getErrorMessage());
+            }
+            return null;
+        }
+        return new CommonResponse(ErrorType.INVALID_MEMBER.getErrorCode(),
+                ErrorType.INVALID_MEMBER.getErrorMessage());
+
+    }
+
+    @Transactional
+    public CommonResponse reviewDelete( Long rvId, HttpServletRequest request) throws  Exception{
+        String id = commonService.getRequesterId(request);
+        Optional<Member> member = memberRepository.findById(id);
+        if(member.isPresent()){
+            Long mId = member.get().getMId();
+            long cnt = reviewRepositorySupport.reviewDelete(rvId);
+            if(cnt == 0){
+                return new CommonResponse(ErrorType.INVALID_MEMBER.getErrorCode(),
+                        ErrorType.INVALID_MEMBER.getErrorMessage());
+            }
             return null;
         }
         return new CommonResponse(ErrorType.INVALID_MEMBER.getErrorCode(),

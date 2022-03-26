@@ -39,7 +39,8 @@ public class ReviewRepositorySupport {
                 .innerJoin(review.ticket, ticket)
                 .innerJoin(ticket.screening, screening)
                 .innerJoin(screening.movie, movie)
-                .where(movie.mvId.eq(mvId))
+                .where(movie.mvId.eq(mvId),
+                        review.delStatus.eq("0"))
                 .orderBy(review.regDate.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -52,5 +53,17 @@ public class ReviewRepositorySupport {
                 .where(movie.mvId.eq(mvId))
                 .fetchOne();
         return PageableExecutionUtils.getPage(reviewList, pageable, () -> reviewTotal);
+    }
+
+    public long reviewModify(Long rvId, String content){
+        return query.update(review).where(review.rvId.eq(rvId))
+                .set(review.content,content)
+                .execute();
+    }
+    public long reviewDelete(Long rvId){
+        return query.update(review)
+                .where(review.rvId.eq(rvId))
+                .set(review.delStatus,"1")
+                .execute();
     }
 }

@@ -1,0 +1,25 @@
+.teb-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 100px;
+  margin: auto;
+  flex-direction: row;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+.teb-item {
+  width: 25%;
+  height: 80px;
+  text-align: center;
+  line-height: 50px;
+  display: inline-block;
+  border-bottom: 1px solid;
+  border-bottom-color: black;
+}
+
+.selected-teb-item {
+  border-bottom: 2px solid;
+  border-bottom-color: blue;
+}

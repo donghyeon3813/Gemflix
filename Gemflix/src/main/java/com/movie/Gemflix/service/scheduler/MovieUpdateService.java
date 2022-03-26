@@ -3,7 +3,7 @@ package com.movie.Gemflix.service.scheduler;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.movie.Gemflix.config.ApiProperties;
-import com.movie.Gemflix.dto.theMovie.TheMovie;
+import com.movie.Gemflix.dto.movie.TheMovie;
 import com.movie.Gemflix.entity.*;
 import com.movie.Gemflix.repository.movie.*;
 import lombok.RequiredArgsConstructor;
@@ -168,6 +168,7 @@ public class MovieUpdateService {
     public void theMovieGetPeople() throws Exception{
         String apiAndLanguage = getapi();
         List<Movie> movieList = movieRepository.findAll();
+
         for (Movie movie : movieList) {
             String apiId = movie.getApiId();
 
@@ -178,11 +179,11 @@ public class MovieUpdateService {
                     .bodyToMono(JSONObject.class)
                     .block();
             JSONArray castList = peopleListResult.getJSONArray("cast");
+            JSONArray crewList = peopleListResult.getJSONArray("crew");
             for(int i=0; i<castList.size(); i++){
                 String peopleApiId = castList.getJSONObject(i).get("id").toString();
-                if(castList.getJSONObject(i).get("known_for_department")== null){
-                    continue;
-                }else if(castList.getJSONObject(i).get("known_for_department").toString().equals("Acting")){
+                if(castList.getJSONObject(i).get("known_for_department") != null &&
+                        castList.getJSONObject(i).get("known_for_department").toString().equals("Acting")){
                     if(i<5){
                         String type = "2";
                         JSONObject peopleInfo = webClient
@@ -220,12 +221,20 @@ public class MovieUpdateService {
                             peopleRepository.save(people);
                         }
                     }
-                }else if(castList.getJSONObject(i).get("known_for_department").toString().equals("Directing")){
-
+                }
+            }
+            int directorCnt = 0;
+            for(int i=0; i<crewList.size(); i++) {
+                if(directorCnt!=0){
+                    continue;
+                }
+                String peopleApiId = crewList.getJSONObject(i).get("id").toString();
+                if (crewList.getJSONObject(i).get("department") != null &&
+                        crewList.getJSONObject(i).get("department").toString().equals("Directing")) {
                     String type = "1";
                     JSONObject peopleInfo = webClient
                             .get()
-                            .uri("https://api.themoviedb.org/3/person/"+peopleApiId+"?"+apiAndLanguage)
+                            .uri("https://api.themoviedb.org/3/person/" + peopleApiId + "?" + apiAndLanguage)
                             .retrieve()
                             .bodyToMono(JSONObject.class)
                             .block();
@@ -235,18 +244,18 @@ public class MovieUpdateService {
                     String nationality = null;
                     String name = peopleInfo.get("name").toString();
                     try {
-                        if(peopleInfo.get("birthday")!=null && !peopleInfo.get("birthday").toString().equals("")) {
+                        if (peopleInfo.get("birthday") != null && !peopleInfo.get("birthday").toString().equals("")) {
                             birth = format.parse(peopleInfo.get("birthday").toString());
                         }
-                        if(peopleInfo.get("place_of_birth")!=null){
+                        if (peopleInfo.get("place_of_birth") != null) {
                             place = peopleInfo.get("place_of_birth").toString().split(", ");
-                            nationality = place[place.length-1];
+                            nationality = place[place.length - 1];
                         }
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                     boolean peopleDup = peopleRepository.existsByApiId(peopleApiId);
-                    if(!peopleDup){
+                    if (!peopleDup) {
                         People people = People.builder()
                                 .name(name)
                                 .type(type)
@@ -255,8 +264,8 @@ public class MovieUpdateService {
                                 .apiId(peopleApiId)
                                 .build();
                         peopleRepository.save(people);
+                        directorCnt++;
                     }
-
                 }
             }
         }

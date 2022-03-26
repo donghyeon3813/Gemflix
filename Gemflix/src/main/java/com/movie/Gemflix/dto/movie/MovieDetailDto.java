@@ -19,5 +19,6 @@ public class MovieDetailDto {
     private String backImgUrl;
     private Date openDt;
     private List<Trailer> trailerList;
+    private double score;
 
 }
