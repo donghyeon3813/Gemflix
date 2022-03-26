@@ -35,6 +35,7 @@ public class MovieUpdateService {
     private final TrailerRepository trailerRepository;
 
     public String getapi(){
+
         String api = "api_key="+apiProperties.getKey();
         String language = "language=ko";
         String apiAndLanguage = api+"&"+language ;
@@ -49,7 +50,7 @@ public class MovieUpdateService {
         List<Genre> genreList = new ArrayList<>();
         JSONObject genreResult = webClient
                 .get()
-                .uri("genre/movie/list?"+apiAndLanguage)// 인기순 영화 리스트 가져오기
+                .uri("https://api.themoviedb.org/3/genre/movie/list?"+apiAndLanguage)// 인기순 영화 리스트 가져오기
                 .retrieve()
                 .bodyToMono(JSONObject.class)
                 .block();
@@ -84,7 +85,7 @@ public class MovieUpdateService {
         for(int i = 1; i<=page; i++){
             JSONObject movieListResult =
                     webClient
-                    .get().uri("movie/popular?"+apiAndLanguage+"&page="+i)// 인기순 영화 리스트 가져오기
+                    .get().uri("https://api.themoviedb.org/3/movie/popular?"+apiAndLanguage+"&page="+i)// 인기순 영화 리스트 가져오기
                     .retrieve()
                     .bodyToMono(JSONObject.class)
                     .block();
@@ -95,7 +96,7 @@ public class MovieUpdateService {
                 JSONObject movieDetail =
                         webClient
                                 .get()
-                                .uri("movie/"+movieId+"?"+apiAndLanguage+"&append_to_response=release_dates")// 인기순 영화 리스트 가져오기
+                                .uri("https://api.themoviedb.org/3/movie/"+movieId+"?"+apiAndLanguage+"&append_to_response=release_dates")// 인기순 영화 리스트 가져오기
                                 .retrieve()
                                 .bodyToMono(JSONObject.class)
                                 .block();
@@ -198,7 +199,6 @@ public class MovieUpdateService {
                         String nationality = null;
                         String name = peopleInfo.get("name").toString();
                         try {
-
                             if(peopleInfo.get("birthday")!=null && !peopleInfo.get("birthday").toString().equals("")) {
                                 birth = format.parse(peopleInfo.get("birthday").toString());
                             }
@@ -278,7 +278,7 @@ public class MovieUpdateService {
             String peopleApiKey = people.getApiId();
             JSONObject result = webClient
                     .get()
-                    .uri("person/"+peopleApiKey+"/movie_credits?"+apiAndLanguage)
+                    .uri("https://api.themoviedb.org/3/person/"+peopleApiKey+"/movie_credits?"+apiAndLanguage)
                     .retrieve()
                     .bodyToMono(JSONObject.class)
                     .block();
@@ -338,7 +338,7 @@ public class MovieUpdateService {
             String movieApiKey = movie.getApiId();
             JSONObject result = webClient
                     .get()
-                    .uri("movie/"+movieApiKey+"/videos?"+apiAndLanguage)
+                    .uri("https://api.themoviedb.org/3/movie/"+movieApiKey+"/videos?"+apiAndLanguage)
                     .retrieve()
                     .bodyToMono(JSONObject.class)
                     .block();

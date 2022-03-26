@@ -29,6 +29,8 @@ public class MovieRepositorySupport {
     private QReview review = QReview.review;
     private QTicket ticket = QTicket.ticket;
     private QScreening screening = QScreening.screening;
+    private QPeople people = QPeople.people;
+    private QFilmography filmography = QFilmography.filmography;
 
 
 
@@ -83,6 +85,18 @@ public class MovieRepositorySupport {
                 .where(trailer.movie.mvId.eq(movieSearchDto.getMvId()))
                 .fetch();
         movieDetailDto.setTrailerList(trailerList);
+
+        List<People> peopleList = query
+                .select(Projections.fields(People.class,
+                        people.name,
+                        people.type,
+                        people.peId))
+                .from(people)
+                .innerJoin(filmography).on(people.peId.eq(filmography.people.peId))
+                .where(filmography.movie.mvId.eq(movieSearchDto.getMvId()))
+                .orderBy(people.type.asc())
+                .fetch();
+        movieDetailDto.setPeopleList(peopleList);
         return movieDetailDto;
     }
 

@@ -1,5 +1,6 @@
 package com.movie.Gemflix.dto.movie;
 
+import com.movie.Gemflix.entity.People;
 import com.movie.Gemflix.entity.Trailer;
 import lombok.Data;
 
@@ -19,6 +20,7 @@ public class MovieDetailDto {
     private String backImgUrl;
     private Date openDt;
     private List<Trailer> trailerList;
+    private List<People> peopleList;
     private double score;
 
 }

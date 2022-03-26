@@ -24,7 +24,6 @@ public class WebClientConfig {
                 .build();
         ReactorClientHttpConnector clientHttpConnector = new ReactorClientHttpConnector(HttpClient.create(connectionProvider));
         return WebClient.builder()
-                .baseUrl("https://api.themoviedb.org/3/")
                 .exchangeStrategies(exchangeStrategies)
                 .clientConnector(clientHttpConnector).build();
     }

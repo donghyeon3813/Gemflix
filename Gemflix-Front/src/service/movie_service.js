@@ -82,6 +82,19 @@ class MovieService {
         return JSON.parse(error.request.response);
       });
   }
+
+  async filmography(data) {
+    console.log(data);
+    return await this.server
+      .get("movie/filmographys/" + data, null)
+      .then(function (success) {
+        console.log(success);
+        return success.data;
+      })
+      .catch(function (error) {
+        return error.request.response;
+      });
+  }
 }
 
 export default MovieService;

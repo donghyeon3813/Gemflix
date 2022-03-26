@@ -3,14 +3,12 @@ package com.movie.Gemflix.service;
 import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.dto.movie.*;
+import com.movie.Gemflix.entity.Filmography;
 import com.movie.Gemflix.entity.Member;
 import com.movie.Gemflix.entity.Review;
 import com.movie.Gemflix.entity.Ticket;
 import com.movie.Gemflix.repository.member.MemberRepository;
-import com.movie.Gemflix.repository.movie.MovieRepositorySupport;
-import com.movie.Gemflix.repository.movie.ReviewRepository;
-import com.movie.Gemflix.repository.movie.ReviewRepositorySupport;
-import com.movie.Gemflix.repository.movie.TicketRepositorySupport;
+import com.movie.Gemflix.repository.movie.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -35,6 +33,8 @@ public class MovieService {
     private final MemberRepository memberRepository;
 
     private final ReviewRepository reviewRepository;
+
+    private final FilmographyRepositorySupport filmographyRepositorySupport;
 
     private final TicketRepositorySupport ticketRepositorySupport;
 
@@ -120,5 +120,10 @@ public class MovieService {
 
     public Page<ReviewListDto> findReviewList(Long mvId, Pageable pageable) throws Exception{
         return reviewRepositorySupport.findReviewList(mvId, pageable);
+    }
+
+    public List<FilmographyList> findFilmographyList(Long peId) throws Exception {
+
+        return filmographyRepositorySupport.findFilmography(peId);
     }
 }

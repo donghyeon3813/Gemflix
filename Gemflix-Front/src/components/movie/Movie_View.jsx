@@ -94,7 +94,7 @@ const MovieView = ({ movieServer }) => {
     <>
       {movieInfo !== null ? (
         <>
-          <MovieDetail movieDetailInfo={movieInfo} />
+          <MovieDetail movieDetailInfo={movieInfo} movieServer={movieServer} />
           <ul className="teb-menu">
             {tebMenu.map((info) => (
               <li
