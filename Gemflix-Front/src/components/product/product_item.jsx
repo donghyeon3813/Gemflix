@@ -1,11 +1,10 @@
-import { memo, React, useRef, useState, useEffect } from 'react';
+import { memo, React, useState } from 'react';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import Modal from 'react-modal';
 import { addCart } from '../../store/actions';
 import { useNavigate } from 'react-router';
 
 const ProductItem = memo((props) => {
-
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector(store => store.userReducer, shallowEqual);
@@ -15,17 +14,26 @@ const ProductItem = memo((props) => {
     
 
     const onClickUpdate = () => {
+        console.log(props);
         navigate('/product/modify', { 
             state: { 
-                product: props, 
+                name: props.name,
+                content: props.content,
+                price: props.price,
+                status: props.status,
+                base64: props.base64,
+                categoryIdx: props.categoryIdx,
+                category: props.category,
+                prId: props.prId,
                 categories: props.categories
             } 
         });
     }
 
     const onClickDelete = (prId) => {
-        console.log(prId);
-        //TODO: DELETE
+        if(window.confirm("해당 상품을 삭제하겠습니까?")){
+            props.handleDeleteProduct(prId); 
+        }
     }
 
     const changeCount = (event) => {

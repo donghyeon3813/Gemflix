@@ -105,11 +105,31 @@ class AuthService{
 
     //상품 삭제
     async deleteProduct(prId) {
-        return await this.server.delete('/product', { params: prId })
+        return await this.server.delete('/product', { 
+            params: {
+                prId: prId
+            } 
+        })
         .then(function (success) {
             return success.data;
         })
         .catch(function (error) {
+            return JSON.parse(error.request.response);
+        });
+    }
+    
+    //결제 endpoint
+    async completePayment(formData) {
+        return await this.server.post('/payments/complete', {
+            headers: { "Content-Type": "application/json" },
+            formData
+        }, {})
+        .then(function (success) {
+            console.log(success.data);
+            return success.data;
+        })
+        .catch(function (error) {
+            console.log(error.request.response);
             return JSON.parse(error.request.response);
         });
     }

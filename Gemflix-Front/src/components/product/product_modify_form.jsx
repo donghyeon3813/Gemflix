@@ -2,7 +2,7 @@ import { React, useState, useRef, useEffect } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const ProductModifyForm = ({server}) => {
+const ProductModifyForm = ({server, onClickLogout}) => {
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -22,18 +22,17 @@ const ProductModifyForm = ({server}) => {
     const [prId, setPrId] = useState(0);
     const storeFormRef = useRef();
 
-    const product = location.state.product;
     const categories = location.state.categories;
 
     useEffect(() => {
-        setName(product.name);
-        setContent(product.content);
-        setPrice(product.price);
-        setStatus(product.status == 1 ? 'Y' : 'N');
-        setImgBase64(product.base64);
-        setCategoryIdx(product.categoryIdx);
+        setName(location.state.name);
+        setContent(location.state.content);
+        setPrice(location.state.price);
+        setStatus(location.state.status == 1 ? 'Y' : 'N');
+        setImgBase64(location.state.base64);
+        setCategoryIdx(location.state.categoryIdx);
+        setPrId(location.state.prId);
         setCategory(category);
-        setPrId(product.prId);
     }, [])
 
     const handleChangeFile = (event) => {
@@ -99,14 +98,23 @@ const ProductModifyForm = ({server}) => {
             mounted.current = true;
         } else { //success
             const code = response.code;
-            if(code === 1000){ //success
-                alert("상품 수정이 완료되었습니다.");
-                //목록페이지로 이동
-                navigate('/products');
+            switch(code){
+                case 1007: //interceptor에서 accessToken 재발급
+                    break;
 
-            }else{ //fail
-                alert(response.message);
-            }
+                case 1000: //success
+                    alert("상품 수정이 완료되었습니다.");
+                    navigate('/products'); //목록페이지로 이동
+                    break;
+
+                case 1008: //refreshToken 만료 -> 로그아웃
+                    onClickLogout(true);
+                    break;
+
+                default: //fail
+                    alert(response.message);
+                    break;
+            }  
         }
         setLoading(false);
     }, [requestCnt]);

@@ -12,8 +12,6 @@ const Navbar = ({server, onClickLogout}) => {
         server.profile()
         .then(response => {
             const code = response.code;
-            console.log("profile response code: " + code);
-            
             switch(code){
                 case 1007: //interceptor에서 accessToken 재발급
                     break;

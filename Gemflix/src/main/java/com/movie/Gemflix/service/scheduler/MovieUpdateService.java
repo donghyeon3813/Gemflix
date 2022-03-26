@@ -84,10 +84,10 @@ public class MovieUpdateService {
         for(int i = 1; i<=page; i++){
             JSONObject movieListResult =
                     webClient
-                    .get().uri("movie/popular?"+apiAndLanguage+"&page="+i)// 인기순 영화 리스트 가져오기
-                    .retrieve()
-                    .bodyToMono(JSONObject.class)
-                    .block();
+                            .get().uri("movie/popular?"+apiAndLanguage+"&page="+i)// 인기순 영화 리스트 가져오기
+                            .retrieve()
+                            .bodyToMono(JSONObject.class)
+                            .block();
             JSONArray movieJsonArr = movieListResult.getJSONArray("results");
             for (int j = 0; j<movieJsonArr.size(); j++){
                 String movieId = movieJsonArr.getJSONObject(j).get("id").toString();

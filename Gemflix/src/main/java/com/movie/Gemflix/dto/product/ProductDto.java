@@ -32,6 +32,7 @@ public class ProductDto {
     private MultipartFile multiPartFile;
     private String base64;
     private String memberId;
+    private String delStatus;
 
     private CategoryDto category;
     private long cgId;

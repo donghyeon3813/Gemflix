@@ -17,11 +17,13 @@ import ProductList from "./components/product/product_list";
 import MovieView from "./components/movie/movie_view";
 import MovieList from "./components/movie/movie_list";
 import dotenv from "dotenv";
-import CartList from "./components/cart/cart_list";
 import ProductModifyForm from "./components/product/product_modify_form";
+import Payment from "./components/mypage/payment";
+import CartList from "./components/mypage/cart_list";
 dotenv.config();
 
 function App({ server }) {
+
   const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;
   const KAKAO_REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
 
@@ -110,7 +112,6 @@ function App({ server }) {
 
             {/* login */}
             <Route path="/profile" element={<Profile />}></Route>
-            <Route path="/cartList" element={<CartList />}></Route>
             <Route path="/join" element={<Join server={server} />}></Route>
             <Route path="/login" element={
                 <Login server={server} kakaoLoginUrl={kakaoLoginUrl} settingAccessToken={settingAccessToken}/>
@@ -127,8 +128,12 @@ function App({ server }) {
 
             {/* product */}
             <Route path="/products" element={<ProductList server={server}/>}></Route>
-            <Route path="/product/create" element={<ProductCreateForm server={server}/>}></Route>
-            <Route path="/product/modify" element={<ProductModifyForm server={server}/>}></Route>
+            <Route path="/product/create" element={<ProductCreateForm server={server} onClickLogout={onClickLogout}/>}></Route>
+            <Route path="/product/modify" element={<ProductModifyForm server={server} onClickLogout={onClickLogout}/>}></Route>
+
+            {/* myPage */}
+            <Route path="/cartList" element={<CartList />}></Route>
+            <Route path="/payment" element={<Payment server={server} onClickLogout={onClickLogout}/>}></Route>
             
           </Routes>
           <Footer />

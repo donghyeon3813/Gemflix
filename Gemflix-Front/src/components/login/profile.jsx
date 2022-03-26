@@ -7,23 +7,28 @@ const Profile = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState(null);
     const [regDate, setRegDate] = useState(null);
+    const memberInfo = location.state.memberInfo;
 
     useEffect(() => {
-        let regDt = location.state.memberInfo.regDate;
+        let regDt = memberInfo.regDate;
         setRegDate(String(regDt).replace("T", " "));
-        setEmail(location.state.memberInfo.email);
+        setEmail(memberInfo.email);
     }, []);
 
     const onClickCartList = () => {
-        navigate('/cartList');
+        navigate('/cartList', {
+            state: {
+                phone: memberInfo.phone
+            }
+        });
     }
 
     return (
         <>
         <div>
             <h1>Profile</h1>
-            <label>아이디 : {location.state.memberInfo.id}</label><br/>
-            <label>핸드폰 번호 : {location.state.memberInfo.phone}</label><br/>
+            <label>아이디 : {memberInfo.id}</label><br/>
+            <label>핸드폰 번호 : {memberInfo.phone}</label><br/>
             {email == null ? 
                 <>
                 <label>이메일 : </label>
@@ -35,7 +40,7 @@ const Profile = () => {
                 </>
                     
             }
-            <label>포인트 : {location.state.memberInfo.point} p</label><br/>
+            <label>포인트 : {memberInfo.point} p</label><br/>
             <label>가입날짜 : {regDate}</label>
         </div>
         <button type='button' onClick={onClickCartList}>장바구니</button>

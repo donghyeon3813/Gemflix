@@ -2,7 +2,7 @@ import { React, useState, useRef, useEffect } from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const ProductCreateForm = ({server}) => {
+const ProductCreateForm = ({server, onClickLogout}) => {
     
     const navigate = useNavigate();
     const location = useLocation();
@@ -93,14 +93,23 @@ const ProductCreateForm = ({server}) => {
             mounted.current = true;
         } else { //success
             const code = response.code;
-            if(code === 1000){ //success
-                alert("상품 등록이 완료되었습니다.");
-                //목록페이지로 이동
-                navigate('/products');
+            switch(code){
+                case 1007: //interceptor에서 accessToken 재발급
+                    break;
 
-            }else{ //fail
-                alert(response.message);
-            }
+                case 1000: //success
+                    alert("상품 등록이 완료되었습니다.");
+                    navigate('/products'); //목록페이지로 이동
+                    break;
+
+                case 1008: //refreshToken 만료 -> 로그아웃
+                    onClickLogout(true);
+                    break;
+
+                default: //fail
+                    alert(response.message);
+                    break;
+            }    
         }
         setLoading(false);
     }, [requestCnt]);

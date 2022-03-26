@@ -53,6 +53,28 @@ const ProductList = ({server}) => {
         });
     }
 
+    const handleDeleteProduct = (prId) => {
+        server.deleteProduct(prId)
+            .then(response => {
+                const code = response.code;
+                if(code === 1000){ //success
+                    alert("삭제되었습니다.");
+                    //목록페이지로 이동
+                    navigate('/products');
+
+                }else{ //fail
+                    alert(response.message);
+                }
+            })
+            .catch(ex => {
+                console.log("deleteProduct requset fail : " + ex);
+            })
+            .finally(() => {
+                console.log("deleteProduct request end");
+            });
+
+    }
+
 
     if(user.memberRole === 'ADMIN'){
         if(products == null){
@@ -85,7 +107,8 @@ const ProductList = ({server}) => {
                                                 key={product.prId} name={product.name} 
                                                 price={product.price} base64={product.base64} 
                                                 content={product.content} status={product.status} prId={product.prId}
-                                                categories={categories} category={category} categoryIdx={product.category.cgId}/>
+                                                categories={categories} category={category} categoryIdx={product.category.cgId}
+                                                handleDeleteProduct={handleDeleteProduct}/>
                                         ))
                                         }
                                     </div>

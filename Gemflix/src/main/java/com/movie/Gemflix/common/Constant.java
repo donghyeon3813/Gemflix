@@ -10,6 +10,11 @@ public class Constant {
         public static final int SUCCESS_CODE = 1000;
     }
 
+    public static class BooleanStringValue{
+        public static final String TRUE = "1";
+        public static final String FALSE = "0";
+    }
+
     public static class FileExtension{
         public static final String[] JPG_AND_PNG = {"jpg", "jpeg", "png"};
     }

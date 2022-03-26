@@ -2,13 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import CartItem from './cart_item';
 import { deleteCart } from '../../store/actions';
+import { useLocation, useNavigate } from 'react-router';
 
 const CartList = (props) => {
 
+    const location = useLocation();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useSelector(store => store.userReducer, shallowEqual);
     const carts = useSelector(store => store.cartReducer, shallowEqual);
     const [memberCarts, setMemberCarts] = useState([]);
+    const [cartName, setCartName] = useState('');
+
     const [allPrice, setAllPrice] = useState(0);
     const [selectedPrice, setSelectedPrice] = useState(0);
 
@@ -23,7 +28,9 @@ const CartList = (props) => {
 
         if(0 < carts.length){
             const tempCarts = carts.filter((cart) => cart.memberId === user.memberId);
+            const num =tempCarts.length-1;
             setMemberCarts(tempCarts);
+            console.log(tempCarts);
             
             let tempAllPrice = 0;
             let ids = [];
@@ -33,6 +40,11 @@ const CartList = (props) => {
             });
             setAllPrice(tempAllPrice);
             setIdList(ids);
+            if(tempCarts.length == 1){
+                setCartName(tempCarts[0].item.name);
+            }else{
+                setCartName(tempCarts[0].item.name + " 외 " + num + "개의 상품...");
+            }
         }
     }, [carts]);
 
@@ -64,7 +76,13 @@ const CartList = (props) => {
     }
 
     const onClickOrderCart = () => {
-        //TODO
+        navigate('/payment', {
+            state: {
+                price: selectedPrice,
+                cartName: cartName,
+                carts: memberCarts
+            }
+        });
     }
 
     const inputPriceFormat = (str) => {
@@ -89,13 +107,12 @@ const CartList = (props) => {
     }else{
         return (
             <>
-                <button type='button' onClick={() => onClickOrderCart()}>선택상품 주문</button>
-                <button type='button' onClick={() => onClickDeleteCart()}>선택상품 삭제</button>
                 <div className='cart_list'>
                     <input type="checkbox" onChange={onChangeAll} checked={checkList.length === idList.length}/>
+                    <h3>{cartName}</h3>
                     {
                         memberCarts.map((cart, index) => (
-                            <div key={index}>
+                        <div key={index}>
                             <div className='cart_box'>
                                 <input type="checkbox" onChange={(e) => onChangeEach(e, cart.id, cart.totalPrice)} checked={checkList.includes(cart.id)}/>
                                 <CartItem key={cart.id} cart={cart}/>
@@ -104,6 +121,8 @@ const CartList = (props) => {
                     ))
                     }
                     <h2>총 {inputPriceFormat(selectedPrice)}원</h2>
+                    <button type='button' onClick={() => onClickOrderCart()}>선택상품 주문</button>
+                    <button type='button' onClick={() => onClickDeleteCart()}>선택상품 삭제</button>
                 </div>
             </>
         );

@@ -51,10 +51,10 @@ public class ProductService {
         String status = productDto.getStatus();
         switch (status){
             case "Y":
-                productDto.setStatus("1");
+                productDto.setStatus(Constant.BooleanStringValue.TRUE);
                 break;
             case "N":
-                productDto.setStatus("0");
+                productDto.setStatus(Constant.BooleanStringValue.FALSE);
                 break;
         }
         productDto.setImgLocation(imgLocation);
@@ -94,10 +94,10 @@ public class ProductService {
         String status = productDto.getStatus();
         switch (status){
             case "Y":
-                productDto.setStatus("1");
+                productDto.setStatus(Constant.BooleanStringValue.TRUE);
                 break;
             case "N":
-                productDto.setStatus("0");
+                productDto.setStatus(Constant.BooleanStringValue.FALSE);
                 break;
         }
         productDto.setImgLocation(imgLocation);
@@ -115,9 +115,14 @@ public class ProductService {
         return null;
     }
 
+    @Transactional
+    public void deleteProduct(Long prId) {
+        productRepositorySupport.deleteProduct(prId);
+    }
+
     public List<ProductDto> getProducts() throws Exception{
 
-        List<Product> products = productRepositorySupport.findByStatusProductAndCategory("1");
+        List<Product> products = productRepositorySupport.findByStatusAndDelStatusProductAndCategory("1");
         if(products.size() == 0) return null;
 
         List<ProductDto> productDtos = products.stream()
@@ -167,6 +172,7 @@ public class ProductService {
         }
         return "data:image/" + extension + ";base64," + fileString;
     }
+
 
 
 }

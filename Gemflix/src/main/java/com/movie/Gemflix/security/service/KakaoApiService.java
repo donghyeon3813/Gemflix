@@ -23,6 +23,7 @@ public class KakaoApiService {
 
     public OAuthToken tokenRequest(String code) {
         //POST방식으로 데이터 요청
+        //TODO: to webClient
         RestTemplate restTemplate = new RestTemplate();
 
         //HttpHeader
@@ -44,6 +45,7 @@ public class KakaoApiService {
 
     public KakaoProfileDto userInfoRequest(OAuthToken oAuthToken) {
         ///유저정보 요청
+        //TODO: to webClient
         RestTemplate restTemplate = new RestTemplate();
 
         //HttpHeader

@@ -36,10 +36,9 @@ public class ProductController {
     private final ProductService productService;
 
     private final CategoryRepository categoryRepository;
-    private final ProductRepository productRepository;
 
     //상품 목록 조회
-    @GetMapping("products")
+    @GetMapping("/products")
     public ResponseEntity<?> getProducts(){
 
         try{
@@ -67,7 +66,7 @@ public class ProductController {
     }
 
     //상품 카테고라 목록 조회
-    @GetMapping("category")
+    @GetMapping("/category")
     public ResponseEntity<?> getCategory(){
         try{
             List<Category> category = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "cgId"));
@@ -88,7 +87,7 @@ public class ProductController {
 
     //상품 등록
     @Secured("ROLE_ADMIN")
-    @PostMapping("product")
+    @PostMapping("/product")
     public ResponseEntity<?> createProduct(@ModelAttribute @Valid ProductDto productDto,
                                            BindingResult bindingResult){
 
@@ -122,7 +121,7 @@ public class ProductController {
 
     //상품수정
     @Secured("ROLE_ADMIN")
-    @PutMapping("product")
+    @PutMapping("/product")
     public ResponseEntity<?> modifyProduct(@ModelAttribute @Valid ProductDto productDto,
                                            BindingResult bindingResult){
 
@@ -158,12 +157,12 @@ public class ProductController {
 
     //상품삭제
     @Secured("ROLE_ADMIN")
-    @DeleteMapping("product")
+    @DeleteMapping("/product")
     public ResponseEntity<?> deleteProduct(@RequestParam("prId") Long prId){
 
         try{
             log.info("[deleteProduct] prId: {}", prId);
-            productRepository.deleteById(prId);
+            productService.deleteProduct(prId);
             return CommonResponse.createResponse(CommonResponse.builder()
                     .code(Constant.Success.SUCCESS_CODE)
                     .message("Product Delete Success")
