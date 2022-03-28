@@ -15,7 +15,7 @@
   position: absolute;
   top: 25%;
   left: 23%;
-  height: 570px;
+  height: 600px;
   width: 970px;
   display: flex;
   align-items: center;
@@ -36,6 +36,9 @@
   height: 520px;
   width: 100%;
   margin-bottom: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: scroll;
 }
 
 .modal-filmo-people {
