@@ -3,6 +3,7 @@ package com.movie.Gemflix.service;
 import com.alibaba.fastjson.JSONObject;
 import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.ErrorType;
+import com.movie.Gemflix.dto.payment.PaymentDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,36 +30,38 @@ public class PaymentService {
     private final WebClient webClient;
 
     public Boolean completePayment(JSONObject body) {
-        JSONObject params = body.getJSONObject("params");
-        String impUid = params.getString("imp_uid");
-        String marchantUid = params.getString("merchant_uid");
-        int requestPrice = params.getIntValue("price");
+        String impUid = body.getString("imp_uid");
+        String marchantUid = body.getString("merchant_uid");
+        int requestPrice = body.getIntValue("pay_amount");
 
         // 액세스 토큰(access token) 발급 받기
-        String accessToken = getIamportToken();
-
-        // imp_uid로 아임포트 서버에서 결제 정보 조회
-        JSONObject paymentData = getPaymentData(impUid, accessToken);
-        int paidPrice = paymentData.getIntValue("amount");
-        String status = paymentData.getString("status");
-
-        // 결제금액의 위변조 여부를 검증 (결제 되어야 하는 금액 == 실제 결제된 금액)
-        if(requestPrice == paidPrice){
-            // 결제 정보를 데이터베이스에 저장
-            savePaymentData(paymentData);
-
-            if("paid".equals(status)){ // 결제 완료 (가상계좌는 구현하지 않음)
-                return true;
-            }else{
-                return false;
-            }
-        }else{
-            // 위조된 결제 시도
-            return false;
-        }
+//        String accessToken = getIamportToken();
+//
+//        // imp_uid로 아임포트 서버에서 결제 정보 조회
+//        JSONObject paymentData = getPaymentData(impUid, accessToken);
+//        int paidPrice = paymentData.getIntValue("amount");
+//        String status = paymentData.getString("status");
+//
+//        // 결제금액의 위변조 여부를 검증 (결제 되어야 하는 금액 == 실제 결제된 금액)
+//        if(requestPrice == paidPrice){
+//            // 결제 정보를 데이터베이스에 저장
+//            savePaymentData(paymentData);
+//
+//            if("paid".equals(status)){ // 결제 완료 (가상계좌는 구현하지 않음)
+//                return true;
+//            }else{
+//                return false;
+//            }
+//        }else{
+//            // 위조된 결제 시도
+//            return false;
+//        }
+        return false;
     }
 
     private void savePaymentData(JSONObject paymentData) {
+        log.info("paymentData: {}", paymentData);
+
     }
 
     public String getIamportToken(){

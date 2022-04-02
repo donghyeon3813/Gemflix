@@ -1,9 +1,11 @@
 import { React, useState, useRef, useEffect } from 'react';
-import { useSelector, shallowEqual } from 'react-redux';
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { modifyCartByAdmin } from '../../store/actions';
 
 const ProductModifyForm = ({server, onClickLogout}) => {
 
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const location = useLocation();
     const user = useSelector(store => store.userReducer, shallowEqual);
@@ -12,7 +14,7 @@ const ProductModifyForm = ({server, onClickLogout}) => {
     const [name, setName] = useState('');
     const [content, setContent] = useState('');
     const [status, setStatus] = useState(null);
-    const [price, setPrice] = useState('');
+    const [price, setPrice] = useState(0);
     const [response, setReponse] = useState([]);
     const [requestCnt, setRequestCnt] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -103,6 +105,8 @@ const ProductModifyForm = ({server, onClickLogout}) => {
                     break;
 
                 case 1000: //success
+                    //회원들의 장바구니 상품들도 수정반영
+                    dispatch(modifyCartByAdmin(prId, name, parseInt(price.replace(/,/g,"")), imgBase64));
                     alert("상품 수정이 완료되었습니다.");
                     navigate('/products'); //목록페이지로 이동
                     break;
@@ -125,7 +129,7 @@ const ProductModifyForm = ({server, onClickLogout}) => {
             setImgFile(null);
             setStatus(null);
             setImgBase64([]);
-            setPrice('');
+            setPrice(0);
             setCategory(categories.get(0));
             setName('');
             setContent('');
@@ -153,7 +157,7 @@ const ProductModifyForm = ({server, onClickLogout}) => {
     };
 
     const changePrice = (event) => {
-        setPrice(inputPriceFormat(event.target.value));
+        setPrice(event.target.value);
     }
 
     const changeName = (event) => {
@@ -197,7 +201,7 @@ const ProductModifyForm = ({server, onClickLogout}) => {
                         <h4>상품명</h4>
                         <input value={name} type="text" placeholder="상품명(20자 이내)" onChange={changeName} onKeyPress={handleKeyPress}/><br/>
                         <h4>가격</h4>
-                        <input value={price} type="text" placeholder="가격(100만원 이내)" onChange={changePrice}/>원<br/>
+                        <input value={inputPriceFormat(price)} type="text" placeholder="가격(100만원 이내)" onChange={changePrice}/>원<br/>
                         <h4>상세설명</h4>
                         <input value={content} type="text" placeholder="상세설명(500자 이내)" onChange={changeContent}/><br/>
                         <h4>판매상태</h4>

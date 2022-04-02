@@ -15,16 +15,16 @@ const ProductItem = memo((props) => {
 
     const onClickUpdate = () => {
         console.log(props);
-        navigate('/product/modify', { 
+        navigate('/product/modify', {
             state: { 
+                prId: props.prId,
                 name: props.name,
-                content: props.content,
                 price: props.price,
+                content: props.content,
                 status: props.status,
                 base64: props.base64,
                 categoryIdx: props.categoryIdx,
                 category: props.category,
-                prId: props.prId,
                 categories: props.categories
             } 
         });
@@ -32,7 +32,7 @@ const ProductItem = memo((props) => {
 
     const onClickDelete = (prId) => {
         if(window.confirm("해당 상품을 삭제하겠습니까?")){
-            props.handleDeleteProduct(prId); 
+            props.handleDeleteProduct(prId);
         }
     }
 

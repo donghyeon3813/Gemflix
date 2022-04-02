@@ -19,8 +19,8 @@ public class MovieDataScheduler {
     private final MovieUpdateService movieUpdateService;
     private final ScreeningService screeningService;
 
-//    @Scheduled(cron = "0 0 10 * * *") //매일10시 설정
-    @Scheduled(fixedDelay = 1000000) // 최초 실행후 주석처리
+    @Scheduled(cron = "0 0 10 * * *") //매일10시 설정
+//    @Scheduled(fixedDelay = 1000000) // 최초 실행후 주석처리
     private void TheMovieDateUpdate() {
         try {
             movieUpdateService.theMovieGetGenres();

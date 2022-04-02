@@ -27,8 +27,9 @@ const Payment = ({server, onClickLogout}) => {
     const [detailAddress, setDetailAddress] = useState('');
 
     const [memberPoint, setMemberPoint] = useState(0); //총 보유 포인트
-    const [usePoint, setUsePoint] = useState(''); //사용할 포인트
+    const [usePoint, setUsePoint] = useState(0); //사용할 포인트
     const [remainPoint, setRemainPoint] = useState(0); //사용후 남을 포인트
+    const [limitPoint, setLimitPoint] = useState(0);
 
     const [proAmount, setProAmount] = useState(price); //상품 원가
     const [disAmount, setDisAmount] = useState(0); //할인할 가격
@@ -39,13 +40,19 @@ const Payment = ({server, onClickLogout}) => {
     const [disStatus, setDisStatus] = useState('N');
 
     const pointDisplayType = disStatus === 'P' ? {display:"block"} : {display:"none"};
-    
-	useEffect(() => {
+
+    useEffect(() => {
+        // sdk 초기화하기
         if(status === "ready" && status02 === "ready"){
-            // sdk 초기화하기
             IMP = window.IMP;
             IMP.init(process.env.REACT_APP_IMP);
 		}
+        
+        //setLimitPoint
+        settingMaxPoint();
+    });
+    
+	useEffect(() => {
         if(location.state.carts){
             carts = location.state.carts;
         }
@@ -106,7 +113,7 @@ const Payment = ({server, onClickLogout}) => {
         pg: 'html5_inicis', // PG사
         pay_method: 'card', // 결제수단
         merchant_uid: `mid_${new Date().getTime()}`, // 주문번호
-        amount: price, // 결제금액
+        amount: payAmount, // 결제금액
         name: cartName, // 주문명
         buyer_name: name, //주문자명
         buyer_tel: phone, // 주문자 전화번호
@@ -116,7 +123,7 @@ const Payment = ({server, onClickLogout}) => {
 
     const requestPay = () => {
         if(name && phone && address && detailAddress){
-            console.log(data);
+
             // IMP.request_pay(param, callback) 결제창 호출
             IMP.request_pay(data
                 ,res => { // callback
@@ -126,26 +133,31 @@ const Payment = ({server, onClickLogout}) => {
                         const imp_uid = res.imp_uid;
                         const merchant_uid = res.merchant_uid;
 
-                        // const formData = new FormData();
-                        // formData.append("imp_uid", imp_uid);
-                        // formData.append("merchant_uid", merchant_uid);
-                        // formData.append("point", usePoint); //사용 포인트
-                        // formData.append("pro_amount", proAmount); //원가 상품 금액
-                        // formData.append("dis_amount", disAmount); //할인 금액
-                        // formData.append("pay_amount", payAmount); //최종 금액
-                        // formData.append("pay_type", payType); //결제방식
-                        // formData.append("dis_type", disType); //할인방식
-                        // formData.append("pay_name", name); //주문자명
-                        // formData.append("pay_phone", phone); //주문자 전화번호
-                        // formData.append("pay_address", address + " " + detailAddress); //주문자 주소
+                        if(disAmount !== 0){
+                            setDisType(1);
+                        }
 
-                        // // axios로 HTTP 요청
-                        // server.completePayment(formData)
-                        //     .then((data) => {
-                        //         // 서버 결제 API 성공시 로직
-                        //         console.log(data);
+                        const data = {
+                            imp_uid: imp_uid,
+                            merchant_uid: merchant_uid,
+                            point: usePoint,
+                            pro_amount: proAmount,
+                            dis_amount: disAmount,
+                            pay_amount: payAmount,
+                            pay_type: payType,
+                            dis_type: disType,
+                            pay_name: name,
+                            pay_phone: phone,
+                            pay_address: address + " " + detailAddress
+                        };
+
+                        // axios로 HTTP 요청
+                        server.completePayment(data)
+                            .then((data) => {
+                                // 서버 결제 API 성공시 로직
+                                console.log(data);
                                 
-                        //     })
+                            })
 
                     }else{
                         // 결제 실패 시 로직
@@ -179,33 +191,68 @@ const Payment = ({server, onClickLogout}) => {
 
     const changeRadioNone = (event) => {
         setDisStatus(event.target.value);
+        setUsePoint(0);
+        setRemainPoint(memberPoint);
+        setProAmount(price);
+        setDisAmount(0);
+        setPayAmount(price);
     };
     
     const changeRadioPoint = (event) => {
         setDisStatus(event.target.value);
     };
 
-    const changeRadioTicket = (event) => {
-        setDisStatus(event.target.value);
-    };
-
     const changeUsePoint = (event) => {
-        const newUsePoint = event.target.value;
-        const newRemainPoint = memberPoint - newUsePoint;
-        setUsePoint(event.target.value);
-        setRemainPoint(memberPoint - newUsePoint);
-        console.log(usePoint+":"+remainPoint);
+        let tempUsePoint = event.target.value; //사용할 포인트
+        let tempRemainPoint = memberPoint - tempUsePoint; //남을 포인트
+        let limitUsePoint;
+
+        setUsePoint(tempUsePoint);
+        setRemainPoint(memberPoint - tempUsePoint);
+        setDisAmount(tempUsePoint);
+        settingPayAmount(tempUsePoint);
+
+        if(memberPoint < proAmount){ //보유포인트 < 최종가격
+            limitUsePoint = memberPoint;
+        }else{ //보유포인트 >= 최종가격
+            limitUsePoint = proAmount;
+        }
+
+        if(limitUsePoint < tempUsePoint || tempRemainPoint < 0){
+            alert("포인트를 최대치로 사용하였습니다.");
+            setUsePoint(limitUsePoint);
+            setRemainPoint(memberPoint - limitUsePoint);
+            setDisAmount(limitUsePoint);
+            settingPayAmount(limitUsePoint);
+        }
     }
 
     const useAllPoint = () => {
-        if(payAmount < memberPoint){ //상품가격 < 보유포인트
-            setUsePoint(payAmount);
-            setRemainPoint(memberPoint - payAmount);
+        if(proAmount < memberPoint){ //상품가격 < 보유포인트
+            setUsePoint(proAmount);
+            setRemainPoint(memberPoint - proAmount);
+            setDisAmount(proAmount);
+            settingPayAmount(proAmount);
 
         }else{ //상품가격 > 보유포인트, 상품가격 == 보유포인트
             setUsePoint(memberPoint);
             setRemainPoint(0);
+            setDisAmount(memberPoint);
+            settingPayAmount(memberPoint);
+            
         }
+    }
+
+    const settingMaxPoint = () => {
+        if(memberPoint > proAmount){ //보유포인트 > 최종가격
+            setLimitPoint(proAmount);
+        }else{ //보유포인트 =< 최종가격
+            setLimitPoint(memberPoint);
+        }
+    }
+    
+    const settingPayAmount = (dis) => {
+        setPayAmount(proAmount - dis);
     }
 
     return (
@@ -223,7 +270,7 @@ const Payment = ({server, onClickLogout}) => {
                 
                 <div style={pointDisplayType}>
                     <label>사용할 포인트</label>
-                    <input value={usePoint} type="text" placeholder="사용할 포인트" onChange={(e) => changeUsePoint(e)}/><br/>
+                    <input value={usePoint} type="number" min="0" max={limitPoint} placeholder="사용할 포인트" onChange={(e) => changeUsePoint(e)}/><br/>
                     <p>잔여 포인트 : {remainPoint}</p>
                     <button type='button' onClick={useAllPoint}>전액사용</button>
                 </div>

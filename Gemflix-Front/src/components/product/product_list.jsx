@@ -2,6 +2,7 @@ import { React, useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import ProductItem from './product_item';
+import { deleteCartByAdmin } from '../../store/actions';
 
 const ProductList = ({server}) => {
 
@@ -11,6 +12,7 @@ const ProductList = ({server}) => {
     const [products, setProducts] = useState([]);
     const [textCategories, setTextCategories] = useState([]);
     const [categories, setCategories] = useState(new Map());
+    const [refreshCnt, setRefreshCnt] = useState(0);
 
     const onClickCreate = () => {
         navigate('/product/create', { state: { categories: categories } });
@@ -18,6 +20,13 @@ const ProductList = ({server}) => {
 
     useEffect(() => {
         //get category
+        getCategories();
+
+        //get product
+        getProducts();
+    }, [refreshCnt]);
+
+    const getCategories = () => {
         server.category()
         .then(response => {
             const data = response.data;
@@ -31,10 +40,7 @@ const ProductList = ({server}) => {
         .finally(() => {
             console.log("category request end");
         });
-
-        //get product
-        getProducts();
-    }, []);
+    }
 
     const getProducts = () => {
         server.products()
@@ -58,10 +64,10 @@ const ProductList = ({server}) => {
             .then(response => {
                 const code = response.code;
                 if(code === 1000){ //success
+                    //회원들의 장바구니 상품들도 삭제반영
+                    dispatch(deleteCartByAdmin(prId));
                     alert("삭제되었습니다.");
-                    //목록페이지로 이동
-                    navigate('/products');
-
+                    setRefreshCnt(refreshCnt + 1);
                 }else{ //fail
                     alert(response.message);
                 }

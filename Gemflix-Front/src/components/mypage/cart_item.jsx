@@ -1,10 +1,11 @@
 import React from 'react';
 
-const CartItem = ({cart}) => {
+const CartItem = (props) => {
     
-    const count = cart.count;
-    const item = cart.item;
-    const totalPrice = cart.totalPrice;
+    const count = props.count;
+    const totalPrice = props.totalPrice;
+    const name = props.name;
+    const base64 = props.base64;
 
     const inputPriceFormat = (str) => {
         const comma = (str) => {
@@ -24,12 +25,12 @@ const CartItem = ({cart}) => {
                 <div className='cart_img'>
                     <img
                         className="preview"
-                        src={item.base64}
+                        src={base64}
                         style={{width:"100px",height:"100px"}}
                     />
                 </div>
                 <div className='cart_content'>
-                    <h4>{item.name}</h4>
+                    <h4>{name}</h4>
                     <p>수량 : {count} 개</p>
                     <p>가격 : {inputPriceFormat(totalPrice)} 원</p>
                 </div>

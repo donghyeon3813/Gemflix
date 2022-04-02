@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import CartItem from './cart_item';
 import { deleteCart } from '../../store/actions';
 import { useLocation, useNavigate } from 'react-router';
 
-const CartList = (props) => {
+const CartList = memo((props) => {
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -13,12 +13,14 @@ const CartList = (props) => {
     const carts = useSelector(store => store.cartReducer, shallowEqual);
     const [memberCarts, setMemberCarts] = useState([]);
     const [cartName, setCartName] = useState('');
+    const [orderCartName, setOrderCartName] = useState('');
 
     const [allPrice, setAllPrice] = useState(0);
     const [selectedPrice, setSelectedPrice] = useState(0);
 
-    const [checkList, setCheckList] = useState([])
-    const [idList, setIdList] = useState([])
+    const [checkList, setCheckList] = useState([]);
+    const [idList, setIdList] = useState([]);
+    const [refreshCnt, setRefreshCnt] = useState(0);
 
     useEffect(() => {
         setAllPrice(0);
@@ -27,59 +29,99 @@ const CartList = (props) => {
         setIdList([]);
 
         if(0 < carts.length){
-            const tempCarts = carts.filter((cart) => cart.memberId === user.memberId);
-            const num =tempCarts.length-1;
-            setMemberCarts(tempCarts);
-            console.log(tempCarts);
-            
+            const memberId = user.memberId;
+            let tempMemberCart = null;
+            carts.forEach(thisMember => {
+                if(Object.hasOwn(thisMember, memberId)){
+                    tempMemberCart = thisMember[memberId];
+                    setMemberCarts(tempMemberCart);
+                    console.log(tempMemberCart);
+                }
+            });
+
             let tempAllPrice = 0;
             let ids = [];
-            tempCarts.map((cart, index) => {
-                tempAllPrice = tempAllPrice + cart.totalPrice;
-                ids[index] = cart.id;
-            });
-            setAllPrice(tempAllPrice);
-            setIdList(ids);
-            if(tempCarts.length == 1){
-                setCartName(tempCarts[0].item.name);
-            }else{
-                setCartName(tempCarts[0].item.name + " 외 " + num + "개의 상품...");
+            let i = 0;
+
+            if(tempMemberCart.length != null){
+                tempMemberCart.forEach((item) => {
+                    item.selectedCounts.forEach((count) => {
+                        tempAllPrice = tempAllPrice + count.totalPrice;
+                        ids[i] = count.cId;
+                        i = i + 1;
+                    });
+                });
+                setAllPrice(tempAllPrice);
+                setIdList(ids);
+    
+                let len = tempMemberCart.length;
+                if(0 < len){
+                    if(len === 1){
+                        setCartName(tempMemberCart[0].name);
+                    }else{
+                        setCartName(tempMemberCart[0].name + " 외 " + (len-1) + "개의 상품...");
+                    }
+                    setOrderCartName(tempMemberCart[0].name);
+                }
             }
         }
-    }, [carts]);
+    }, [refreshCnt]);
 
     const onChangeAll = (e) => {
         setCheckList(e.target.checked ? idList : []);
         setSelectedPrice(e.target.checked ? allPrice : 0);
     }
 
-    const onChangeEach = (e, id, price) => {
+    const onChangeEach = (e, cId, totalPrice) => {
         if(e.target.checked){
-            setCheckList([...checkList, id]);
-            setSelectedPrice(selectedPrice + price);
+            setCheckList([...checkList, cId]);
+            setSelectedPrice(selectedPrice + totalPrice);
         }else{
-            setCheckList(checkList.filter((checkedId) => checkedId !== id));
-            setSelectedPrice(selectedPrice - price);
+            setCheckList(checkList.filter((checkedId) => checkedId !== cId));
+            setSelectedPrice(selectedPrice - totalPrice);
         }
     }
 
     const onClickDeleteCart = () => {
-        const deleteAfterCarts = carts.filter((item) => {
-            if(!checkList.includes(item.id)){
-                return item;
+        const memberId = user.memberId;
+        let deleteAfterMemberItems;
+
+        carts.filter(thisMember => {
+            if(Object.hasOwn(thisMember, memberId)){
+                let oldItems = thisMember[memberId];
+
+                deleteAfterMemberItems = oldItems.map(thisItem => {
+                    let oldSelectedCounts = thisItem.selectedCounts;
+                    let newSelectedCounts = oldSelectedCounts.map((thisCount) => {
+                        if(!checkList.includes(thisCount.cId)){
+                            return thisCount;
+                        }
+                    });
+                    newSelectedCounts = newSelectedCounts.filter((element) => element !== undefined);
+                    if(0 < newSelectedCounts.length){
+                        thisItem.selectedCounts = newSelectedCounts;
+                        return thisItem;
+                    }
+                });
             }
         });
-        console.log(deleteAfterCarts);
-        dispatch(deleteCart(deleteAfterCarts));
+        deleteAfterMemberItems = deleteAfterMemberItems.filter((element) => element !== undefined);
+        console.log(deleteAfterMemberItems);
+        dispatch(deleteCart(deleteAfterMemberItems, memberId));
         setMemberCarts([]);
         setCheckList([]);
+        setRefreshCnt(refreshCnt + 1);
     }
 
     const onClickOrderCart = () => {
+        const len = checkList.length;
+        if(1 < len){
+            setOrderCartName(orderCartName + " 외 " + (len-1) + "개의 상품...");
+        }
         navigate('/payment', {
             state: {
                 price: selectedPrice,
-                cartName: cartName,
+                cartName: orderCartName,
                 carts: memberCarts
             }
         });
@@ -111,14 +153,21 @@ const CartList = (props) => {
                     <input type="checkbox" onChange={onChangeAll} checked={checkList.length === idList.length}/>
                     <h3>{cartName}</h3>
                     {
-                        memberCarts.map((cart, index) => (
-                        <div key={index}>
-                            <div className='cart_box'>
-                                <input type="checkbox" onChange={(e) => onChangeEach(e, cart.id, cart.totalPrice)} checked={checkList.includes(cart.id)}/>
-                                <CartItem key={cart.id} cart={cart}/>
-                            </div>
-                        </div>
-                    ))
+                        memberCarts.map((cart) => {
+                            return (
+                                cart.selectedCounts.map((thisCount) => {
+                                    return (
+                                    <div className='cart_box' key={thisCount.cId}>
+                                        <input type="checkbox" onChange={(e) => onChangeEach(e, thisCount.cId, thisCount.totalPrice)} 
+                                            checked={checkList.includes(thisCount.cId)}/>
+                                        <CartItem key={thisCount.cId} count={thisCount.count} 
+                                            totalPrice={thisCount.totalPrice} name={cart.name} base64={cart.base64}/>
+                                    </div>
+                                    );
+                                })
+
+                            );
+                        })
                     }
                     <h2>총 {inputPriceFormat(selectedPrice)}원</h2>
                     <button type='button' onClick={() => onClickOrderCart()}>선택상품 주문</button>
@@ -127,6 +176,6 @@ const CartList = (props) => {
             </>
         );
     }
-};
+});
 
 export default CartList;

@@ -108,7 +108,7 @@ class AuthService{
         return await this.server.delete('/product', { 
             params: {
                 prId: prId
-            } 
+            }
         })
         .then(function (success) {
             return success.data;
@@ -119,11 +119,10 @@ class AuthService{
     }
     
     //결제 endpoint
-    async completePayment(formData) {
-        return await this.server.post('/payments/complete', {
-            headers: { "Content-Type": "application/json" },
-            formData
-        }, {})
+    async completePayment(data) {
+        return await this.server.post('/payments/complete', data, {
+            headers: { 'Content-Type': 'application/json' }
+        })
         .then(function (success) {
             console.log(success.data);
             return success.data;

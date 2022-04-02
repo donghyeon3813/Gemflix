@@ -12,7 +12,7 @@ const ProductCreateForm = ({server, onClickLogout}) => {
     const [name, setName] = useState('');
     const [content, setContent] = useState('');
     const [status, setStatus] = useState(null);
-    const [price, setPrice] = useState('');
+    const [price, setPrice] = useState(0);
     const [response, setReponse] = useState([]);
     const [requestCnt, setRequestCnt] = useState(0);
     const [loading , setLoading] = useState(false);
@@ -120,7 +120,7 @@ const ProductCreateForm = ({server, onClickLogout}) => {
             setImgFile(null);
             setStatus(null);
             setImgBase64([]);
-            setPrice('');
+            setPrice(0);
             setCategory(categories.get(0));
             setName('');
             setContent('');
@@ -148,7 +148,7 @@ const ProductCreateForm = ({server, onClickLogout}) => {
     };
 
     const changePrice = (event) => {
-        setPrice(inputPriceFormat(event.target.value));
+        setPrice(event.target.value);
     }
 
     const changeName = (event) => {
@@ -192,7 +192,7 @@ const ProductCreateForm = ({server, onClickLogout}) => {
                         <h4>상품명</h4>
                         <input value={name} type="text" placeholder="상품명(20자 이내)" onChange={changeName} onKeyPress={handleKeyPress}/><br/>
                         <h4>가격</h4>
-                        <input value={price} type="text" placeholder="가격(100만원 이내)" onChange={changePrice}/>원<br/>
+                        <input value={inputPriceFormat(price)} type="text" placeholder="가격(100만원 이내)" onChange={changePrice}/>원<br/>
                         <h4>상세설명</h4>
                         <input value={content} type="text" placeholder="상세설명(500자 이내)" onChange={changeContent}/><br/>
                         <h4>판매상태</h4>
