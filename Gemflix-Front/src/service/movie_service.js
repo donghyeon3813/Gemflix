@@ -95,6 +95,53 @@ class MovieService {
         return error.request.response;
       });
   }
+
+  async place() {
+    return await this.server
+      .get("/reservation/places/", null)
+      .then(function (success) {
+        console.log(success);
+        return success.data;
+      })
+      .catch(function (error) {
+        return error.request.response;
+      });
+  }
+  async theater(data) {
+    return await this.server
+      .get("/reservation/theaters/", { params: data })
+      .then(function (success) {
+        console.log(success);
+        return success.data;
+      })
+      .catch(function (error) {
+        return error.request.response;
+      });
+  }
+
+  async showingMovie() {
+    return await this.server
+      .get("/reservation/movies/", null)
+      .then(function (success) {
+        console.log(success);
+        return success.data;
+      })
+      .catch(function (error) {
+        return error.request.response;
+      });
+  }
+  async screens(data) {
+    console.log(data);
+    return await this.server
+      .get("/reservation/screens/", { params: data })
+      .then(function (success) {
+        console.log(success);
+        return success.data;
+      })
+      .catch(function (error) {
+        return error.request.response;
+      });
+  }
 }
 
 export default MovieService;

@@ -100,6 +100,17 @@ public class MovieRepositorySupport {
         return movieDetailDto;
     }
 
+    public List<MovieListDto> findShowingMovieList() throws Exception{
+        return query
+                .select(Projections.fields(MovieListDto.class,
+                        movie.mvId.as("mvId"),
+                        movie.title.as("title")
+                ))
+                .from(movie)
+                .where(movie.status.eq("1"))
+                .orderBy(movie.title.asc())
+                .fetch();
+    }
 
     // 동적쿼리 제목
      BooleanExpression eqTitle(String title){

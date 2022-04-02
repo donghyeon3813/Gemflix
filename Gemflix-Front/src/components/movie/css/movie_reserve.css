@@ -1,0 +1,7 @@
+.swiper-container {
+  width: 450px;
+  height: 50px !important;
+}
+.swiper-wrapper {
+  height: 100px;
+}

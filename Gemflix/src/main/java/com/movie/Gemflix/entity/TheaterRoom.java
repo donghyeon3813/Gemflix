@@ -23,7 +23,7 @@ public class TheaterRoom {
     private Long roomId;
 
     private String name;
-    private String seatCnt;
+    private int seatCnt;
 
     @ManyToOne
     @JoinColumn(name = "TH_ID")

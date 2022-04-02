@@ -29,7 +29,7 @@ public class Screening {
     @JoinColumn(name = "MV_ID")
     private Movie movie;
 
-    private LocalDateTime StartTime;
+    private LocalDateTime startTime;
     private LocalDateTime endTime;
     private LocalDateTime screeningDate;
     private String type;
