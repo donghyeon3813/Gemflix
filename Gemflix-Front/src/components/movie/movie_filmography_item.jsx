@@ -2,7 +2,8 @@ import axios from "axios";
 const MovieFilmographyItem = (props) => {
   const filmography = props.filmography;
   const movieItemStyle = {
-    width: "400px",
+    width: "300px",
+    margin: "auto",
   };
   const imgStyle = {
     width: "200px",

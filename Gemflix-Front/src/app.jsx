@@ -22,8 +22,7 @@ import Payment from "./components/mypage/payment";
 import CartList from "./components/mypage/cart_list";
 dotenv.config();
 
-function App({ server }) {
-
+function App({ server, movieServer }) {
   const KAKAO_CLIENT_ID = process.env.REACT_APP_KAKAO_CLIENT_ID;
   const KAKAO_REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI;
 
@@ -122,14 +121,46 @@ function App({ server }) {
               }></Route>
 
             {/* movie */}
-            <Route path="/movies" exact element={<MovieList />}></Route>
-            <Route path="/movies/view" exact element={<MovieView />}></Route>
-            <Route path="/reserve" exact element={<MovieReserve />}></Route>
+
+            <Route
+              path="/movies"
+              exact
+              element={<MovieList movieServer={movieServer} />}
+            ></Route>
+            <Route
+              path="/movies/view"
+              exact
+              element={<MovieView movieServer={movieServer} />}
+            ></Route>
+            <Route
+              path="/reserve"
+              exact
+              element={<MovieReserve movieServer={movieServer} />}
+            ></Route>
 
             {/* product */}
-            <Route path="/products" element={<ProductList server={server}/>}></Route>
-            <Route path="/product/create" element={<ProductCreateForm server={server} onClickLogout={onClickLogout}/>}></Route>
-            <Route path="/product/modify" element={<ProductModifyForm server={server} onClickLogout={onClickLogout}/>}></Route>
+            <Route
+              path="/products"
+              element={<ProductList server={server} />}
+            ></Route>
+            <Route
+              path="/product/create"
+              element={
+                <ProductCreateForm
+                  server={server}
+                  onClickLogout={onClickLogout}
+                />
+              }
+            ></Route>
+            <Route
+              path="/product/modify"
+              element={
+                <ProductModifyForm
+                  server={server}
+                  onClickLogout={onClickLogout}
+                />
+              }
+            ></Route>
 
             {/* myPage */}
             <Route path="/cartList" element={<CartList />}></Route>
