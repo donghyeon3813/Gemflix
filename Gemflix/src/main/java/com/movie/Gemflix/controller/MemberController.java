@@ -4,6 +4,7 @@ import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.dto.member.MemberDto;
+import com.movie.Gemflix.dto.member.RegMemberDto;
 import com.movie.Gemflix.entity.Member;
 import com.movie.Gemflix.repository.member.MemberRepository;
 import com.movie.Gemflix.service.CommonService;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +33,7 @@ public class MemberController {
     private final MemberRepository memberRepository;
 
     //회원프로필 조회
-//    @Secured({"ROLE_NO_PERMISSION", "ROLE_MEMBER", "ROLE_ADMIN"})
+    @Secured({"ROLE_NO_PERMISSION", "ROLE_MEMBER", "ROLE_ADMIN"})
     @GetMapping("/profile")
     public ResponseEntity<?> getProfile(HttpServletRequest request, HttpServletResponse response){
         String memberId = commonService.getRequesterId(request);
@@ -47,14 +49,14 @@ public class MemberController {
 
         Member member = optMember.get();
         log.info("member: {}", member);
-        MemberDto memberDto = modelMapper.map(member, MemberDto.class);
-        log.info("memberDto: {}", memberDto);
-        memberDto.setPassword(null);
+        RegMemberDto regMemberDto = modelMapper.map(member, RegMemberDto.class);
+        log.info("memberDto: {}", regMemberDto);
+        regMemberDto.setPassword(null);
 
         return CommonResponse.createResponse(CommonResponse.builder()
                 .code(Constant.Success.SUCCESS_CODE)
                 .message("Member Profile Success")
-                .data(memberDto)
+                .data(regMemberDto)
                 .build(), HttpStatus.OK);
     }
 

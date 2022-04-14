@@ -1,12 +1,16 @@
 package com.movie.Gemflix.dto.payment;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.movie.Gemflix.dto.member.MemberDto;
+import com.movie.Gemflix.entity.PaidProduct;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
-@ToString
+@ToString(exclude = "paidProducts")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentDto {
@@ -17,10 +21,16 @@ public class PaymentDto {
     private int proAmount;
     private int disAmount;
     private int payAmount;
-    private int payType;
-    private int disType;
+    private String payType;
+    private String disType;
+    private LocalDateTime payDate;
+    private String payStatus;
     private String payName;
     private String payPhone;
     private String payAddress;
+
+    private MemberDto member;
+
+    private List<PaidProductDto> paidProducts = new ArrayList<>();
 
 }

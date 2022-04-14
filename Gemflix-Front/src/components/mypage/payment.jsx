@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal/lib/components/Modal';
+import { shallowEqual, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useResolvedPath } from 'react-router';
 import { useScript } from '../../hooks';
 import DaumPost from './daum_post';
@@ -16,15 +17,16 @@ const Payment = ({server, onClickLogout}) => {
     const cartName = location.state.cartName;
     const price = location.state.price;
     let memberInfo;
-    let carts;
-    let tickets;
 
+    const user = useSelector(store => store.userReducer, shallowEqual);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
     const [detailAddress, setDetailAddress] = useState('');
+    const [carts, setCarts] = useState([]);
+    const [tickets, setTickets] = useState([]);
 
     const [memberPoint, setMemberPoint] = useState(0); //총 보유 포인트
     const [usePoint, setUsePoint] = useState(0); //사용할 포인트
@@ -54,10 +56,10 @@ const Payment = ({server, onClickLogout}) => {
     
 	useEffect(() => {
         if(location.state.carts){
-            carts = location.state.carts;
+            setCarts(location.state.carts);
         }
         if(location.state.tickets){
-            tickets = location.state.tickets;
+            setTickets(location.state.tickets);
         }
         console.log(carts);
         console.log(tickets);
@@ -129,6 +131,7 @@ const Payment = ({server, onClickLogout}) => {
                 ,res => { // callback
                     if(res.success){
                         // 결제 성공 시 로직
+                        alert("결제가 완료되었습니다.");
                         console.log("payment requset success");
                         const imp_uid = res.imp_uid;
                         const merchant_uid = res.merchant_uid;
@@ -136,6 +139,9 @@ const Payment = ({server, onClickLogout}) => {
                         if(disAmount !== 0){
                             setDisType(1);
                         }
+
+                        console.log(carts);
+                        console.log(tickets);
 
                         const data = {
                             imp_uid: imp_uid,
@@ -148,11 +154,13 @@ const Payment = ({server, onClickLogout}) => {
                             dis_type: disType,
                             pay_name: name,
                             pay_phone: phone,
-                            pay_address: address + " " + detailAddress
+                            pay_address: address + " " + detailAddress,
+                            carts: carts,
+                            tickets: tickets
                         };
 
                         // axios로 HTTP 요청
-                        server.completePayment(data)
+                        server.completePayment(data, user.memberId)
                             .then((data) => {
                                 // 서버 결제 API 성공시 로직
                                 console.log(data);

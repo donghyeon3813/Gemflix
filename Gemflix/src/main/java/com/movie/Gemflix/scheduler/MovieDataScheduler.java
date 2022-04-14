@@ -35,7 +35,7 @@ public class MovieDataScheduler {
 
     }
 
-    @Scheduled(cron = "0 0 11 * * *") //매일11시 설정
+    @Scheduled(cron = "0 0 23 * * *") //매일 오후11시 설정
     private void settingMovieScreening() {
         screeningService.settingMovieScreening();
     }

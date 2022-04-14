@@ -43,7 +43,7 @@ const CartList = memo((props) => {
             let ids = [];
             let i = 0;
 
-            if(tempMemberCart.length != null){
+            if(tempMemberCart && tempMemberCart.length != null){
                 tempMemberCart.forEach((item) => {
                     item.selectedCounts.forEach((count) => {
                         tempAllPrice = tempAllPrice + count.totalPrice;
@@ -115,16 +115,20 @@ const CartList = memo((props) => {
 
     const onClickOrderCart = () => {
         const len = checkList.length;
-        if(1 < len){
-            setOrderCartName(orderCartName + " 외 " + (len-1) + "개의 상품...");
-        }
-        navigate('/payment', {
-            state: {
-                price: selectedPrice,
-                cartName: orderCartName,
-                carts: memberCarts
+        if(len === 0){
+            alert("선택된 상품이 없습니다.");
+        }else{
+            if(1 < len){
+                setOrderCartName(orderCartName + " 외 " + (len-1) + "개의 상품...");
             }
-        });
+            navigate('/payment', {
+                state: {
+                    price: selectedPrice,
+                    cartName: orderCartName,
+                    carts: memberCarts
+                }
+            });
+        }
     }
 
     const inputPriceFormat = (str) => {

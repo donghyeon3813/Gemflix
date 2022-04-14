@@ -119,8 +119,8 @@ class AuthService{
     }
     
     //결제 endpoint
-    async completePayment(data) {
-        return await this.server.post('/payments/complete', data, {
+    async completePayment(data, memberId) {
+        return await this.server.post('/payments/complete/' + memberId, data, {
             headers: { 'Content-Type': 'application/json' }
         })
         .then(function (success) {

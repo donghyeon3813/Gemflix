@@ -1,6 +1,6 @@
 package com.movie.Gemflix.security.service;
 
-import com.movie.Gemflix.dto.member.MemberDto;
+import com.movie.Gemflix.dto.member.RegMemberDto;
 import com.movie.Gemflix.repository.member.MemberRepository;
 import com.movie.Gemflix.security.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +24,16 @@ public class EmailService {
     private static final String MAIL_SUBJECT = "[Gemflix] 회원가입 인증메일입니다.";
     private static final Long LINK_EXPIRE_TIME = 60 * 30L; //30분
 
-    public boolean sendVerificationMail(MemberDto memberDTO) throws Exception{
+    public boolean sendVerificationMail(RegMemberDto regMemberDTO) throws Exception{
         try {
             String uuid = UUID.randomUUID().toString();
-            String memberId = memberDTO.getId();
+            String memberId = regMemberDTO.getId();
             redisUtil.setStringDataExpire(RedisUtil.PREFIX_EMAIL_KEY + uuid, memberId, LINK_EXPIRE_TIME);
             String text = "안녕하세요. " + memberId + "님," +
                     "\n 보석같은 영화를 제공하는 Gemplix 입니다." +
                     "\n 아래 링크를 눌러 Email 인증을 완료하세요." +
                     "\n " + MAIL_VERIFICATION_LINK + uuid;
-            sendMail(memberDTO.getEmail(), MAIL_SUBJECT, text);
+            sendMail(regMemberDTO.getEmail(), MAIL_SUBJECT, text);
         }catch (Exception e){
             e.printStackTrace();
             log.error("fail to send mail.");

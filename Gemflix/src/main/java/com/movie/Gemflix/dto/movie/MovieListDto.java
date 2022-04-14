@@ -1,11 +1,15 @@
 package com.movie.Gemflix.dto.movie;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
 
 @Data
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class MovieListDto {
     private Long mvId;
     private String imgUrl;

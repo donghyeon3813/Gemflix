@@ -1,9 +1,6 @@
 package com.movie.Gemflix.security.model;
 
-import com.movie.Gemflix.entity.MemberRole;
 import lombok.*;
-
-import javax.servlet.http.Cookie;
 
 //사용자에게 반환될 JWT를 담은 Response
 @Data

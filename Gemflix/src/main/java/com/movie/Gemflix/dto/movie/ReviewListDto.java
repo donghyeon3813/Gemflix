@@ -2,11 +2,15 @@ package com.movie.Gemflix.dto.movie;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.movie.Gemflix.entity.Movie;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Data
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReviewListDto {
     private Long rvId;
     private String content;

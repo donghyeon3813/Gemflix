@@ -1,8 +1,12 @@
 package com.movie.Gemflix.dto.member;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class KakaoProfileDto {
     public Integer id;
     public String connected_at;

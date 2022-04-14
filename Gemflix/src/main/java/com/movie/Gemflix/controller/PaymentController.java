@@ -9,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @Slf4j
@@ -23,12 +20,13 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     //결제 정보 전달받는 API endpoint
-    @PostMapping("/payments/complete")
-    public ResponseEntity<?> completePayment(@RequestBody JSONObject body){
+    @PostMapping("/payments/complete/{memberId}")
+    public ResponseEntity<?> completePayment(@RequestBody JSONObject requestBody,
+                                             @PathVariable String memberId){
         log.info("===== completePayment =====");
-        log.info("body: {}", body);
+        log.info("requestBody: {}, memberId: {}", requestBody, memberId);
 
-        paymentService.completePayment(body);
+        paymentService.completePayment(requestBody, memberId);
 
 
 

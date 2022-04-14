@@ -2,7 +2,7 @@ package com.movie.Gemflix.security.service;
 
 import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.ErrorType;
-import com.movie.Gemflix.dto.member.MemberDto;
+import com.movie.Gemflix.dto.member.RegMemberDto;
 import com.movie.Gemflix.entity.Member;
 import com.movie.Gemflix.entity.MemberRole;
 import com.movie.Gemflix.entity.QMember;
@@ -39,29 +39,29 @@ public class AuthService {
     private EntityManager entityManager;
 
     @Transactional
-    public CommonResponse registerMember(MemberDto memberDTO) throws Exception{
+    public CommonResponse registerMember(RegMemberDto regMemberDTO) throws Exception{
         //ID 중복 검사
-        Optional<Member> optMember = memberRepository.findById(memberDTO.getId());
+        Optional<Member> optMember = memberRepository.findById(regMemberDTO.getId());
         if(optMember.isPresent()){
             return new CommonResponse(ErrorType.DUPLICATED_MEMBER_ID.getErrorCode(),
                     ErrorType.DUPLICATED_MEMBER_ID.getErrorMessage());
         }
 
         //EMAIL 중복 검사
-        Optional<Member> optMember02 = memberRepository.findByEmail(memberDTO.getEmail());
+        Optional<Member> optMember02 = memberRepository.findByEmail(regMemberDTO.getEmail());
         if(optMember02.isPresent()){
             return new CommonResponse(ErrorType.DUPLICATED_MEMBER_EMAIL.getErrorCode(),
                     ErrorType.DUPLICATED_MEMBER_EMAIL.getErrorMessage());
         }
 
         //Email 인증
-        if(!emailService.sendVerificationMail(memberDTO)){
+        if(!emailService.sendVerificationMail(regMemberDTO)){
             return new CommonResponse(ErrorType.INVALID_MEMBER_EMAIL.getErrorCode(),
                     ErrorType.INVALID_MEMBER_EMAIL.getErrorMessage());
         }
         //회원 등록
-        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
-        Member member = modelMapper.map(memberDTO, Member.class);
+        regMemberDTO.setPassword(passwordEncoder.encode(regMemberDTO.getPassword()));
+        Member member = modelMapper.map(regMemberDTO, Member.class);
         memberRepository.save(member);
         return null;
     }

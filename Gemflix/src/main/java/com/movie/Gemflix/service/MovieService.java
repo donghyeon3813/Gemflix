@@ -3,7 +3,6 @@ package com.movie.Gemflix.service;
 import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.dto.movie.*;
-import com.movie.Gemflix.entity.Filmography;
 import com.movie.Gemflix.entity.Member;
 import com.movie.Gemflix.entity.Review;
 import com.movie.Gemflix.entity.Ticket;

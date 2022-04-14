@@ -1,10 +1,12 @@
 package com.movie.Gemflix.dto.member;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 @Data
 @ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OAuthToken {
     private String access_token;
     private String token_type;

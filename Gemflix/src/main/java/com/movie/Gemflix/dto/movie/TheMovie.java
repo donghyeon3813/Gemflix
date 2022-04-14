@@ -1,8 +1,12 @@
 package com.movie.Gemflix.dto.movie;
 
-import lombok.Data;
+import lombok.*;
 
 @Data
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TheMovie {
     private boolean adult; // 성인영화여부
     private String genreName; // 포함장르
