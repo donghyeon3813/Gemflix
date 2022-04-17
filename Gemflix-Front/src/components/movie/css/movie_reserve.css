@@ -5,3 +5,43 @@
 .swiper-wrapper {
   height: 100px;
 }
+.theater-room-group {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.theater-room {
+  width: 100px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(248, 248, 248, 1) 100%
+  );
+  color: black;
+}
+.theater-room-all {
+  overflow: auto;
+  height: 500px;
+}
+.small-seat-rows {
+  position: relative;
+  height: 10px;
+}
+.big-seat-rows {
+  position: relative;
+  height: 40px;
+}
+.seat-row-name {
+  position: absolute;
+  left: 10px;
+}
+
+.seat-color-red {
+  background-color: red;
+}

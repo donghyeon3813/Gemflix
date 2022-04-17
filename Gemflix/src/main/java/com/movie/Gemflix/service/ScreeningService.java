@@ -34,8 +34,8 @@ public class ScreeningService {
     private static final String STATUS_TRUE = "1"; //상영중
 
     public void settingMovieScreening() {
-        settingStartTime();
         LocalDateTime after7Day = LocalDateTime.now().plusDays(7);
+        settingStartTime(after7Day);
         Optional<List<Movie>> optMovies = movieRepository.findByStatus(STATUS_TRUE);
 
         if(!optMovies.isPresent()){
@@ -83,8 +83,7 @@ public class ScreeningService {
         }
     }
 
-    private void settingStartTime(){
-        LocalDateTime after7Day = LocalDateTime.now().plusDays(7);
+    private void settingStartTime(LocalDateTime after7Day){
         //직접 변경
         LocalDateTime hour11 = after7Day.withHour(11).withMinute(0).withSecond(0);
         LocalDateTime hour14 = after7Day.withHour(14).withMinute(0).withSecond(0);
