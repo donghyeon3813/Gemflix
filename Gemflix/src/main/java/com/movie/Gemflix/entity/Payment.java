@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = "paidProducts")
 @DynamicInsert //insert시 null인 필드 제외
 @Table(name = "PAYMENT")
 public class Payment {

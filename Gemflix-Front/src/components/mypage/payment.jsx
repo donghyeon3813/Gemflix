@@ -131,7 +131,6 @@ const Payment = ({server, onClickLogout}) => {
                 ,res => { // callback
                     if(res.success){
                         // 결제 성공 시 로직
-                        alert("결제가 완료되었습니다.");
                         console.log("payment requset success");
                         const imp_uid = res.imp_uid;
                         const merchant_uid = res.merchant_uid;
@@ -163,9 +162,9 @@ const Payment = ({server, onClickLogout}) => {
                         server.completePayment(data, user.memberId)
                             .then((data) => {
                                 // 서버 결제 API 성공시 로직
-                                console.log(data);
-                                
-                            })
+                                console.log(data); 
+                            });
+                        alert("결제가 완료되었습니다.");
 
                     }else{
                         // 결제 실패 시 로직

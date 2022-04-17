@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = {"theaterRoom", "movie"})
 @DynamicInsert //insert시 null인 필드 제외
 @Table(name = "SCREENING")
 public class Screening {

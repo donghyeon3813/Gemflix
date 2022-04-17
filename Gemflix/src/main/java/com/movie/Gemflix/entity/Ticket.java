@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = {"member", "screening"})
 @DynamicInsert //insert시 null인 필드 제외
 @Table(name = "TICKET")
 public class Ticket {
