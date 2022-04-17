@@ -142,6 +142,18 @@ class MovieService {
         return error.request.response;
       });
   }
+  async screenInfo(data) {
+    console.log(data);
+    return await this.server
+      .get("/reservation/screen/" + data, null)
+      .then(function (success) {
+        console.log(success);
+        return success.data;
+      })
+      .catch(function (error) {
+        return error.request.response;
+      });
+  }
 }
 
 export default MovieService;

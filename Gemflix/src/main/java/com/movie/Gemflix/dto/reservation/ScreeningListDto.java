@@ -17,5 +17,6 @@ public class ScreeningListDto {
     private String mvTitle;
     private String trName;
     private int seatCnt;
+    private int spareSeatCnt;
 
 }

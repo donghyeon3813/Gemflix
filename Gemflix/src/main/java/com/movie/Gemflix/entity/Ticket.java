@@ -28,7 +28,9 @@ public class Ticket {
     @JoinColumn( name = "SI_ID")
     private Screening screening;
 
-    private String seat;
+    @OneToOne
+    @JoinColumn (name = "SE_ID")
+    private Seat seat;
 
     private int price;
 

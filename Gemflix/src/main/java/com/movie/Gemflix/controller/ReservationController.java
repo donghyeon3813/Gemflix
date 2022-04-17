@@ -7,6 +7,7 @@ import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.dto.movie.FilmographyList;
 import com.movie.Gemflix.dto.movie.MovieListDto;
 import com.movie.Gemflix.dto.movie.ReviewListDto;
+import com.movie.Gemflix.dto.reservation.ScreenInfoDto;
 import com.movie.Gemflix.dto.reservation.ScreenSearchDto;
 import com.movie.Gemflix.dto.reservation.ScreeningListDto;
 import com.movie.Gemflix.entity.Theater;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -107,11 +109,12 @@ public class ReservationController {
     }
 
     @GetMapping("/screens")
-    public ResponseEntity<?> findScreenList(@RequestParam(name = "mvId", required = false) Long mvId, @RequestParam("thId") Long thId){
+    public ResponseEntity<?> findScreenList(@RequestParam(name = "date") String date, @RequestParam("thId") Long thId,
+                                            @RequestParam(name = "mvId", required = false) Long mvId){
         log.info("method :{} ","findScreenList");
-        log.info("parameter :{},{}",mvId,thId);
+        log.info("parameter : date = {}, thid = {}, mvId = {}",date,thId,mvId);
         try {
-            List<ScreeningListDto> screenList = reservationService.findScreenList();
+            List<ScreeningListDto> screenList = reservationService.findScreenList(date,thId,mvId);
             log.info("Result : {}",screenList);
             return CommonResponse.createResponse(
                     CommonResponse.builder()
@@ -130,5 +133,32 @@ public class ReservationController {
                             .build(), HttpStatus.INTERNAL_SERVER_ERROR
             );
         }
+    }
+    @GetMapping("/screen/{siId}")
+    public ResponseEntity<?> findScreenInfo(@PathVariable("siId") Long siId){
+        log.info("method :{} ","findScreenInfo");
+        log.info("parameter :{}",siId);
+        try {
+
+            ScreenInfoDto findScreenInfo = reservationService.findScreenInfo(siId);
+            log.info("Result : {}",findScreenInfo);
+            return CommonResponse.createResponse(
+                    CommonResponse.builder()
+                            .code(Constant.Success.SUCCESS_CODE)
+                            .message("Success")
+                            .data(findScreenInfo)
+                            .build(),HttpStatus.OK
+            );
+        }catch (Exception e){
+            log.info("findScreenInfo Error ");
+            e.printStackTrace();
+            return CommonResponse.createResponse(
+                    CommonResponse.builder()
+                            .code(ErrorType.ETC_FAIL.getErrorCode())
+                            .message(ErrorType.ETC_FAIL.getErrorMessage())
+                            .build(), HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+
     }
 }
