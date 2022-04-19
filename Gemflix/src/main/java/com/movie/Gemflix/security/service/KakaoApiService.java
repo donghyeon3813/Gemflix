@@ -1,34 +1,36 @@
 package com.movie.Gemflix.security.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.movie.Gemflix.dto.member.KakaoProfileDto;
 import com.movie.Gemflix.dto.member.OAuthToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class KakaoApiService {
 
+    private final WebClient webClient;
+
     @Value("${kakao.api.key}")
     private String kakaoKey;
 
     public OAuthToken tokenRequest(String code) {
-        //POST방식으로 데이터 요청
-        //TODO: to webClient
-        RestTemplate restTemplate = new RestTemplate();
-
-        //HttpHeader
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+//        //POST방식으로 데이터 요청
+//        JSONObject body = new JSONObject();
+//        body.put("grant_type", "authorization_code");
+//        body.put("client_id", kakaoKey); //clientId 는 프로퍼티에 정의해놨음
+//        body.put("redirect_uri", "http://localhost:4200/auth/callback/kakao");
+//        body.put("code", code);
 
         //HttpBody
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
@@ -37,25 +39,35 @@ public class KakaoApiService {
         body.add("redirect_uri", "http://localhost:4200/auth/callback/kakao");
         body.add("code", code);
 
-        //HttpHeader와 HttpBody 담기기
-        HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(body, headers);
-        return restTemplate.exchange("https://kauth.kakao.com/oauth/token",
-                HttpMethod.POST, kakaoTokenRequest, OAuthToken.class).getBody();
+        Mono<OAuthToken> responseMono = webClient.post()
+                .uri("https://kauth.kakao.com/oauth/token")
+                .bodyValue(body)
+                .headers(headers -> headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(RuntimeException::new))
+                .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(RuntimeException::new))
+                .bodyToMono(OAuthToken.class)
+                ;
+
+        return responseMono.share().block();
     }
 
     public KakaoProfileDto userInfoRequest(OAuthToken oAuthToken) {
-        ///유저정보 요청
-        //TODO: to webClient
-        RestTemplate restTemplate = new RestTemplate();
+        String oauthToken = oAuthToken.getAccess_token();
 
-        //HttpHeader
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "Bearer " + oAuthToken.getAccess_token());
-        headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
+        //유저정보 요청
+        Mono<KakaoProfileDto> responseMono = webClient.post()
+                .uri("https://kapi.kakao.com/v2/user/me")
+                .headers(headers -> {
+                    headers.setBearerAuth(oauthToken);
+                    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+                })
+                .retrieve()
+                .onStatus(HttpStatus::is4xxClientError, response -> Mono.error(RuntimeException::new))
+                .onStatus(HttpStatus::is5xxServerError, response -> Mono.error(RuntimeException::new))
+                .bodyToMono(KakaoProfileDto.class)
+                ;
 
-        //HttpHeader와 HttpBody 담기기
-        HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers);
-        return restTemplate.exchange("https://kapi.kakao.com/v2/user/me",
-                HttpMethod.POST, kakaoProfileRequest, KakaoProfileDto.class).getBody();
+        return responseMono.share().block();
     }
 }
