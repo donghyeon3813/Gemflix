@@ -1,16 +1,19 @@
 package com.movie.Gemflix.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = "pointHistories")
 @DynamicInsert //insert시 null인 필드 제외
 @Table(name = "MEMBER")
 public class Member extends BaseEntity {
@@ -30,5 +33,8 @@ public class Member extends BaseEntity {
     private String grade;
     private String delStatus;
     private String fromSocial;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<PointHistory> pointHistories = new ArrayList<>();
 
 }

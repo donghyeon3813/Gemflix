@@ -25,12 +25,6 @@ public class KakaoApiService {
     private String kakaoKey;
 
     public OAuthToken tokenRequest(String code) {
-//        //POST방식으로 데이터 요청
-//        JSONObject body = new JSONObject();
-//        body.put("grant_type", "authorization_code");
-//        body.put("client_id", kakaoKey); //clientId 는 프로퍼티에 정의해놨음
-//        body.put("redirect_uri", "http://localhost:4200/auth/callback/kakao");
-//        body.put("code", code);
 
         //HttpBody
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();

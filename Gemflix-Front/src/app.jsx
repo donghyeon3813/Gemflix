@@ -20,6 +20,7 @@ import dotenv from "dotenv";
 import ProductModifyForm from "./components/product/product_modify_form";
 import Payment from "./components/mypage/payment";
 import CartList from "./components/mypage/cart_list";
+import PaymentList from "./components/mypage/payment_list";
 dotenv.config();
 
 function App({ server, movieServer }) {
@@ -165,6 +166,7 @@ function App({ server, movieServer }) {
             {/* myPage */}
             <Route path="/cartList" element={<CartList />}></Route>
             <Route path="/payment" element={<Payment server={server} onClickLogout={onClickLogout}/>}></Route>
+            <Route path="/paymentList" element={<PaymentList server={server} onClickLogout={onClickLogout}/>}></Route>
             
           </Routes>
           <Footer />

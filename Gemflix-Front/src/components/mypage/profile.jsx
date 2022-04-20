@@ -23,6 +23,14 @@ const Profile = () => {
         });
     }
 
+    const onClickPaymentList = () => {
+        navigate('/paymentList', {
+            state: {
+                memberInfo: memberInfo
+            }
+        });
+    }
+
     return (
         <>
         <div>
@@ -44,7 +52,7 @@ const Profile = () => {
             <label>가입날짜 : {regDate}</label>
         </div>
         <button type='button' onClick={onClickCartList}>장바구니</button>
-        <button type='button'>결제내역</button>
+        <button type='button' onClick={onClickPaymentList}>결제내역</button>
         <button type='button'>관람영화</button>
         <button type='button'>탈퇴하기</button>
         </>

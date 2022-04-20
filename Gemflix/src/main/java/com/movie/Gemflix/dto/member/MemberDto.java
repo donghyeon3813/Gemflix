@@ -5,6 +5,8 @@ import lombok.*;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @ToString
@@ -26,5 +28,11 @@ public class MemberDto {
     private String fromSocial;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
+
+    private List<PointHistoryDto> pointHistories = new ArrayList<>();
+
+    public void addPointHistory(PointHistoryDto pointHistoryDto){
+        this.pointHistories.add(pointHistoryDto);
+    }
 
 }

@@ -133,6 +133,21 @@ class AuthService{
         });
     }
 
+    //결제 endpoint
+    async savePayment(data, memberId) {
+        return await this.server.post('/payments/save/' + memberId, data, {
+            headers: { 'Content-Type': 'application/json' }
+        })
+        .then(function (success) {
+            console.log(success.data);
+            return success.data;
+        })
+        .catch(function (error) {
+            console.log(error.request.response);
+            return JSON.parse(error.request.response);
+        });
+    }
+
 }
 
 export default AuthService;

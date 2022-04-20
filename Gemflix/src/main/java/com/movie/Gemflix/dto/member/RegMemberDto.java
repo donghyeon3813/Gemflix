@@ -1,10 +1,13 @@
 package com.movie.Gemflix.dto.member;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.movie.Gemflix.entity.MemberRole;
 import lombok.*;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @ToString
@@ -32,13 +35,20 @@ public class RegMemberDto {
     private String email;
 
     //그 외 기본 정보들
-    private int point = 0;
+    private int point; //회원가입 포인트
     private String status = "1";
-    private MemberRole authority = MemberRole.NO_PERMISSION;
-    private String grade = "1";
-    private String delStatus = "0";
+    private MemberRole authority;
+    private String grade;
+    private String delStatus;
     private String fromSocial;
     private LocalDateTime regDate;
     private LocalDateTime modDate;
+
+    @JsonManagedReference
+    private List<PointHistoryDto> pointHistories = new ArrayList<>();
+
+    public void addPointHistory(PointHistoryDto pointHistoryDto){
+        pointHistories.add(pointHistoryDto);
+    }
 
 }

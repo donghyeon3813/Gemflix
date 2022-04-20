@@ -3,6 +3,7 @@ package com.movie.Gemflix.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.deserializer.ASMDeserializerFactory;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.dto.member.MemberDto;
 import com.movie.Gemflix.dto.payment.PaidProductDto;
@@ -66,7 +67,7 @@ public class PaymentService {
             // 결제 정보를 데이터베이스에 저장
             boolean result = savePaymentData(paymentData, requestBody, memberId);
 
-            if("paid".equals(status)){ // 결제 완료 (가상계좌는 구현하지 않음)
+            if("paid".equals(status) && result){ // 결제 완료 (가상계좌는 구현하지 않음)
                 return true;
             }else{
                 return false;
@@ -98,31 +99,34 @@ public class PaymentService {
                                  String memberId) {
         log.info("===== settingCarts =====");
 
-        // payment(결제정보) 세팅
-        PaymentDto paymentDto = settingPayment(requestBody, paymentData, memberId);
-        List<PaidProductDto> paidProducts = new ArrayList<>();
+        try{
+            // payment(결제정보) 세팅
+            PaymentDto paymentDto = settingPayment(requestBody, paymentData, memberId);
+            List<PaidProductDto> paidProducts = new ArrayList<>();
 
-        for (Object thisProduct : carts) { //해당 상품
-            JSONObject thisProductJson = JSON.parseObject(JSON.toJSONString(thisProduct));
+            for (Object thisProduct : carts) { //해당 상품
+                JSONObject thisProductJson = JSON.parseObject(JSON.toJSONString(thisProduct));
 
-            // paid product(결제상품들) 세팅
-            JSONArray selectedCounts = thisProductJson.getJSONArray("selectedCounts");
-            log.info("selectedCounts: {}", selectedCounts);
+                // paid product(결제상품들) 세팅
+                JSONArray selectedCounts = thisProductJson.getJSONArray("selectedCounts");
+                log.info("selectedCounts: {}", selectedCounts);
 
-            for (Object tempThisCount : selectedCounts) { //해당상품의 count 갯수
-                log.info("tempThisCount: {}", tempThisCount);
-                JSONObject thisCount = JSON.parseObject(JSON.toJSONString(tempThisCount));
-                settingPaidProduct(thisCount, thisProductJson, paidProducts, paymentDto);
+                for (Object tempThisCount : selectedCounts) { //해당상품의 count 갯수
+                    log.info("tempThisCount: {}", tempThisCount);
+                    JSONObject thisCount = JSON.parseObject(JSON.toJSONString(tempThisCount));
+                    settingPaidProduct(thisCount, thisProductJson, paidProducts, paymentDto);
 
-            } //thisCount for
+                } //thisCount for
 
-        } //thisProduct for
-        paymentDto.setPaidProducts(paidProducts);
-        log.info("paymentDto: {}", paymentDto);
-        Payment payment = modelMapper.map(paymentDto, Payment.class);
-        log.info("payment: {}", payment);
-        paymentRepository.save(payment);
-        return false;
+            } //thisProduct for
+            paymentDto.setPaidProducts(paidProducts);
+            Payment payment = modelMapper.map(paymentDto, Payment.class);
+            paymentRepository.save(payment);
+            return true;
+
+        }catch (Exception e){
+            return false;
+        }
     }
 
     private void settingPaidProduct(JSONObject thisCount,
@@ -164,18 +168,17 @@ public class PaymentService {
         log.info("===== savePayment =====");
 
         MemberDto memberDto = getMemberData(memberId);
-        long timestamp = paymentData.getLongValue("paid_at");
-        LocalDateTime payDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), TimeZone.getDefault().toZoneId());
+        LocalDateTime now = LocalDateTime.now();
 
         //payment save
         PaymentDto paymentDto = PaymentDto.builder()
                 .point(requestBody.getIntValue("point"))
-                .payAmount(requestBody.getIntValue("pay_amount"))
+                .proAmount(requestBody.getIntValue("pro_amount"))
                 .disAmount(requestBody.getIntValue("dis_amount"))
                 .payAmount(paymentData.getIntValue("amount"))
                 .payType(requestBody.getString("pay_type"))
                 .disType(requestBody.getString("dis_type"))
-                .payDate(payDate)
+                .payDate(now)
                 .payStatus(Constant.BooleanStringValue.TRUE)
                 .payName(paymentData.getString("buyer_name"))
                 .payPhone(paymentData.getString("buyer_tel"))
@@ -247,5 +250,63 @@ public class PaymentService {
         return paymentData;
     }
 
+    public Boolean savePaymentData(JSONObject requestBody, String memberId) {
+
+        try{
+            PaymentDto paymentDto = settingPayment(requestBody, memberId);
+            List<PaidProductDto> paidProducts = new ArrayList<>();
+
+            JSONArray carts = requestBody.getJSONArray("carts");
+            for (Object thisProduct : carts) { //해당 상품
+                JSONObject thisProductJson = JSON.parseObject(JSON.toJSONString(thisProduct));
+
+                // paid product(결제상품들) 세팅
+                JSONArray selectedCounts = thisProductJson.getJSONArray("selectedCounts");
+                log.info("selectedCounts: {}", selectedCounts);
+
+                for (Object tempThisCount : selectedCounts) { //해당상품의 count 갯수
+                    log.info("tempThisCount: {}", tempThisCount);
+                    JSONObject thisCount = JSON.parseObject(JSON.toJSONString(tempThisCount));
+                    settingPaidProduct(thisCount, thisProductJson, paidProducts, paymentDto);
+                } //thisCount for
+
+            } //thisProduct for
+            paymentDto.setPaidProducts(paidProducts);
+            log.info("paymentDto: {}", paymentDto);
+            Payment payment = modelMapper.map(paymentDto, Payment.class);
+            log.info("payment: {}", payment);
+            paymentRepository.save(payment);
+            return true;
+
+        }catch (Exception e){
+            return false;
+        }
+    }
+
+    private PaymentDto settingPayment(JSONObject requestBody, String memberId) {
+        log.info("===== savePayment =====");
+
+        MemberDto memberDto = getMemberData(memberId);
+        LocalDateTime now = LocalDateTime.now();
+
+        //payment save
+        PaymentDto paymentDto = PaymentDto.builder()
+                .point(requestBody.getIntValue("point"))
+                .proAmount(requestBody.getIntValue("pro_amount"))
+                .disAmount(requestBody.getIntValue("dis_amount"))
+                .payAmount(requestBody.getIntValue("pay_amount"))
+                .payType(requestBody.getString("pay_type"))
+                .disType(requestBody.getString("dis_type"))
+                .payDate(now)
+                .payStatus(Constant.BooleanStringValue.TRUE)
+                .payName(requestBody.getString("pay_name"))
+                .payPhone(requestBody.getString("pay_phone"))
+                .payAddress(requestBody.getString("pay_address"))
+                .member(memberDto)
+                .build();
+
+        log.info("paymentDto: {}", paymentDto);
+        return paymentDto;
+    }
 
 }

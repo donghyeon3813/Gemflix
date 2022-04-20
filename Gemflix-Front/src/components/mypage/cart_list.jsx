@@ -125,7 +125,9 @@ const CartList = memo((props) => {
                 state: {
                     price: selectedPrice,
                     cartName: orderCartName,
-                    carts: memberCarts
+                    carts: memberCarts,
+                    beforeCarts: carts,
+                    delIdList: checkList
                 }
             });
         }

@@ -1,15 +1,18 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal/lib/components/Modal';
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate, useResolvedPath } from 'react-router';
 import { useScript } from '../../hooks';
+import { deleteCart } from '../../store/actions';
 import DaumPost from './daum_post';
 
 const Payment = ({server, onClickLogout}) => {
 
     const location = useLocation();
+    const dispatch = useDispatch();
     const navigate = useNavigate();
+
     const status = useScript("https://code.jquery.com/jquery-1.12.4.min.js");
     const status02 = useScript("https://cdn.iamport.kr/js/iamport.payment-1.1.8.js");
     let IMP;
@@ -25,8 +28,11 @@ const Payment = ({server, onClickLogout}) => {
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
     const [detailAddress, setDetailAddress] = useState('');
-    const [carts, setCarts] = useState([]);
-    const [tickets, setTickets] = useState([]);
+
+    const [carts, setCarts] = useState([]); //결제할 상품들
+    const [beforeCarts, setBeforeCarts] = useState([]); //결제전 장바구니 상품목록
+    const [tickets, setTickets] = useState([]); //결제할 티켓들
+    const [delIdList, setDelIdList] = useState([]); //결제할 아이디들
 
     const [memberPoint, setMemberPoint] = useState(0); //총 보유 포인트
     const [usePoint, setUsePoint] = useState(0); //사용할 포인트
@@ -58,9 +64,16 @@ const Payment = ({server, onClickLogout}) => {
         if(location.state.carts){
             setCarts(location.state.carts);
         }
+        if(location.state.beforeCarts){
+            setBeforeCarts(location.state.beforeCarts);
+        }
         if(location.state.tickets){
             setTickets(location.state.tickets);
         }
+        if(location.state.delIdList){
+            setDelIdList(location.state.delIdList);
+        }
+
         console.log(carts);
         console.log(tickets);
 	}, [carts, tickets])
@@ -125,58 +138,122 @@ const Payment = ({server, onClickLogout}) => {
 
     const requestPay = () => {
         if(name && phone && address && detailAddress){
+            if(payAmount == 0){ //결제할 금액 0원인 경우
+                if(0 < disAmount){ //할인금액이 0보다 큰 경우
 
-            // IMP.request_pay(param, callback) 결제창 호출
-            IMP.request_pay(data
-                ,res => { // callback
-                    if(res.success){
-                        // 결제 성공 시 로직
-                        console.log("payment requset success");
-                        const imp_uid = res.imp_uid;
-                        const merchant_uid = res.merchant_uid;
+                    const data = {
+                        point: usePoint,
+                        pro_amount: proAmount,
+                        dis_amount: disAmount,
+                        pay_amount: payAmount,
+                        pay_type: payType,
+                        dis_type: disType,
+                        pay_name: name,
+                        pay_phone: phone,
+                        pay_address: address + " " + detailAddress,
+                        carts: carts,
+                        tickets: tickets
+                    };
 
-                        if(disAmount !== 0){
-                            setDisType(1);
-                        }
+                    // axios로 HTTP 요청
+                    server.savePayment(data, user.memberId)
+                        .then((data) => {
+                            // 서버 결제 API 성공시 로직
+                            console.log(data); 
+                        });
+                    alert("결제가 완료되었습니다.");
+                    deleteCartPaidCarts(); //장바구니에서 삭제
+                    navigate('/paymentList');
 
-                        console.log(carts);
-                        console.log(tickets);
-
-                        const data = {
-                            imp_uid: imp_uid,
-                            merchant_uid: merchant_uid,
-                            point: usePoint,
-                            pro_amount: proAmount,
-                            dis_amount: disAmount,
-                            pay_amount: payAmount,
-                            pay_type: payType,
-                            dis_type: disType,
-                            pay_name: name,
-                            pay_phone: phone,
-                            pay_address: address + " " + detailAddress,
-                            carts: carts,
-                            tickets: tickets
-                        };
-
-                        // axios로 HTTP 요청
-                        server.completePayment(data, user.memberId)
-                            .then((data) => {
-                                // 서버 결제 API 성공시 로직
-                                console.log(data); 
-                            });
-                        alert("결제가 완료되었습니다.");
-
-                    }else{
-                        // 결제 실패 시 로직
-                        console.log("payment requset fail: " + res.error_msg);
-                        alert("결제에 실패하였습니다. 에러 내용: " + res.error_msg);
-                    }
+                }else{
+                    alert("잘못된 결제 요청 입니다. 메인페이지로 이동합니다.");
+                    navigate('/');
                 }
-            )
+
+            }else{
+                // IMP.request_pay(param, callback) 결제창 호출
+                IMP.request_pay(data
+                    ,res => { // callback
+                        if(res.success){
+                            // 결제 성공 시 로직
+                            console.log("payment requset success");
+                            const imp_uid = res.imp_uid;
+                            const merchant_uid = res.merchant_uid;
+
+                            if(disAmount !== 0){
+                                setDisType(1);
+                            }
+
+                            console.log(carts);
+                            console.log(tickets);
+
+                            const data = {
+                                imp_uid: imp_uid,
+                                merchant_uid: merchant_uid,
+                                point: usePoint,
+                                pro_amount: proAmount,
+                                dis_amount: disAmount,
+                                pay_amount: payAmount,
+                                pay_type: payType,
+                                dis_type: disType,
+                                pay_name: name,
+                                pay_phone: phone,
+                                pay_address: address + " " + detailAddress,
+                                carts: carts,
+                                tickets: tickets
+                            };
+
+                            // axios로 HTTP 요청
+                            server.completePayment(data, user.memberId)
+                                .then((data) => {
+                                    // 서버 결제 API 성공시 로직
+                                    console.log(data); 
+                                });
+                                alert("결제가 완료되었습니다.");
+                                deleteCartPaidCarts(); //장바구니에서 삭제
+                                navigate('/paymentList');
+
+                        }else{
+                            // 결제 실패 시 로직
+                            console.log("payment requset fail: " + res.error_msg);
+                            alert("결제에 실패하였습니다. 에러 내용: " + res.error_msg);
+                        }
+                    }
+                )
+            }
 
         }else{
             alert("모든 정보를 입력해주세요.");
         }
+    }
+
+    const deleteCartPaidCarts = () => {
+        //beforeCarts, carts, delIdList
+        const memberId = user.memberId;
+        let deleteAfterMemberItems;
+
+        beforeCarts.filter(thisMember => {
+            if(Object.hasOwn(thisMember, memberId)){
+                let oldItems = thisMember[memberId];
+
+                deleteAfterMemberItems = oldItems.map(thisItem => {
+                    let oldSelectedCounts = thisItem.selectedCounts;
+                    let newSelectedCounts = oldSelectedCounts.map((thisCount) => {
+                        if(!delIdList.includes(thisCount.cId)){
+                            return thisCount;
+                        }
+                    });
+                    newSelectedCounts = newSelectedCounts.filter((element) => element !== undefined);
+                    if(0 < newSelectedCounts.length){
+                        thisItem.selectedCounts = newSelectedCounts;
+                        return thisItem;
+                    }
+                });
+            }
+        });
+        deleteAfterMemberItems = deleteAfterMemberItems.filter((element) => element !== undefined);
+        console.log(deleteAfterMemberItems);
+        dispatch(deleteCart(deleteAfterMemberItems, memberId));
     }
 
     const changeName = (event) => {
@@ -260,6 +337,23 @@ const Payment = ({server, onClickLogout}) => {
     
     const settingPayAmount = (dis) => {
         setPayAmount(proAmount - dis);
+
+        if(0 < (proAmount - dis)){
+            setPayTypeCard();
+
+        }else{ //결제금액 0원(포인트로 모두 결제한 경우)
+            setPayTypePoint();
+        }
+    }
+
+    const setPayTypePoint = () => {
+        setDisType(1);
+        setPayType(3); //point
+    }
+
+    const setPayTypeCard = () => {
+        setDisType(null);
+        setPayType(1); //card
     }
 
     return (
