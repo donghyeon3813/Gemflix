@@ -14,12 +14,13 @@ public class PointHistoryDto {
 
     private Long phId;
     private int changePoint;
-    private int point;
+    private int beforePoint;
+    private int afterPoint;
     private String type;
     private LocalDateTime regDate;
 
     @JsonBackReference
-    private RegMemberDto member;
+    private MemberDto member;
 
 }
 

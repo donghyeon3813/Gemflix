@@ -1,6 +1,7 @@
 package com.movie.Gemflix.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.movie.Gemflix.dto.member.PointHistoryDto;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 

@@ -5,7 +5,6 @@ import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.dto.member.MemberDto;
 import com.movie.Gemflix.dto.member.PointHistoryDto;
-import com.movie.Gemflix.dto.member.RegMemberDto;
 import com.movie.Gemflix.entity.Member;
 import com.movie.Gemflix.entity.MemberRole;
 import com.movie.Gemflix.entity.PointHistory;
@@ -48,41 +47,42 @@ public class AuthService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public CommonResponse registerMember(RegMemberDto regMemberDTO) throws Exception{
+    public CommonResponse registerMember(MemberDto memberDTO) throws Exception{
         //ID 중복 검사
-        Optional<Member> optMember = memberRepository.findById(regMemberDTO.getId());
+        Optional<Member> optMember = memberRepository.findById(memberDTO.getId());
         if(optMember.isPresent()){
             return new CommonResponse(ErrorType.DUPLICATED_MEMBER_ID.getErrorCode(),
                     ErrorType.DUPLICATED_MEMBER_ID.getErrorMessage());
         }
 
         //EMAIL 중복 검사
-        Optional<Member> optMember02 = memberRepository.findByEmail(regMemberDTO.getEmail());
+        Optional<Member> optMember02 = memberRepository.findByEmail(memberDTO.getEmail());
         if(optMember02.isPresent()){
             return new CommonResponse(ErrorType.DUPLICATED_MEMBER_EMAIL.getErrorCode(),
                     ErrorType.DUPLICATED_MEMBER_EMAIL.getErrorMessage());
         }
 
         //Email 인증
-        if(!emailService.sendVerificationMail(regMemberDTO)){
+        if(!emailService.sendVerificationMail(memberDTO)){
             return new CommonResponse(ErrorType.INVALID_MEMBER_EMAIL.getErrorCode(),
                     ErrorType.INVALID_MEMBER_EMAIL.getErrorMessage());
         }
         //회원 등록
-        regMemberDTO.setPassword(passwordEncoder.encode(regMemberDTO.getPassword()));
+        memberDTO.setPassword(passwordEncoder.encode(memberDTO.getPassword()));
 
         //초기값 세팅
-        settingMemberDefaultValue(regMemberDTO);
+        settingMemberDefaultValue(memberDTO);
         PointHistoryDto pointHistoryDto = PointHistoryDto.builder()
                 .changePoint(REGISTER_POINT)
-                .point(REGISTER_POINT)
+                .beforePoint(0)
+                .afterPoint(REGISTER_POINT)
                 .type(Constant.PointType.REGISTER_POINT)
                 .regDate(LocalDateTime.now())
-                .member(regMemberDTO)
+                .member(memberDTO)
                 .build();
         log.info("pointHistoryDto: {}", pointHistoryDto);
 
-        Member member = modelMapper.map(regMemberDTO, Member.class);
+        Member member = modelMapper.map(memberDTO, Member.class);
         PointHistory pointHistory = modelMapper.map(pointHistoryDto, PointHistory.class);
         log.info("member: {}", member);
         log.info("pointHistory: {}", pointHistory);
@@ -90,36 +90,15 @@ public class AuthService {
         return null;
     }
 
-    private void settingMemberDefaultValue(RegMemberDto regMemberDTO) {
+    private void settingMemberDefaultValue(MemberDto memberDTO) {
 
-        regMemberDTO.setStatus(Constant.BooleanStringValue.TRUE);
-        regMemberDTO.setAuthority(MemberRole.NO_PERMISSION);
-        regMemberDTO.setGrade(Constant.Grade.BRONZE);
-        regMemberDTO.setDelStatus(Constant.BooleanStringValue.FALSE);
-        regMemberDTO.setPoint(REGISTER_POINT);
+        memberDTO.setStatus(Constant.BooleanStringValue.TRUE);
+        memberDTO.setAuthority(MemberRole.NO_PERMISSION);
+        memberDTO.setGrade(Constant.Grade.BRONZE);
+        memberDTO.setDelStatus(Constant.BooleanStringValue.FALSE);
+        memberDTO.setPoint(REGISTER_POINT);
 
-        log.info("regMemberDTO: {}", regMemberDTO);
-
-
-
-        //RegMemberDto => MemberDto
-        /*MemberDto memberDto = MemberDto.builder()
-                .id(regMemberDTO.getId())
-                .password(regMemberDTO.getPassword())
-                .phone(regMemberDTO.getPhone())
-                .email(regMemberDTO.getEmail())
-                .point(regMemberDTO.getPoint())
-                .status(regMemberDTO.getStatus())
-                .authority(regMemberDTO.getAuthority())
-                .grade(regMemberDTO.getGrade())
-                .delStatus(regMemberDTO.getDelStatus())
-                .fromSocial(regMemberDTO.getFromSocial())
-                .regDate(regMemberDTO.getRegDate())
-                .modDate(regMemberDTO.getModDate())
-                .pointHistories(regMemberDTO.getPointHistories())
-                .build();
-
-        log.info("memberDto: {}", memberDto);*/
+        log.info("memberDTO: {}", memberDTO);
     }
 
     @Transactional

@@ -20,6 +20,9 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TK_ID_SEQ_GEN")
     private Long tkId;
 
+    private int price;
+    private String rvUseState;
+
     @ManyToOne
     @JoinColumn( name = "M_ID")
     private Member member;
@@ -32,7 +35,7 @@ public class Ticket {
     @JoinColumn (name = "SE_ID")
     private Seat seat;
 
-    private int price;
-
-    private String rvUseState;
+    @ManyToOne
+    @JoinColumn(name = "PM_ID") //결제정보 고유번호
+    private Payment payment;
 }

@@ -3,7 +3,7 @@ package com.movie.Gemflix.controller;
 import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.common.ErrorType;
-import com.movie.Gemflix.dto.member.RegMemberDto;
+import com.movie.Gemflix.dto.member.MemberDto;
 import com.movie.Gemflix.entity.MemberRole;
 import com.movie.Gemflix.security.service.AuthService;
 import com.movie.Gemflix.security.util.CookieUtil;
@@ -49,18 +49,18 @@ public class JwtAuthenticationController {
 
     //회원가입 & 인증메일 발송
     @PostMapping("/register")
-    public ResponseEntity<?> registerMember(@RequestBody @Valid RegMemberDto regMemberDTO,
+    public ResponseEntity<?> registerMember(@RequestBody @Valid MemberDto memberDTO,
                                             BindingResult bindingResult){
 
         try {
-            log.info("[registerMember] memberDTO: {}", regMemberDTO);
+            log.info("[registerMember] memberDTO: {}", memberDTO);
             CommonResponse response = commonService.checkError(bindingResult);
             if (response != null){
                 return CommonResponse.createResponse(response, HttpStatus.BAD_REQUEST);
             }
 
             //회원 등록
-            response = authService.registerMember(regMemberDTO);
+            response = authService.registerMember(memberDTO);
             if(response != null){
                 return CommonResponse.createResponse(response, HttpStatus.OK);
             }

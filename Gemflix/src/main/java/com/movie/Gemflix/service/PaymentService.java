@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -41,9 +40,9 @@ public class PaymentService {
 
     private final WebClient webClient;
     private final ModelMapper modelMapper;
+    private final PointService pointService;
     private final PaymentRepository paymentRepository;
     private final MemberRepository memberRepository;
-    private final PaidProductRepository paidProductRepository;
     private final ProductRepository productRepository;
 
 
@@ -81,11 +80,13 @@ public class PaymentService {
     private boolean savePaymentData(JSONObject paymentData, JSONObject requestBody, String memberId) {
         log.info("===== savePaymentData =====");
 
+        int usePoint = requestBody.getIntValue("point");
         JSONArray carts = requestBody.getJSONArray("carts");
         JSONArray tickets = requestBody.getJSONArray("tickets");
 
         if(0 < carts.size()){ //상품결제
             settingCarts(carts, requestBody, paymentData, memberId);
+            return pointService.minusPoint(memberId, usePoint, Constant.PointType.PAYMENT_POINT);
 
         }else if(0 < tickets.size()){ //영화결제
             //TODO:
@@ -276,7 +277,9 @@ public class PaymentService {
             Payment payment = modelMapper.map(paymentDto, Payment.class);
             log.info("payment: {}", payment);
             paymentRepository.save(payment);
-            return true;
+
+            int usePoint = requestBody.getIntValue("point");
+            return pointService.minusPoint(memberId, usePoint, Constant.PointType.PAYMENT_POINT);
 
         }catch (Exception e){
             return false;
@@ -284,8 +287,6 @@ public class PaymentService {
     }
 
     private PaymentDto settingPayment(JSONObject requestBody, String memberId) {
-        log.info("===== savePayment =====");
-
         MemberDto memberDto = getMemberData(memberId);
         LocalDateTime now = LocalDateTime.now();
 

@@ -4,7 +4,6 @@ import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.dto.member.MemberDto;
-import com.movie.Gemflix.dto.member.RegMemberDto;
 import com.movie.Gemflix.entity.Member;
 import com.movie.Gemflix.repository.member.MemberRepository;
 import com.movie.Gemflix.service.CommonService;
@@ -49,14 +48,14 @@ public class MemberController {
 
         Member member = optMember.get();
         log.info("member: {}", member);
-        RegMemberDto regMemberDto = modelMapper.map(member, RegMemberDto.class);
-        log.info("memberDto: {}", regMemberDto);
-        regMemberDto.setPassword(null);
+        MemberDto memberDto = modelMapper.map(member, MemberDto.class);
+        log.info("memberDto: {}", memberDto);
+        memberDto.setPassword(null);
 
         return CommonResponse.createResponse(CommonResponse.builder()
                 .code(Constant.Success.SUCCESS_CODE)
                 .message("Member Profile Success")
-                .data(regMemberDto)
+                .data(memberDto)
                 .build(), HttpStatus.OK);
     }
 
