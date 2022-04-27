@@ -3,7 +3,6 @@ package com.movie.Gemflix.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.parser.deserializer.ASMDeserializerFactory;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.dto.member.MemberDto;
 import com.movie.Gemflix.dto.payment.PaidProductDto;
@@ -11,8 +10,8 @@ import com.movie.Gemflix.dto.payment.PaymentDto;
 import com.movie.Gemflix.dto.product.ProductDto;
 import com.movie.Gemflix.entity.*;
 import com.movie.Gemflix.repository.member.MemberRepository;
-import com.movie.Gemflix.repository.payment.PaidProductRepository;
 import com.movie.Gemflix.repository.payment.PaymentRepository;
+import com.movie.Gemflix.repository.payment.PaymentRepositorySupport;
 import com.movie.Gemflix.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +25,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -41,9 +41,10 @@ public class PaymentService {
     private final WebClient webClient;
     private final ModelMapper modelMapper;
     private final PointService pointService;
-    private final PaymentRepository paymentRepository;
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
+    private final PaymentRepository paymentRepository;
+    private final PaymentRepositorySupport paymentRepositorySupport;
 
 
     public Boolean completePayment(JSONObject requestBody, String memberId) {
@@ -310,4 +311,17 @@ public class PaymentService {
         return paymentDto;
     }
 
+    public List<PaymentDto> getPayments(String memberId) throws Exception {
+        List<Payment> payments = paymentRepositorySupport.findByMIdOrderByPayDateDesc(memberId);
+        log.info("payments: {}", payments);
+        if(payments.size() == 0) return null;
+
+        List<PaymentDto> paymentDtos = payments.stream()
+                .map(payment -> {
+                    PaymentDto paymentDto = modelMapper.map(payment, PaymentDto.class);
+                    return paymentDto;
+                }).collect(Collectors.toList());
+        log.info("paymentDtos: {}", paymentDtos);
+        return paymentDtos;
+    }
 }

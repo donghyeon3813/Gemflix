@@ -24,7 +24,7 @@ const Profile = () => {
     }
 
     const onClickPaymentList = () => {
-        navigate('/paymentList', {
+        navigate('/payments', {
             state: {
                 memberInfo: memberInfo
             }

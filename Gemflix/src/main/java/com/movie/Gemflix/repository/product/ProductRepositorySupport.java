@@ -22,7 +22,7 @@ public class ProductRepositorySupport {
         List<Product> products = query.select(product)
                 .from(product)
                 .leftJoin(product.category, category)
-                .where(product.status.eq(status))
+                .on(product.status.eq(status))
                 .where(product.delStatus.eq(Constant.BooleanStringValue.FALSE))
                 .orderBy(category.cgId.asc())
                 .orderBy(product.regDate.desc())

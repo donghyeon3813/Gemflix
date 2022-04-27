@@ -166,7 +166,7 @@ function App({ server, movieServer }) {
             {/* myPage */}
             <Route path="/cartList" element={<CartList />}></Route>
             <Route path="/payment" element={<Payment server={server} onClickLogout={onClickLogout}/>}></Route>
-            <Route path="/paymentList" element={<PaymentList server={server} onClickLogout={onClickLogout}/>}></Route>
+            <Route path="/payments" element={<PaymentList server={server} onClickLogout={onClickLogout}/>}></Route>
             
           </Routes>
           <Footer />

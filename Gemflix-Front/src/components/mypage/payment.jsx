@@ -163,7 +163,7 @@ const Payment = ({server, onClickLogout}) => {
                         });
                     alert("결제가 완료되었습니다.");
                     deleteCartPaidCarts(); //장바구니에서 삭제
-                    navigate('/paymentList');
+                    navigate('/payments');
 
                 }else{
                     alert("잘못된 결제 요청 입니다. 메인페이지로 이동합니다.");
@@ -211,7 +211,7 @@ const Payment = ({server, onClickLogout}) => {
                                 });
                                 alert("결제가 완료되었습니다.");
                                 deleteCartPaidCarts(); //장바구니에서 삭제
-                                navigate('/paymentList');
+                                navigate('/payments');
 
                         }else{
                             // 결제 실패 시 로직

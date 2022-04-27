@@ -148,6 +148,17 @@ class AuthService{
         });
     }
 
+    //결제내역 목록
+    async payments(memberId) {
+        return await this.server.get('/payments/' + memberId, {})
+        .then(function (success) {
+            return success.data;
+        })
+        .catch(function (error) {
+            return JSON.parse(error.request.response);
+        });
+    }
+
 }
 
 export default AuthService;
