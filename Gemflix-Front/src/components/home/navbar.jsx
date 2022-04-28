@@ -17,7 +17,9 @@ const Navbar = ({server, onClickLogout}) => {
                     break;
 
                 case 1000: //success
-                    navigate('/profile', { state: { memberInfo: response.data } });
+                    navigate('/profile', { state: { 
+                        memberInfo: response.data
+                    } });
                     break;
 
                 case 1008: //refreshToken 만료 -> 로그아웃

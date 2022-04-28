@@ -1,6 +1,7 @@
 package com.movie.Gemflix.service;
 
 import com.movie.Gemflix.common.CommonResponse;
+import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.dto.movie.*;
 import com.movie.Gemflix.entity.Member;
@@ -55,7 +56,7 @@ public class MovieService {
     @Transactional
     public CommonResponse reviewRegister( ReviewDto reviewDto, HttpServletRequest request) throws  Exception{
         String id = commonService.getRequesterId(request);
-        Optional<Member> member = memberRepository.findById(id);
+        Optional<Member> member = memberRepository.findByIdAndDelStatus(id, Constant.BooleanStringValue.FALSE);
         if(member.isPresent()){
             Long mId = member.get().getMId();
             Long mvId = reviewDto.getMvId();
@@ -84,7 +85,7 @@ public class MovieService {
     @Transactional
     public CommonResponse reviewModify( ReviewDto reviewDto, HttpServletRequest request) throws  Exception{
         String id = commonService.getRequesterId(request);
-        Optional<Member> member = memberRepository.findById(id);
+        Optional<Member> member = memberRepository.findByIdAndDelStatus(id, Constant.BooleanStringValue.FALSE);
         if(member.isPresent()){
             Long mId = member.get().getMId();
             long cnt = reviewRepositorySupport.reviewModify(reviewDto.getRvId(), reviewDto.getComment());
@@ -102,7 +103,7 @@ public class MovieService {
     @Transactional
     public CommonResponse reviewDelete( Long rvId, HttpServletRequest request) throws  Exception{
         String id = commonService.getRequesterId(request);
-        Optional<Member> member = memberRepository.findById(id);
+        Optional<Member> member = memberRepository.findByIdAndDelStatus(id, Constant.BooleanStringValue.FALSE);
         if(member.isPresent()){
             Long mId = member.get().getMId();
             long cnt = reviewRepositorySupport.reviewDelete(rvId);

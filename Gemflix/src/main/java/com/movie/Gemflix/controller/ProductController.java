@@ -39,8 +39,7 @@ public class ProductController {
 
     //상품 목록 조회
     @GetMapping("/products")
-    public ResponseEntity<?> getProducts(){
-
+    public ResponseEntity<?> getProducts(){;
         try{
             List<ProductDto> productDtos = productService.getProducts();
             if(productDtos == null){
@@ -91,8 +90,8 @@ public class ProductController {
     public ResponseEntity<?> createProduct(@ModelAttribute @Valid ProductDto productDto,
                                            BindingResult bindingResult){
 
-        try{
             log.info("[createProduct] productDTO: {}", productDto);
+        try{
             CommonResponse response = commonService.checkError(bindingResult);
             log.info("response: {}", response);
             if(response != null){

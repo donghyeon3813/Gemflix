@@ -49,14 +49,14 @@ public class AuthService {
 
     public CommonResponse registerMember(MemberDto memberDTO) throws Exception{
         //ID 중복 검사
-        Optional<Member> optMember = memberRepository.findById(memberDTO.getId());
+        Optional<Member> optMember = memberRepository.findByIdAndDelStatus(memberDTO.getId(), Constant.BooleanStringValue.FALSE);
         if(optMember.isPresent()){
             return new CommonResponse(ErrorType.DUPLICATED_MEMBER_ID.getErrorCode(),
                     ErrorType.DUPLICATED_MEMBER_ID.getErrorMessage());
         }
 
         //EMAIL 중복 검사
-        Optional<Member> optMember02 = memberRepository.findByEmail(memberDTO.getEmail());
+        Optional<Member> optMember02 = memberRepository.findByEmailAndDelStatus(memberDTO.getEmail(), Constant.BooleanStringValue.FALSE);
         if(optMember02.isPresent()){
             return new CommonResponse(ErrorType.DUPLICATED_MEMBER_EMAIL.getErrorCode(),
                     ErrorType.DUPLICATED_MEMBER_EMAIL.getErrorMessage());

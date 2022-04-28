@@ -1,8 +1,7 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal/lib/components/Modal';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate, useResolvedPath } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { useScript } from '../../hooks';
 import { deleteCart } from '../../store/actions';
 import DaumPost from './daum_post';

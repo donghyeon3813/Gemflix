@@ -1,6 +1,7 @@
 package com.movie.Gemflix.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.dto.member.KakaoProfileDto;
 import com.movie.Gemflix.dto.member.OAuthToken;
 import com.movie.Gemflix.entity.Member;
@@ -29,6 +30,8 @@ public class SocialAuthenticationController {
 
     @PostMapping("/callback/kakao")
     public ResponseEntity<?> kakaoCallback(@RequestBody JSONObject json) {
+        log.info("[kakaoCallback] json: {}", json);
+
         String code = json.getString("code");
         log.info("kakaoCode: {}", code);
         try{
@@ -39,7 +42,7 @@ public class SocialAuthenticationController {
             if(kakaoProfile != null){
                 String id = kakaoProfile.getId().toString();
                 String pw = id + "@";
-                Optional<Member> optMember = memberRepository.findById(id);
+                Optional<Member> optMember = memberRepository.findByIdAndDelStatus(id, Constant.BooleanStringValue.FALSE);
 
                 if(!optMember.isPresent()){ //최초 카카오 로그인 -> 회원 등록
                     Member member = Member.builder()

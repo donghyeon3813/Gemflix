@@ -111,7 +111,6 @@ function App({ server, movieServer }) {
             <Route path="/home" element={<Home server={server} onClickLogout={onClickLogout} />}></Route>
 
             {/* login */}
-            <Route path="/profile" element={<Profile />}></Route>
             <Route path="/join" element={<Join server={server} />}></Route>
             <Route path="/login" element={
                 <Login server={server} kakaoLoginUrl={kakaoLoginUrl} settingAccessToken={settingAccessToken}/>
@@ -122,7 +121,6 @@ function App({ server, movieServer }) {
               }></Route>
 
             {/* movie */}
-
             <Route
               path="/movies"
               exact
@@ -164,6 +162,7 @@ function App({ server, movieServer }) {
             ></Route>
 
             {/* myPage */}
+            <Route path="/profile" element={<Profile server={server} onClickLogout={onClickLogout}/>}></Route>
             <Route path="/cartList" element={<CartList />}></Route>
             <Route path="/payment" element={<Payment server={server} onClickLogout={onClickLogout}/>}></Route>
             <Route path="/payments" element={<PaymentList server={server} onClickLogout={onClickLogout}/>}></Route>

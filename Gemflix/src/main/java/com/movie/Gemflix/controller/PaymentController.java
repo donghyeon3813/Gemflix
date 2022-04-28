@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,11 +25,11 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     //결제 정보 전달받는 API endpoint
+    @Secured({"ROLE_NO_PERMISSION", "ROLE_MEMBER", "ROLE_ADMIN"})
     @PostMapping("/payments/complete/{memberId}")
     public ResponseEntity<?> completePayment(@RequestBody JSONObject requestBody,
                                              @PathVariable String memberId){
-        log.info("===== completePayment =====");
-        log.info("requestBody: {}, memberId: {}", requestBody, memberId);
+        log.info("[completePayment] requestBody: {}, memberId: {}", requestBody, memberId);
 
         try{
             boolean isSuccess = paymentService.completePayment(requestBody, memberId);
@@ -52,11 +53,10 @@ public class PaymentController {
     }
 
     //결제 정보 전달받는 API endpoint
+    @Secured({"ROLE_NO_PERMISSION", "ROLE_MEMBER", "ROLE_ADMIN"})
     @PostMapping("/payments/save/{memberId}")
-    public ResponseEntity<?> savePayment(@RequestBody JSONObject requestBody,
-                                                   @PathVariable String memberId){
-        log.info("===== savePayment =====");
-        log.info("requestBody: {}, memberId: {}", requestBody, memberId);
+    public ResponseEntity<?> savePayment(@RequestBody JSONObject requestBody, @PathVariable String memberId){
+        log.info("[savePayment] requestBody: {}, memberId: {}", requestBody, memberId);
 
         try{
             boolean isSuccess = paymentService.savePaymentData(requestBody, memberId);
@@ -80,8 +80,10 @@ public class PaymentController {
     }
 
     //결제내역 목록 조회
+    @Secured({"ROLE_NO_PERMISSION", "ROLE_MEMBER", "ROLE_ADMIN"})
     @GetMapping("/payments/{memberId}")
     public ResponseEntity<?> getPayments(@PathVariable String memberId) throws Exception{
+        log.info("[getPayments] memberId: {}", memberId);
         try{
             List<PaymentDto> paymentDtos = paymentService.getPayments(memberId);
             if(paymentDtos == null){

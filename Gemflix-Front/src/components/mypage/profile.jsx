@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { shallowEqual, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 
-const Profile = () => {
+const Profile = ({server, onClickLogout}) => {
 
     const location = useLocation();
     const navigate = useNavigate();
+    const user = useSelector(store => store.userReducer, shallowEqual);
+
     const [email, setEmail] = useState(null);
     const [regDate, setRegDate] = useState(null);
     const memberInfo = location.state.memberInfo;
@@ -31,6 +34,36 @@ const Profile = () => {
         });
     }
 
+    const onClickDeleteMember = () => {
+        if(window.confirm("정말 탈퇴하겠습니까?")){
+            server.deleteMember(user.memberId)
+            .then(response => {
+                const code = response.code;
+                switch(code){
+                    case 1007: //interceptor에서 accessToken 재발급
+                        break;
+
+                    case 1000: //success
+                        alert("탈퇴되었습니다.");
+                        onClickLogout(false);
+                        navigate('/');
+                        break;
+
+                    default: //fail
+                        alert("해당 작업을 수행할 수 없습니다. 잠시 후 다시 시도해주세요.");
+                        navigate('/');
+                        break;
+                }
+            })
+            .catch(ex => {
+                console.log("deleteMember requset fail : " + ex);
+            })
+            .finally(() => {
+                console.log("deleteMember request end");
+            });
+        }
+    }
+
     return (
         <>
         <div>
@@ -54,7 +87,7 @@ const Profile = () => {
         <button type='button' onClick={onClickCartList}>장바구니</button>
         <button type='button' onClick={onClickPaymentList}>결제내역</button>
         <button type='button'>관람영화</button>
-        <button type='button'>탈퇴하기</button>
+        <button type='button' onClick={onClickDeleteMember}>탈퇴하기</button>
         </>
         )
     };

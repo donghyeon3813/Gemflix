@@ -1,5 +1,6 @@
 package com.movie.Gemflix.security.service;
 
+import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.entity.Member;
 import com.movie.Gemflix.entity.MemberRole;
 import com.movie.Gemflix.repository.member.MemberRepository;
@@ -28,7 +29,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("loadUserByUsername username: {}", username);
-        Optional<Member> result = memberRepository.findById(username);
+        Optional<Member> result = memberRepository.findByIdAndDelStatus(username, Constant.BooleanStringValue.FALSE);
 
         if(!result.isPresent()){
             throw new UsernameNotFoundException("Check Id");

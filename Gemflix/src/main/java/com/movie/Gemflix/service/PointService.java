@@ -1,5 +1,6 @@
 package com.movie.Gemflix.service;
 
+import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.entity.Member;
 import com.movie.Gemflix.entity.PointHistory;
 import com.movie.Gemflix.repository.member.MemberRepository;
@@ -28,7 +29,7 @@ public class PointService {
     //유저 포인트 적립
     @Transactional
     public boolean plusPoint(String memberId, int changePoint, String type){
-        Optional<Member> optMember = memberRepository.findById(memberId);
+        Optional<Member> optMember = memberRepository.findByIdAndDelStatus(memberId, Constant.BooleanStringValue.FALSE);
 
         if(optMember.isPresent()){
             Member member = optMember.get();
@@ -46,7 +47,7 @@ public class PointService {
     //유저 포인트 차감
     @Transactional
     public boolean minusPoint(String memberId, int changePoint, String type){
-        Optional<Member> optMember = memberRepository.findById(memberId);
+        Optional<Member> optMember = memberRepository.findByIdAndDelStatus(memberId, Constant.BooleanStringValue.FALSE);
 
         if(optMember.isPresent()){
             Member member = optMember.get();

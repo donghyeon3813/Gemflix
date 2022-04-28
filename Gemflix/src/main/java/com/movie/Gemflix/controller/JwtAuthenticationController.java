@@ -82,6 +82,7 @@ public class JwtAuthenticationController {
     //인증메일 확인
     @GetMapping("/verify/{key}")
     public ResponseEntity<?> getEmailVerify(@PathVariable String key) {
+        log.info("[getEmailVerify] key:{}", key);
         try {
             CommonResponse response = authService.verifyEmail(key);
             if(response != null){
@@ -104,6 +105,7 @@ public class JwtAuthenticationController {
     //인증 후 accessToken, refreshToken 발급
     @PostMapping("/login")
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest jwtRequest){
+        log.info("[createAuthenticationToken] jwtRequest:{}", jwtRequest);
         try {
             String authority = checkMemberAuth(jwtRequest);
             if(authority == null){
@@ -141,7 +143,7 @@ public class JwtAuthenticationController {
     //refreshToken 으로 accessToken 재발급
     @PostMapping("/refresh")
     public ResponseEntity<?> checkAuthenticationToken(HttpServletRequest request){
-
+        log.info("[checkAuthenticationToken] request:{}", request);
         Cookie refreshTokenCookie = cookieUtil.getCookie(request, JwtUtil.REFRESH_TOKEN_NAME);
         String refreshToken = null;
         String refreshUsername = null;

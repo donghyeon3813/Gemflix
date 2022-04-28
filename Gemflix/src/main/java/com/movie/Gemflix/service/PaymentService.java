@@ -197,7 +197,7 @@ public class PaymentService {
         log.info("===== getMemberData =====");
         Member member;
         MemberDto memberDto;
-        Optional<Member> optMember = memberRepository.findById(memberId);
+        Optional<Member> optMember = memberRepository.findByIdAndDelStatus(memberId, Constant.BooleanStringValue.FALSE);
         if(optMember.isPresent()){
             member = optMember.get();
             memberDto = modelMapper.map(member, MemberDto.class);

@@ -1,5 +1,6 @@
 package com.movie.Gemflix.repository.member;
 
+import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.entity.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,14 @@ public class MemberRepositorySupport {
     public void modifyMemberPoint(String memberId, int afterPoint){
         query.update(member)
                 .set(member.point, afterPoint)
+                .set(member.modDate, LocalDateTime.now())
+                .where(member.id.eq(memberId))
+                .execute();
+    }
+
+    public void deleteMember(String memberId){
+        query.update(member)
+                .set(member.delStatus, Constant.BooleanStringValue.TRUE)
                 .set(member.modDate, LocalDateTime.now())
                 .where(member.id.eq(memberId))
                 .execute();

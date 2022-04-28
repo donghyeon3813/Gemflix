@@ -59,6 +59,17 @@ class AuthService{
         });
     }
 
+    //회원 탈퇴
+    async deleteMember(memberId) {
+        return await this.server.delete('/member/' + memberId, {})
+        .then(function (success) {
+            return success.data;
+        })
+        .catch(function (error) {
+            return JSON.parse(error.request.response);
+        });
+    }
+
     //상품 카테고리
     async category() {
         return await this.server.get('/category', {})
