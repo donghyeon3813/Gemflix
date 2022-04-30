@@ -14,6 +14,7 @@ public class RedisUtil {
     private final StringRedisTemplate stringRedisTemplate;
 
     public static final String PREFIX_EMAIL_KEY = "email:";
+    public static final String PREFIX_PHONE_KEY = "phone:";
     public static final String PREFIX_REFRESH_TOKEN_KEY = "refresh.token:";
 
     //String Type

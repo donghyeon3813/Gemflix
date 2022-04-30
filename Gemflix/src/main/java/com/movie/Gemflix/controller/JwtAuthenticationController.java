@@ -1,10 +1,12 @@
 package com.movie.Gemflix.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.dto.member.MemberDto;
 import com.movie.Gemflix.entity.MemberRole;
+import com.movie.Gemflix.repository.member.MemberRepository;
 import com.movie.Gemflix.security.service.AuthService;
 import com.movie.Gemflix.security.util.CookieUtil;
 import com.movie.Gemflix.security.util.JwtUtil;
@@ -13,6 +15,7 @@ import com.movie.Gemflix.security.model.JwtResponse;
 import com.movie.Gemflix.security.service.UserDetailsServiceImpl;
 import com.movie.Gemflix.security.util.RedisUtil;
 import com.movie.Gemflix.service.CommonService;
+import com.movie.Gemflix.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,7 +32,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.util.Collection;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -44,6 +49,7 @@ public class JwtAuthenticationController {
     private final UserDetailsServiceImpl userDetailsService;
     private final CommonService commonService;
     private final AuthService authService;
+    private final MemberService memberService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -196,6 +202,64 @@ public class JwtAuthenticationController {
                         .message(ErrorType.INVALID_MEMBER.getErrorMessage())
                         .build(), HttpStatus.UNAUTHORIZED);
             }
+        }
+    }
+
+    //회원 핸드폰 본인인증
+    @PostMapping("/certify")
+    public ResponseEntity<?> certifyPhone(@RequestBody JSONObject requestBody){
+        log.info("[certifyPhone] requestBody: {}",  requestBody);
+        try {
+            String userPhone = requestBody.getString("phone");
+            boolean result = memberService.certifyPhone(userPhone);
+            if (result) {
+                return CommonResponse.createResponse(CommonResponse.builder()
+                        .code(Constant.Success.SUCCESS_CODE)
+                        .message("Phone RandomNumber Send Success")
+                        .build(), HttpStatus.OK);
+            } else {
+                return CommonResponse.createResponse(CommonResponse.builder()
+                        .code(ErrorType.ETC_FAIL.getErrorCode())
+                        .message(ErrorType.ETC_FAIL.getErrorMessage())
+                        .build(), HttpStatus.BAD_REQUEST);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(ErrorType.ETC_FAIL.getErrorCode())
+                    .message(ErrorType.ETC_FAIL.getErrorMessage())
+                    .build(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    //핸드폰번호 본인인증 확인
+    @PostMapping("/verify/phone")
+    public ResponseEntity<?> getEmailVerify(@RequestBody JSONObject requestBody) {
+        log.info("[getEmailVerify] requestBody: {}",  requestBody);
+        try {
+            String userPhone = requestBody.getString("phone");
+            String randomNumber = requestBody.getString("randomNumber");
+
+            List<String> memberIds = memberService.verifyPhone(userPhone, randomNumber);
+            if(memberIds == null){
+                return CommonResponse.createResponse(CommonResponse.builder()
+                        .code(ErrorType.INVALID_MEMBER_PHONE_OR_RANDOM_NUMBER.getErrorCode())
+                        .message(ErrorType.INVALID_MEMBER_PHONE_OR_RANDOM_NUMBER.getErrorMessage())
+                        .build(), HttpStatus.BAD_REQUEST);
+            }
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(Constant.Success.SUCCESS_CODE)
+                    .message("Phone RandomNumber Permission Success")
+                    .data(memberIds)
+                    .build(), HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Phone RandomNumber Exception!!");
+            e.printStackTrace();
+            return CommonResponse.createResponse(CommonResponse.builder()
+                    .code(ErrorType.ETC_FAIL.getErrorCode())
+                    .message(ErrorType.ETC_FAIL.getErrorMessage())
+                    .build(), HttpStatus.BAD_REQUEST);
         }
     }
 

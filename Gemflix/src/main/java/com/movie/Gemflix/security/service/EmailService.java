@@ -18,7 +18,6 @@ public class EmailService {
 
     private final JavaMailSender emailSender;
     private final RedisUtil redisUtil;
-    private final MemberRepository memberRepository;
 
     private static final String MAIL_VERIFICATION_LINK = "http://localhost:9090/auth/verify/";
     private static final String MAIL_SUBJECT = "[Gemflix] 회원가입 인증메일입니다.";

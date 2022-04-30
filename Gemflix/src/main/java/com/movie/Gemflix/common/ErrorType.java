@@ -24,6 +24,7 @@ public enum ErrorType {
     STORE_INVALID_FILE(1019, "첨부된 파일이 없습니다."), //첨부파일 오류
     PAYMENT_FAIL(1020, "결제에 실패했습니다."), //결제실패
     NONE_PAYMENT(1021, "결제내역이 없습니다."), //등록된 결제내역 없음
+    INVALID_MEMBER_PHONE_OR_RANDOM_NUMBER(1022, "핸드폰번호 또는 인증번호가 유효하지않습니다."), //유효하지않은 인증번호 또는 핸드폰번호
 
     MOVIE_DETAIL_NOT_FOUND(1100,"영화 상세정보를 찾을 수 없습니다."),
     MOVIE_REVIEW_NOT_TICKET(1101, "관람평 작성 가능한 관람권이 없습니다."),

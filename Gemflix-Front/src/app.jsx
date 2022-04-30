@@ -21,6 +21,8 @@ import ProductModifyForm from "./components/product/product_modify_form";
 import Payment from "./components/mypage/payment";
 import CartList from "./components/mypage/cart_list";
 import PaymentList from "./components/mypage/payment_list";
+import MemberSearch from "./components/login/member_search";
+import MemberModify from "./components/login/member_modify";
 dotenv.config();
 
 function App({ server, movieServer }) {
@@ -112,6 +114,8 @@ function App({ server, movieServer }) {
 
             {/* login */}
             <Route path="/join" element={<Join server={server} />}></Route>
+            <Route path="/search" element={<MemberSearch server={server} />}></Route>
+            <Route path="/modify" element={<MemberModify server={server} />}></Route>
             <Route path="/login" element={
                 <Login server={server} kakaoLoginUrl={kakaoLoginUrl} settingAccessToken={settingAccessToken}/>
               }></Route>
