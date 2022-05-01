@@ -5,14 +5,19 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.dto.member.MemberDto;
+import com.movie.Gemflix.dto.movie.TicketDto;
 import com.movie.Gemflix.dto.payment.PaidProductDto;
 import com.movie.Gemflix.dto.payment.PaymentDto;
+import com.movie.Gemflix.dto.payment.PhotoTicketDto;
 import com.movie.Gemflix.dto.product.ProductDto;
 import com.movie.Gemflix.entity.*;
 import com.movie.Gemflix.repository.member.MemberRepository;
+import com.movie.Gemflix.repository.movie.ScreeningRepository;
+import com.movie.Gemflix.repository.movie.TicketRepository;
 import com.movie.Gemflix.repository.payment.PaidProductRepository;
 import com.movie.Gemflix.repository.payment.PaymentRepository;
 import com.movie.Gemflix.repository.product.ProductRepository;
+import com.movie.Gemflix.repository.reservation.SeatRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -38,12 +43,17 @@ public class PaymentService {
     @Value("${iamport.api.secret}")
     private String secretKey;
 
+    private int PHOTO_TICKET_PRICE = 1000;
+
     private final WebClient webClient;
     private final ModelMapper modelMapper;
     private final PaymentRepository paymentRepository;
     private final MemberRepository memberRepository;
     private final PaidProductRepository paidProductRepository;
     private final ProductRepository productRepository;
+    private final SeatRepository seatRepository;
+    private final TicketRepository ticketRepository;
+    private final ScreeningRepository screeningRepository;
 
 
     public Boolean completePayment(JSONObject requestBody, String memberId) {
@@ -81,13 +91,14 @@ public class PaymentService {
         log.info("===== savePaymentData =====");
 
         JSONArray carts = requestBody.getJSONArray("carts");
-        JSONArray tickets = requestBody.getJSONArray("tickets");
+        JSONObject reserveInfo = requestBody.getJSONObject("reserveInfo");
+
 
         if(0 < carts.size()){ //상품결제
             settingCarts(carts, requestBody, paymentData, memberId);
 
-        }else if(0 < tickets.size()){ //영화결제
-            //TODO:
+        }else if(reserveInfo != null){ //영화결제
+            settingTickets(reserveInfo, requestBody, paymentData, memberId);
         }
         return false;
     }
@@ -203,6 +214,28 @@ public class PaymentService {
             return null;
         }
     }
+    private Seat getSeatData(Long seId) {
+        log.info("===== getSeatData =====");
+        Optional<Seat> optSeat = seatRepository.findById(seId);
+        if(optSeat.isPresent()){
+            log.info("seatDto: {}", optSeat);
+            return optSeat.get();
+        }else{
+            log.error("invalid seat");
+            return null;
+        }
+    }
+    private Screening getScreeningData(Long siId) {
+        log.info("===== getSeatData =====");
+        Optional<Screening> optScreening = screeningRepository.findById(siId);
+        if(optScreening.isPresent()){
+            log.info("seatDto: {}", optScreening);
+            return optScreening.get();
+        }else{
+            log.error("invalid seat");
+            return null;
+        }
+    }
 
     public String getIamportToken(){
 
@@ -247,5 +280,61 @@ public class PaymentService {
         return paymentData;
     }
 
+    private boolean settingTickets(JSONObject reserveInfo,
+                                 JSONObject requestBody,
+                                 JSONObject paymentData,
+                                 String memberId) {
+        log.info("===== settingCarts =====");
+        // 사용자정보
+        MemberDto memberDto = getMemberData(memberId);
+        Long siId = reserveInfo.getLongValue("siId");
+        // 상영정보
+        Screening screening = getScreeningData(siId);
+        // 좌석 수만큼 티켓 정보 저장
+        JSONArray seIds = reserveInfo.getJSONArray("seIds");
+        List<TicketDto> tickets = new ArrayList<>();
+        int totalPrice = requestBody.getIntValue("pay_amount"); //값을 넘기게끔 변경
+        int photoTicketCnt = requestBody.getIntValue("photoTicketCnt");
+        int price = (totalPrice - photoTicketCnt * PHOTO_TICKET_PRICE) / seIds.size();
 
+        // payment(결제정보) 세팅
+        PaymentDto paymentDto = settingPayment(requestBody, paymentData, memberId);
+
+        for (Object seat : seIds) {
+            Seat seatData = getSeatData(Long.parseLong(seat.toString()));
+            settingTicket(memberDto, seatData, screening, tickets, paymentDto, price);
+        }
+
+        if(photoTicketCnt>0){
+            PhotoTicketDto photoTicketDto = PhotoTicketDto.builder()
+                    .price(photoTicketCnt * PHOTO_TICKET_PRICE)
+                    .cnt(photoTicketCnt)
+                    .payment(paymentDto)
+                    .build();
+            log.info("photoTicket: {}", photoTicketDto);
+            paymentDto.setPhotoTicket(photoTicketDto);
+        }
+        paymentDto.setTickets(tickets);
+        log.info("paymentDto: {}", paymentDto);
+        Payment payment = modelMapper.map(paymentDto, Payment.class);
+        log.info("payment: {}", payment);
+        paymentRepository.save(payment);
+        return false;
+    }
+
+    private void settingTicket(MemberDto memberDto, Seat seat, Screening screening,
+                                   List<TicketDto> tickets, PaymentDto paymentDto, int price) {
+        log.info("===== savePaidProduct =====");
+
+        TicketDto ticket = TicketDto.builder()
+                .member(memberDto)
+                .seat(seat)
+                .rvUseState("0")
+                .price(price)
+                .screening(screening)
+                .payment(paymentDto)
+                .build();
+        tickets.add(ticket);
+        log.info("ticket: {}", ticket);
+    }
 }

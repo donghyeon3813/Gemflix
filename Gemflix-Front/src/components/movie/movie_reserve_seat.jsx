@@ -5,6 +5,8 @@ const MovieReserveSeat = (props) => {
   const movieServer = props.movieServer;
   const siId = props.siId;
   const setReserveChildState = props.setReserveChildState;
+  const setPaymentInfo = props.setPaymentInfo;
+
   const [screenInfo, setScreenInfo] = useState({});
   const [seatRows, setSeatRows] = useState([]);
   const [personCnt, setPersonCnt] = useState(0);
@@ -43,7 +45,6 @@ const MovieReserveSeat = (props) => {
       dupSelectedSeat = selectedSeat.filter((info) => info !== seat);
       setSelectedSeat(dupSelectedSeat);
     }
-    console.log(dupSelectedSeat.length);
 
     if (dupSelectedSeat.length === Number(personCnt)) {
       setSeatColorStatus(true);
@@ -80,6 +81,16 @@ const MovieReserveSeat = (props) => {
       return;
     }
   };
+
+  const handleSetPaymentInfo = () => {
+    setPaymentInfo({
+      screenInfo: screenInfo,
+      selectedSeat: selectedSeat,
+      totalPrice: totalPrice,
+    });
+    setReserveChildState(3);
+  };
+
   useEffect(() => {
     handleGetScreenInfo(siId);
   }, []);
@@ -121,7 +132,7 @@ const MovieReserveSeat = (props) => {
         </div>
         <div>
           총 합계 : {totalPrice.toLocaleString("ko-KR")} 원{" "}
-          <button>결제하기</button>
+          <button onClick={() => handleSetPaymentInfo(3)}>결제하기</button>
         </div>
       </div>
     </>

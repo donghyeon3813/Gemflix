@@ -42,5 +42,9 @@ public class Payment {
     @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL)
     private List<PaidProduct> paidProducts = new ArrayList<>();
 
+    @OneToMany(mappedBy = "payment", cascade = CascadeType.ALL)
+    private List<Ticket> tickets = new ArrayList<>();
 
+    @OneToOne(mappedBy = "payment", cascade = CascadeType.ALL)
+    private PhotoTicket photoTicket;
 }

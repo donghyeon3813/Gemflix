@@ -56,6 +56,7 @@ public class ScreeningRepositorySupport {
                         screening.siId,
                         screening.startTime,
                         screening.endTime,
+                        screening.startTime.as("startDate"),
                         screening.theaterRoom.seatCnt,
                         ExpressionUtils.as(JPAExpressions
                                 .select(ticket.tkId.count().intValue())
@@ -63,7 +64,10 @@ public class ScreeningRepositorySupport {
                                 .where(ticket.screening.siId.eq(screening.siId)),"spareSeatCnt"),
                         screening.theaterRoom.name.as("trName"),
                         screening.movie.rating,
+                        screening.movie.title.as("mvTitle"),
+                        screening.movie.imgUrl.as("imageUrl"),
                         screening.theaterRoom.roomId,
+                        screening.theaterRoom.theater.location,
                         screening.type
                         ))
                 .from(screening)

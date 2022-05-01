@@ -8,9 +8,16 @@ import "./css/movie_reserve.css";
 import SwiperCore, { Navigation, Pagination, A11y } from "swiper";
 import MovieReservePopUp from "./movie_reserve_popUp";
 import MovieReserveSeat from "./movie_reserve_seat";
+import MoviePayment from "./movie_payment";
+import MovieReserveComplete from "./movie_reserve_complete";
+import { useSelector, shallowEqual } from "react-redux";
+import { useLocation, useNavigate } from "react-router";
 
 SwiperCore.use([Navigation, Pagination, A11y]);
 const MovieReserve = ({ movieServer }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const user = useSelector((store) => store.userReducer, shallowEqual);
   const [places, setPlaces] = useState([]);
   const [theaters, setTheaters] = useState([]);
   const [movies, setMovies] = useState([]);
@@ -25,9 +32,13 @@ const MovieReserve = ({ movieServer }) => {
   const [siId, setSiId] = useState();
   const [reservePopUp, setReservePopup] = useState(false);
   const [reserveChildState, setReserveChildState] = useState(1);
+
+  const [paymentInfo, setPaymentInfo] = useState({});
+  const [paymentSucInfo, setPaymentSucInfo] = useState({});
+
+  const [userInfo, setUserInfo] = useState(null);
   const handleGetPlaceList = () => {
     movieServer.place().then((response) => {
-      console.log(response);
       setPlaces(response.data);
       handleGetTheaterList(response.data[0]);
     });
@@ -36,19 +47,16 @@ const MovieReserve = ({ movieServer }) => {
   const handleGetTheaterList = (place) => {
     const data = { place: place };
     movieServer.theater(data).then((response) => {
-      console.log(response);
       setTheaters(response.data);
     });
   };
   const handleGetShowingMovieList = () => {
     movieServer.showingMovie().then((response) => {
-      console.log(response);
       setMovies(response.data);
     });
   };
   const handleGetScreenList = () => {
     movieServer.screens(searchData).then((response) => {
-      console.log(response);
       let screenArr = response.data;
       setScreens(screenArr);
       const dupMvtitle = new Set();
@@ -71,12 +79,9 @@ const MovieReserve = ({ movieServer }) => {
 
   const handleGetDate = () => {
     let nowDate = new Date();
-    console.log(nowDate.getDate());
     let finalDate = new Date(nowDate);
-    finalDate.setDate(nowDate.getDate() + 13);
+    finalDate.setDate(nowDate.getDate() + 9);
     let result = [];
-    console.log(nowDate);
-    console.log(finalDate);
     // nowDate.setHours(nowDate.getHours() + 9);
     while (nowDate <= finalDate) {
       let date = nowDate.getDate();
@@ -87,6 +92,11 @@ const MovieReserve = ({ movieServer }) => {
     setDates([...result]);
   };
   const handleReservePopupOn = (siId) => {
+    if (user.token === null) {
+      alert("로그인이 필요한 기능입니다.");
+      navigate("/login");
+      return;
+    }
     setSiId(siId);
     setReservePopup(true);
   };
@@ -98,6 +108,9 @@ const MovieReserve = ({ movieServer }) => {
     handleGetPlaceList();
     handleGetShowingMovieList();
     handleGetDate();
+    movieServer.profile().then((data) => {
+      setUserInfo(data.data);
+    });
   }, []);
 
   useEffect(() => {
@@ -110,13 +123,21 @@ const MovieReserve = ({ movieServer }) => {
     <div className="reserve_box">
       <div className="reserve_step">
         <ul>
-          <li>상영시간</li>
-          <li>인원/좌석</li>
-          <li>결제</li>
-          <li>결제완료</li>
+          <li className={reserveChildState === 1 ? "back-ground-red" : ""}>
+            상영시간
+          </li>
+          <li className={reserveChildState === 2 ? "back-ground-red" : ""}>
+            인원/좌석
+          </li>
+          <li className={reserveChildState === 3 ? "back-ground-red" : ""}>
+            결제
+          </li>
+          <li className={reserveChildState === 4 ? "back-ground-red" : ""}>
+            결제완료
+          </li>
         </ul>
       </div>
-      {reserveChildState === 1 ? (
+      {reserveChildState === 1 && (
         <div className="reserve_group">
           <div className="reserve_group_step">
             <div className="group_top">
@@ -216,12 +237,33 @@ const MovieReserve = ({ movieServer }) => {
             </div>
           </div>
         </div>
-      ) : (
+      )}{" "}
+      {reserveChildState === 2 && (
         <div className="reserve_group">
-          <MovieReserveSeat siId={siId} movieServer={movieServer} />
+          <MovieReserveSeat
+            siId={siId}
+            movieServer={movieServer}
+            setPaymentInfo={setPaymentInfo}
+            setReserveChildState={setReserveChildState}
+          />
         </div>
       )}
-
+      {reserveChildState === 3 && (
+        <div className="reserve_group">
+          <MoviePayment
+            paymentInfo={paymentInfo}
+            movieServer={movieServer}
+            setPaymentSucInfo={setPaymentSucInfo}
+            userInfo={userInfo}
+            setReserveChildState={setReserveChildState}
+          />
+        </div>
+      )}
+      {reserveChildState === 4 && (
+        <div className="reserve_group">
+          <MovieReserveComplete paymentSucInfo={paymentSucInfo} />
+        </div>
+      )}
       {reservePopUp && (
         <MovieReservePopUp
           movieServer={movieServer}

@@ -5,7 +5,6 @@ const MovieBigSeat = (props) => {
   const selectedSeat = props.selectedSeat;
   const seatColorStatus = props.seatColorStatus;
   let backColor = "";
-  console.log(seatColorStatus);
   if (selectedSeat.indexOf(seatInfo.seId) !== -1) {
     backColor = "red";
   } else if (seatColorStatus === true) {

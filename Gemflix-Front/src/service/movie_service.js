@@ -154,6 +154,32 @@ class MovieService {
         return error.request.response;
       });
   }
+  //결제 endpoint
+  async completePayment(data, memberId) {
+    return await this.server
+      .post("/payments/complete/" + memberId, data, {
+        headers: { "Content-Type": "application/json" },
+      })
+      .then(function (success) {
+        console.log(success.data);
+        return success.data;
+      })
+      .catch(function (error) {
+        console.log(error.request.response);
+        return JSON.parse(error.request.response);
+      });
+  }
+
+  async profile() {
+    return await this.server
+      .get("/member/profile", {})
+      .then(function (success) {
+        return success.data;
+      })
+      .catch(function (error) {
+        return JSON.parse(error.request.response);
+      });
+  }
 }
 
 export default MovieService;

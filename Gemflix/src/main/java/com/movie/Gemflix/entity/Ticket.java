@@ -35,4 +35,9 @@ public class Ticket {
     private int price;
 
     private String rvUseState;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "PM_ID") //결제정보 고유번호
+    private Payment payment;
+
 }
