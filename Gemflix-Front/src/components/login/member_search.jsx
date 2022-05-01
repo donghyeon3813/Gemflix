@@ -91,7 +91,7 @@ const MemberSearch = ({server}) => {
         {/* 비밀번호 찾기 */}
         <div style={searchPwDisplayType}>
             <label>아이디 : </label>
-            <input ref={phoneInputRef} type="tel" placeholder="phone" name='search_phone'/>
+            <input ref={phoneInputRef} type="tel" placeholder="phone" name='search_id'/>
         </div>
         </>
     );

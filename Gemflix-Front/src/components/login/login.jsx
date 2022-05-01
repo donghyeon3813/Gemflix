@@ -51,7 +51,7 @@ const Login = ({server, kakaoLoginUrl, settingAccessToken}) => {
                 </div>
                 <div>
                     <button type='button' onClick={()=> { navigate('/join'); }}>회원가입</button>
-                    <button type='button' onClick={()=> { navigate('/search'); }}>ID / PW 찾기</button>
+                    {/* <button type='button' onClick={()=> { navigate('/search'); }}>ID / PW 찾기</button> */}
                 </div>
                 <div>
                     <a href={kakaoLoginUrl}>
