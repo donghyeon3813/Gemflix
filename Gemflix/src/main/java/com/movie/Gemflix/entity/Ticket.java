@@ -35,7 +35,8 @@ public class Ticket {
     @JoinColumn (name = "SE_ID")
     private Seat seat;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "PM_ID") //결제정보 고유번호
     private Payment payment;
+
 }

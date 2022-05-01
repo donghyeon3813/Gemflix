@@ -3,7 +3,10 @@ package com.movie.Gemflix.dto.payment;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.movie.Gemflix.dto.member.MemberDto;
+import com.movie.Gemflix.dto.movie.TicketDto;
 import com.movie.Gemflix.entity.PaidProduct;
+import com.movie.Gemflix.entity.PhotoTicket;
+import com.movie.Gemflix.entity.Ticket;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -36,5 +39,9 @@ public class PaymentDto {
 
     @JsonManagedReference
     private List<PaidProductDto> paidProducts = new ArrayList<>();
+
+    private List<TicketDto> tickets = new ArrayList<>();
+
+    private PhotoTicketDto photoTicket;
 
 }
