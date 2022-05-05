@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
+import { deleteCartByMember } from '../../store/actions';
 
 const Profile = ({server, onClickLogout}) => {
 
     const location = useLocation();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const user = useSelector(store => store.userReducer, shallowEqual);
 
     const [email, setEmail] = useState(null);
@@ -35,8 +37,10 @@ const Profile = ({server, onClickLogout}) => {
     }
 
     const onClickDeleteMember = () => {
+        const memberId = user.memberId;
         if(window.confirm("정말 탈퇴하겠습니까?")){
-            server.deleteMember(user.memberId)
+
+            server.deleteMember(memberId)
             .then(response => {
                 const code = response.code;
                 switch(code){
@@ -45,6 +49,7 @@ const Profile = ({server, onClickLogout}) => {
 
                     case 1000: //success
                         alert("탈퇴되었습니다.");
+                        dispatch(deleteCartByMember(memberId));
                         onClickLogout(false);
                         navigate('/');
                         break;
@@ -73,7 +78,7 @@ const Profile = ({server, onClickLogout}) => {
             {email == null ? 
                 <>
                 <label>이메일 : </label>
-                <button type='button'>이메일 인증하기</button><br/>
+                {/* <button type='button'>이메일 인증하기</button><br/> */}
                 </>
             :
                 <>
@@ -86,7 +91,6 @@ const Profile = ({server, onClickLogout}) => {
         </div>
         <button type='button' onClick={onClickCartList}>장바구니</button>
         <button type='button' onClick={onClickPaymentList}>결제내역</button>
-        <button type='button'>관람영화</button>
         <button type='button' onClick={onClickDeleteMember}>탈퇴하기</button>
         </>
         )

@@ -7,9 +7,7 @@ import com.movie.Gemflix.dto.member.MemberDto;
 import com.movie.Gemflix.entity.Member;
 import com.movie.Gemflix.repository.member.MemberRepository;
 import com.movie.Gemflix.repository.member.MemberRepositorySupport;
-import com.movie.Gemflix.security.service.AuthService;
 import com.movie.Gemflix.service.CommonService;
-import com.movie.Gemflix.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -20,8 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import javax.websocket.server.PathParam;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -32,7 +28,6 @@ public class MemberController {
 
     private final ModelMapper modelMapper;
     private final CommonService commonService;
-    private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final MemberRepositorySupport memberRepositorySupport;
 

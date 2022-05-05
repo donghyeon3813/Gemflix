@@ -130,6 +130,20 @@ const cartReducer = (state = defaultState, action) => {
                 state = [...newState];
             }
             return state;
+
+            case "DELETE_ITEM_BY_MEMBER": //장바구니에서 해당 멤버의 장바구니 삭제
+            let memberId03 = action.payload.memberId;
+
+            if(0 < state.length){
+                let newState = state.map(element => {
+                    if(!Object.hasOwn(element, memberId03)){ //해당 멤버의 cart 아님
+                        return element;
+                    }
+                }).filter((thisElement) => thisElement !== undefined);;
+
+                state = [...newState];
+            }
+            return state;
         
         case "MODIFY_ITEM_BY_ADMIN": //관리자가 상품 수정시 회원들의 장바구니의 상품 수정
             if(0 < state.length){

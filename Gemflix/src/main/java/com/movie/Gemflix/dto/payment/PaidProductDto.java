@@ -1,9 +1,7 @@
 package com.movie.Gemflix.dto.payment;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.movie.Gemflix.dto.movie.TicketDto;
 import com.movie.Gemflix.dto.product.ProductDto;
-import com.movie.Gemflix.entity.Ticket;
 import lombok.*;
 
 @Data

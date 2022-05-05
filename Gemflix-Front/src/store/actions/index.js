@@ -18,7 +18,6 @@ export const addCart = (item, count, totalPrice, memberId) => {
     totalPrice = Number(totalPrice);
     return {
         type: "ADD_ITEM",
-        // type: "RESET",
         payload: {item, count, totalPrice, memberId}
     }
 }
@@ -27,6 +26,14 @@ export const deleteCart = (deleteAfterMemberItems, memberId) => {
     return {
         type:"DELETE_ITEM",
         payload: {deleteAfterMemberItems, memberId}
+    }
+}
+
+//장바구니에서 해당 멤버의 장바구니 삭제
+export const deleteCartByMember = (memberId) => {
+    return {
+        type:"DELETE_ITEM_BY_MEMBER",
+        payload: {memberId}
     }
 }
 
