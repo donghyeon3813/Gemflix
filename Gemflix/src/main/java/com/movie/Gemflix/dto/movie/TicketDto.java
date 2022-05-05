@@ -1,23 +1,33 @@
 package com.movie.Gemflix.dto.movie;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.movie.Gemflix.dto.member.MemberDto;
 import com.movie.Gemflix.dto.payment.PaymentDto;
+import com.movie.Gemflix.dto.reservation.SeatDto;
 import com.movie.Gemflix.entity.Screening;
 import com.movie.Gemflix.entity.Seat;
 import lombok.*;
 
 @Data
-@ToString
+@ToString(exclude = {"member", "screening", "payment", "seat"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TicketDto {
-
+    private long tkId;
     private int price;
     private String rvUseState;
+    @JsonBackReference
     private MemberDto member;
-    private Screening screening;
-    private Seat seat;
+    @JsonBackReference
+    private ScreeningDto screening;
+    @JsonBackReference
+    private SeatDto seat;
+    @JsonBackReference
     private PaymentDto payment;
+
+    @JsonManagedReference
+    private ReviewDto review;
 
 }

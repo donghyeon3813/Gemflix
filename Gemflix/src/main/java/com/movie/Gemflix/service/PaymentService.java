@@ -5,11 +5,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.dto.member.MemberDto;
+import com.movie.Gemflix.dto.movie.ScreeningDto;
 import com.movie.Gemflix.dto.movie.TicketDto;
 import com.movie.Gemflix.dto.payment.PaidProductDto;
 import com.movie.Gemflix.dto.payment.PaymentDto;
 import com.movie.Gemflix.dto.payment.PhotoTicketDto;
 import com.movie.Gemflix.dto.product.ProductDto;
+import com.movie.Gemflix.dto.reservation.SeatDto;
 import com.movie.Gemflix.entity.*;
 import com.movie.Gemflix.repository.member.MemberRepository;
 import com.movie.Gemflix.repository.movie.ScreeningRepository;
@@ -219,23 +221,23 @@ public class PaymentService {
             return null;
         }
     }
-    private Seat getSeatData(Long seId) {
+    private SeatDto getSeatData(Long seId) {
         log.info("===== getSeatData =====");
         Optional<Seat> optSeat = seatRepository.findById(seId);
         if(optSeat.isPresent()){
             log.info("seatDto: {}", optSeat);
-            return optSeat.get();
+            return modelMapper.map(optSeat.get(), SeatDto.class);
         }else{
             log.error("invalid seat");
             return null;
         }
     }
-    private Screening getScreeningData(Long siId) {
+    private ScreeningDto getScreeningData(Long siId) {
         log.info("===== getSeatData =====");
         Optional<Screening> optScreening = screeningRepository.findById(siId);
         if(optScreening.isPresent()){
             log.info("seatDto: {}", optScreening);
-            return optScreening.get();
+            return modelMapper.map(optScreening.get(), ScreeningDto.class);
         }else{
             log.error("invalid seat");
             return null;
@@ -367,7 +369,7 @@ public class PaymentService {
         MemberDto memberDto = getMemberData(memberId);
         Long siId = reserveInfo.getLongValue("siId");
         // 상영정보
-        Screening screening = getScreeningData(siId);
+        ScreeningDto screening = getScreeningData(siId);
         // 좌석 수만큼 티켓 정보 저장
         JSONArray seIds = reserveInfo.getJSONArray("seIds");
         List<TicketDto> tickets = new ArrayList<>();
@@ -379,7 +381,7 @@ public class PaymentService {
         PaymentDto paymentDto = settingPayment(requestBody, paymentData, memberId);
 
         for (Object seat : seIds) {
-            Seat seatData = getSeatData(Long.parseLong(seat.toString()));
+            SeatDto seatData = getSeatData(Long.parseLong(seat.toString()));
             settingTicket(memberDto, seatData, screening, tickets, paymentDto, price);
         }
 
@@ -400,7 +402,7 @@ public class PaymentService {
         return false;
     }
 
-    private void settingTicket(MemberDto memberDto, Seat seat, Screening screening,
+    private void settingTicket(MemberDto memberDto, SeatDto seat, ScreeningDto screening,
                                    List<TicketDto> tickets, PaymentDto paymentDto, int price) {
         log.info("===== savePaidProduct =====");
 

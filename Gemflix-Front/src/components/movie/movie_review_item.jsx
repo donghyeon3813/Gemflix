@@ -22,7 +22,7 @@ const MovieReviewItem = (props) => {
       return;
     }
     const data = {
-      comment: review,
+      content: review,
       rvId: rvId,
     };
     movieServer.reviewModify(data, user.token).then((response) => {

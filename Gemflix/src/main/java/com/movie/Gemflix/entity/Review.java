@@ -1,5 +1,6 @@
 package com.movie.Gemflix.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -19,6 +20,7 @@ public class Review extends BaseEntity{
     @SequenceGenerator(name = "RV_ID_SEQ_GEN", sequenceName = "RV_ID_SEQ", initialValue = 1, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RV_ID_SEQ_GEN")
     private Long rvId;
+
 
     @OneToOne
     @JoinColumn(name = "TK_ID")

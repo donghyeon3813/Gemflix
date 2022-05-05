@@ -65,7 +65,7 @@ const MovieView = ({ movieServer }) => {
 
     const data = {
       mvId: movieInfo.mvId,
-      comment: review,
+      content: review,
       score: score,
     };
     movieServer.reviewRegister(data, user.token).then((response) => {
