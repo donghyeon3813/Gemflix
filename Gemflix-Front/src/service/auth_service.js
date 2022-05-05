@@ -59,29 +59,16 @@ class AuthService{
         });
     }
 
-    //회원 핸드폰 본인인증
-    async certifyPhone(phone) {
-        return await this.server.post('/auth/certify', {
-            phone: phone
-        })
+    //회원 이메일 인증
+    async certifyEmail(data, memberId) {
+        return await this.server.post('/auth/email/' + memberId, data, {
+            headers: { 'Content-Type': 'application/json' }})
         .then(function (success) {
+            console.log(success.data);
             return success.data;
         })
         .catch(function (error) {
-            return error.request.response;
-        });
-    }
-
-    //회원 핸드폰 본인인증
-    async certifyRandomNumber(phone, randomNumber) {
-        return await this.server.post('/auth/verify/phone', {
-            phone: phone,
-            randomNumber: randomNumber
-        })
-        .then(function (success) {
-            return success.data;
-        })
-        .catch(function (error) {
+            console.log(error.request.response);
             return JSON.parse(error.request.response);
         });
     }

@@ -11,8 +11,10 @@ const Profile = ({server, onClickLogout}) => {
     const user = useSelector(store => store.userReducer, shallowEqual);
 
     const [email, setEmail] = useState(null);
+    const [tempEmail, setTempEmail] = useState('');
     const [regDate, setRegDate] = useState(null);
     const memberInfo = location.state.memberInfo;
+
 
     useEffect(() => {
         let regDt = memberInfo.regDate;
@@ -69,16 +71,62 @@ const Profile = ({server, onClickLogout}) => {
         }
     }
 
+    const onClickCertifyEmail = () => {
+        const memberId = user.memberId;
+        const data = { email: tempEmail };
+
+        server.certifyEmail(data, memberId)
+            .then(response => {
+                const code = response.code;
+                switch(code){
+                    case 1007: //interceptor에서 accessToken 재발급
+                        break;
+
+                    case 1000: //success
+                        alert("이메일로 인증번호가 전송되었습니다. 이메일을 확인하여 인증을 완료하세요.");
+                        navigate('/');
+                        break;
+
+                    default: //fail
+                        alert("해당 작업을 수행할 수 없습니다. 잠시 후 다시 시도해주세요.");
+                        navigate('/');
+                        break;
+                }
+            })
+            .catch(ex => {
+                console.log("certifyEmail requset fail : " + ex);
+            })
+            .finally(() => {
+                console.log("certifyEmail request end");
+            });
+    }
+
+    const changeEmail = (event) => {
+        setTempEmail(event.target.value);
+    }
+
     return (
         <>
         <div>
             <h1>Profile</h1>
             <label>아이디 : {memberInfo.id}</label><br/>
-            <label>핸드폰 번호 : {memberInfo.phone}</label><br/>
+            {memberInfo.phone == null ? 
+                <>
+                </>
+            :
+                <>
+                <label>핸드폰 번호 : {memberInfo.phone}</label><br/>
+                </>
+                    
+            }
+
+
+
             {email == null ? 
                 <>
                 <label>이메일 : </label>
-                {/* <button type='button'>이메일 인증하기</button><br/> */}
+                <input type="email" placeholder="email" onChange={changeEmail}/>
+                <button type='button' onClick={onClickCertifyEmail}>이메일 인증하기</button><br/>
                 </>
             :
                 <>

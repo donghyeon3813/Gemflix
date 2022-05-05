@@ -159,10 +159,16 @@ const Payment = ({server, onClickLogout}) => {
                         .then((data) => {
                             // 서버 결제 API 성공시 로직
                             console.log(data); 
+                        })
+                        .catch(ex => {
+                            console.log("payments requset fail : " + ex);
+                            })
+                        .finally(() => {
+                            console.log("payments request end");
+                            alert("결제가 완료되었습니다.");
+                            deleteCartPaidCarts(); //장바구니에서 삭제
+                            getPayments();
                         });
-                    alert("결제가 완료되었습니다.");
-                    deleteCartPaidCarts(); //장바구니에서 삭제
-                    navigate('/payments');
 
                 }else{
                     alert("잘못된 결제 요청 입니다. 메인페이지로 이동합니다.");
@@ -207,10 +213,16 @@ const Payment = ({server, onClickLogout}) => {
                                 .then((data) => {
                                     // 서버 결제 API 성공시 로직
                                     console.log(data); 
+                                })
+                                .catch(ex => {
+                                    console.log("payments requset fail : " + ex);
+                                    })
+                                .finally(() => {
+                                    console.log("payments request end");
+                                    alert("결제가 완료되었습니다.");
+                                    deleteCartPaidCarts(); //장바구니에서 삭제
+                                    getPayments();
                                 });
-                                alert("결제가 완료되었습니다.");
-                                deleteCartPaidCarts(); //장바구니에서 삭제
-                                navigate('/payments');
 
                         }else{
                             // 결제 실패 시 로직
@@ -224,6 +236,37 @@ const Payment = ({server, onClickLogout}) => {
         }else{
             alert("모든 정보를 입력해주세요.");
         }
+    }
+
+    const getPayments = () => {
+        //server reqeust
+        server.payments(user.memberId)
+        .then(response => {
+        const code = response.code;
+        switch(code){
+                case 1007: //interceptor에서 accessToken 재발급
+                break;
+
+                case 1000: //success
+                const payments = response.data;
+                console.log(payments);
+
+                navigate('/payments', { state: { 
+                    payments: payments
+                } });
+                break;
+
+                case 1008: //refreshToken 만료 -> 로그아웃
+                onClickLogout(true);
+                break;
+        }
+        })
+        .catch(ex => {
+        console.log("payments requset fail : " + ex);
+        })
+        .finally(() => {
+        console.log("payments request end");
+        });
     }
 
     const deleteCartPaidCarts = () => {

@@ -1,11 +1,13 @@
 package com.movie.Gemflix.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.movie.Gemflix.common.CommonResponse;
 import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.common.ErrorType;
 import com.movie.Gemflix.dto.member.MemberDto;
 import com.movie.Gemflix.entity.MemberRole;
 import com.movie.Gemflix.security.service.AuthService;
+import com.movie.Gemflix.security.service.EmailService;
 import com.movie.Gemflix.security.util.CookieUtil;
 import com.movie.Gemflix.security.util.JwtUtil;
 import com.movie.Gemflix.security.model.JwtRequest;
@@ -44,6 +46,7 @@ public class JwtAuthenticationController {
     private final UserDetailsServiceImpl userDetailsService;
     private final CommonService commonService;
     private final AuthService authService;
+    private final EmailService emailService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -76,6 +79,33 @@ public class JwtAuthenticationController {
                     .code(ErrorType.ETC_FAIL.getErrorCode())
                     .message(ErrorType.ETC_FAIL.getErrorMessage())
                     .build(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/email/{memberId}")
+    public ResponseEntity<?> certifyEmail(@RequestBody JSONObject requestBody,
+                                          @PathVariable String memberId) {
+        log.info("[certifyEmail] requestBody:{}, memberId: {}", requestBody, memberId);
+        String email = requestBody.getString("email");
+        try {
+            if (emailService.sendVerificationMail(memberId, email)) {
+                return CommonResponse.createResponse(CommonResponse.builder()
+                        .code(Constant.Success.SUCCESS_CODE)
+                        .message("Member Email Send Success")
+                        .build(), HttpStatus.OK);
+            } else {
+                return CommonResponse.createResponse(CommonResponse.builder()
+                        .code(ErrorType.ETC_FAIL.getErrorCode())
+                        .message(ErrorType.ETC_FAIL.getErrorMessage())
+                        .build(), HttpStatus.BAD_REQUEST);
+            }
+        }catch (Exception e){
+        log.error("certifyEmail Exception!!");
+        e.printStackTrace();
+        return CommonResponse.createResponse(CommonResponse.builder()
+                .code(ErrorType.ETC_FAIL.getErrorCode())
+                .message(ErrorType.ETC_FAIL.getErrorMessage())
+                .build(), HttpStatus.BAD_REQUEST);
         }
     }
 

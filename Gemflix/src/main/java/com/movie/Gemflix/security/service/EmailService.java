@@ -24,20 +24,26 @@ public class EmailService {
     private static final Long LINK_EXPIRE_TIME = 60 * 30L; //30분
 
     public boolean sendVerificationMail(MemberDto memberDTO) throws Exception{
-        try {
-            String uuid = UUID.randomUUID().toString();
             String memberId = memberDTO.getId();
-            redisUtil.setStringDataExpire(RedisUtil.PREFIX_EMAIL_KEY + uuid, memberId, LINK_EXPIRE_TIME);
-            String text = "안녕하세요. " + memberId + "님," +
-                    "\n 보석같은 영화를 제공하는 Gemplix 입니다." +
-                    "\n 아래 링크를 눌러 Email 인증을 완료하세요." +
-                    "\n " + MAIL_VERIFICATION_LINK + uuid;
-            sendMail(memberDTO.getEmail(), MAIL_SUBJECT, text);
-        }catch (Exception e){
+            String email = memberDTO.getEmail();
+            return sendVerificationMail(memberId, email);
+    }
+
+    public boolean sendVerificationMail(String memberId, String email){
+            try{
+                String uuid = UUID.randomUUID().toString();
+                redisUtil.setStringDataExpire(RedisUtil.PREFIX_EMAIL_KEY + uuid, memberId, LINK_EXPIRE_TIME);
+                redisUtil.setStringDataExpire(RedisUtil.PREFIX_EMAIL_KEY + memberId, email, LINK_EXPIRE_TIME);
+                String text = "안녕하세요. " + memberId + "님," +
+                        "\n 보석같은 영화를 제공하는 Gemplix 입니다." +
+                        "\n 아래 링크를 눌러 Email 인증을 완료하세요." +
+                        "\n " + MAIL_VERIFICATION_LINK + uuid;
+                sendMail(email, MAIL_SUBJECT, text);
+            }catch (Exception e){
             e.printStackTrace();
             log.error("fail to send mail.");
             return false;
-        }
+            }
         return true;
     }
 

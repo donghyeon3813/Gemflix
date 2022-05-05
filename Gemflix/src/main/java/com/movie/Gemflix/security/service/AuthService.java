@@ -103,19 +103,21 @@ public class AuthService {
     @Transactional
     public CommonResponse verifyEmail(String key) throws Exception {
         String memberId = redisUtil.getStringData(RedisUtil.PREFIX_EMAIL_KEY + key);
+        String email = redisUtil.getStringData(RedisUtil.PREFIX_EMAIL_KEY + memberId);
         if(memberId == null){
             return new CommonResponse(ErrorType.INVALID_MEMBER_ID.getErrorCode(),
                     ErrorType.INVALID_MEMBER_ID.getErrorMessage());
         }else{
-            modifyUserRole(memberId);authHeader:
+            modifyUserRoleAndEmail(memberId, email);authHeader:
             redisUtil.deleteData(RedisUtil.PREFIX_EMAIL_KEY + key);
             return null;
         }
     }
 
-    public void modifyUserRole(String memberId) throws Exception{
+    public void modifyUserRoleAndEmail(String memberId, String email) throws Exception{
         queryFactory.update(qMember)
                 .set(qMember.authority, MemberRole.MEMBER)
+                .set(qMember.email, email)
                 .set(qMember.modDate, LocalDateTime.now())
                 .where(qMember.id.eq(memberId))
                 .execute();

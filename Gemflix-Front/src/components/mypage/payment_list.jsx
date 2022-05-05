@@ -1,47 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
 import PaymentItem from './payment_item';
 
 const PaymentList = ({server, onClickLogout}) => {
 
         const user = useSelector(store => store.userReducer, shallowEqual);
-
+        const location = useLocation();
         const [disStatus, setDisStatus] = useState('T');
         const productDisplayType = disStatus === 'P' ? {display:"block"} : {display:"none"};
         const ticketDisplayType = disStatus === 'T' ? {display:"block"} : {display:"none"};
-        const [payments, setPayments] = useState([]);
-        const [isRefreshed, setIsRefreshed] = useState(0);
-
-        useEffect(() => {
-                console.log(payments);
-                if(isRefreshed === 0){
-                        //server reqeust
-                        server.payments(user.memberId)
-                        .then(response => {
-                        const code = response.code;
-                        switch(code){
-                                case 1007: //interceptor에서 accessToken 재발급
-                                break;
-
-                                case 1000: //success
-                                const payments = response.data;
-                                setPayments(payments);
-                                setIsRefreshed(1);
-                                break;
-
-                                case 1008: //refreshToken 만료 -> 로그아웃
-                                onClickLogout(true);
-                                break;
-                        }
-                        })
-                        .catch(ex => {
-                        console.log("payments requset fail : " + ex);
-                        })
-                        .finally(() => {
-                        console.log("payments request end");
-                        });
-                }
-        }, [payments])
+        const payments = location.state.payments;
+        
 
         const changeDisplay = (event) => {
                 setDisStatus(event.target.value);
