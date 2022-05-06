@@ -18,11 +18,9 @@ public class TicketDto {
     private long tkId;
     private int price;
     private String rvUseState;
-    @JsonBackReference
+
     private MemberDto member;
-    @JsonBackReference
     private ScreeningDto screening;
-    @JsonBackReference
     private SeatDto seat;
     @JsonBackReference
     private PaymentDto payment;

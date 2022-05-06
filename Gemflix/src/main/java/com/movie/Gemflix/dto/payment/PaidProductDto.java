@@ -16,7 +16,6 @@ public class PaidProductDto {
     private int count;
     private int price;
 
-    @JsonBackReference
     private ProductDto product; //상품
 
     @JsonBackReference

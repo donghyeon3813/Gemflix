@@ -356,6 +356,7 @@ public class PaymentService {
                     PaymentDto paymentDto = modelMapper.map(payment, PaymentDto.class);
                     return paymentDto;
                 }).collect(Collectors.toList());
+
         log.info("paymentDtos: {}", paymentDtos);
         return paymentDtos;
     }

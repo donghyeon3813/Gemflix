@@ -4,17 +4,12 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.movie.Gemflix.dto.movie.TicketDto;
 import com.movie.Gemflix.entity.TheaterRoom;
-import lombok.*;
+import lombok.Data;
 
 @Data
-@ToString
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class SeatDto {
     private Long seId;
 
-    @JsonBackReference
     private TheaterRoom theaterRoom;
 
     private String seCol;
@@ -22,5 +17,5 @@ public class SeatDto {
     private String seRow;
 
     @JsonManagedReference
-    private TicketDto ticketDto;
+    private TicketDto ticket;
 }

@@ -27,11 +27,11 @@ public class Ticket {
     @JoinColumn( name = "M_ID")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn( name = "SI_ID")
     private Screening screening;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn (name = "SE_ID")
     private Seat seat;
 
