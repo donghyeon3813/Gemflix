@@ -28,10 +28,6 @@ public class PaidProduct {
         private Product product;
 
         @ManyToOne
-        @JoinColumn(name = "TK_ID") //티켓 고유번호
-        private Ticket ticket;
-
-        @ManyToOne
         @JoinColumn(name = "PM_ID") //결제정보 고유번호
         private Payment payment;
 

@@ -25,7 +25,7 @@ const MovieReserveComplete = (props) => {
           <div>
             좌석 <span>{paymentSucInfo.seats}</span>
           </div>
-          <button>예매번호 확인하기</button>
+          <div>예매번호는 마이페이지에서 확인이 가능합니다.</div>
         </div>
       </div>
     </>

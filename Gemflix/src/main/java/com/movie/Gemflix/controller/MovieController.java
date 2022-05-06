@@ -100,9 +100,10 @@ public class MovieController {
     }
 
     @PostMapping("/review")
-    public ResponseEntity<?> reviewRegister(@RequestBody ReviewDto reviewDto, HttpServletRequest request){
+    public ResponseEntity<?> reviewRegister(@RequestBody ReviewRegisterDto reviewDto, HttpServletRequest request){
         log.info("method :{}","reviewRegister");
         log.info("parameter :{}",reviewDto);
+        System.out.println("ewqewqewqewqewqewqweq");
         try {
             CommonResponse response = movieService.reviewRegister(reviewDto, request);
             if(response!= null){
@@ -156,7 +157,7 @@ public class MovieController {
     }
 
     @PutMapping("/review")
-    public ResponseEntity<?> reviewModify(@RequestBody ReviewDto reviewDto, HttpServletRequest request){
+    public ResponseEntity<?> reviewModify(@RequestBody ReviewRegisterDto reviewDto, HttpServletRequest request){
         log.info("method :{}","reviewModify");
         log.info("parameter :{}",reviewDto);
         try {

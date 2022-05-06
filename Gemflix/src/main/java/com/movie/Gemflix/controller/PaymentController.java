@@ -45,6 +45,7 @@ public class PaymentController {
                         .build(), HttpStatus.NO_CONTENT);
             }
         }catch (Exception e){
+            e.printStackTrace();
             return CommonResponse.createResponse(CommonResponse.builder()
                     .code(ErrorType.ETC_FAIL.getErrorCode())
                     .message(ErrorType.ETC_FAIL.getErrorMessage())

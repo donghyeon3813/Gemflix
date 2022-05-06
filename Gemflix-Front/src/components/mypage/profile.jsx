@@ -31,10 +31,40 @@ const Profile = ({server, onClickLogout}) => {
     }
 
     const onClickPaymentList = () => {
-        navigate('/payments', {
-            state: {
-                memberInfo: memberInfo
-            }
+        getPayments();
+    }
+
+    const getPayments = () => {
+        //server reqeust
+        server.payments(user.memberId)
+        .then(response => {
+        const code = response.code;
+        switch(code){
+                case 1007: //interceptor에서 accessToken 재발급
+                break;
+
+                case 1000: //success
+                const payments = response.data;
+                console.log(payments);
+
+                navigate('/payments', {
+                    state: {
+                        memberInfo: memberInfo,
+                        payments: payments
+                    }
+                });
+                break;
+
+                case 1008: //refreshToken 만료 -> 로그아웃
+                onClickLogout(true);
+                break;
+        }
+        })
+        .catch(ex => {
+        console.log("payments requset fail : " + ex);
+        })
+        .finally(() => {
+        console.log("payments request end");
         });
     }
 

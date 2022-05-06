@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@ToString(exclude = "paidProducts")
+@ToString(exclude = {"paidProducts", "tickets", "member", "photoTicket"})
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -40,8 +40,10 @@ public class PaymentDto {
     @JsonManagedReference
     private List<PaidProductDto> paidProducts = new ArrayList<>();
 
+    @JsonManagedReference
     private List<TicketDto> tickets = new ArrayList<>();
 
+    @JsonManagedReference
     private PhotoTicketDto photoTicket;
 
 }

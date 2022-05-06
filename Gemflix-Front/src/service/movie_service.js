@@ -32,7 +32,10 @@ class MovieService {
   async reviewRegister(data, accessToken) {
     return await this.server
       .post("/movie/review", data, {
-        headers: { Authorization: "Bearer " + accessToken },
+        headers: {
+          Authorization: "Bearer " + accessToken,
+          "Content-Type": "application/json",
+        },
       })
       .then(function (success) {
         console.log(success);

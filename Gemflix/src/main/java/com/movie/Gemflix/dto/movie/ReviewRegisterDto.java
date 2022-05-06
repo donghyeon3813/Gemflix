@@ -1,7 +1,6 @@
 package com.movie.Gemflix.dto.movie;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.movie.Gemflix.entity.Ticket;
 import lombok.*;
 
 @Data
@@ -9,18 +8,11 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewDto {
+public class ReviewRegisterDto {
     private String content;
-
     private Long mvId;
-
+    private Long rvId;
     private float score;
 
-    private Long rvId;
-
-    @JsonBackReference
-    private TicketDto ticket;
-
-    private String delStatus;
 
 }

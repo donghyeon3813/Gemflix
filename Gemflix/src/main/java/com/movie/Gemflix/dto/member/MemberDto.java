@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@ToString
+@ToString(exclude = "pointHistories")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -52,5 +52,7 @@ public class MemberDto {
     public void addPointHistory(PointHistoryDto pointHistoryDto){
         pointHistories.add(pointHistoryDto);
     }
+
+
 
 }

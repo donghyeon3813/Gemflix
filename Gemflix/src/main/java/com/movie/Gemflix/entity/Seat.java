@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = "theaterRoom")
 @Table(name = "SEAT")
 public class Seat {
 

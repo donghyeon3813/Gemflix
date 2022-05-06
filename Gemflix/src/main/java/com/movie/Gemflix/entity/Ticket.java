@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = {"member", "screening"})
+@ToString(exclude = {"member", "screening", "seat", "payment"})
 @DynamicInsert //insert시 null인 필드 제외
 @Table(name = "TICKET")
 public class Ticket {
@@ -27,11 +27,11 @@ public class Ticket {
     @JoinColumn( name = "M_ID")
     private Member member;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn( name = "SI_ID")
     private Screening screening;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn (name = "SE_ID")
     private Seat seat;
 
