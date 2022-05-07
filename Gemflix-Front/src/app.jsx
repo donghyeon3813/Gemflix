@@ -36,9 +36,8 @@ function App({ server, movieServer }) {
   let alreadyLogout = false;
 
   useEffect(() => {
-    if(user.loggedIn === true && user.token){
-        checkLogin();
-
+    if (user.loggedIn === true && user.token) {
+      checkLogin();
     }
   }, [user.loggedIn]);
 
@@ -74,18 +73,19 @@ function App({ server, movieServer }) {
 
   const settingAccessToken = (response) => {
     const code = response.code;
-    if(code === 1000){ //success
+    if (code === 1000) {
+      //success
       const accessToken = response.data.accessToken;
       const refreshToken = response.data.refreshToken;
       const memberId = response.data.memberId;
       const memberRole = response.data.memberRole;
       const expire = response.data.expire;
 
-      if(accessToken && refreshToken){
-        setCookie('refreshToken', refreshToken, {
-          path: '/'
-          , secure: true
-          , maxAge: expire
+      if (accessToken && refreshToken) {
+        setCookie("refreshToken", refreshToken, {
+          path: "/",
+          secure: true,
+          maxAge: expire,
 
           // , httpOnly: true //도메인에만 적용가능
         });
@@ -93,7 +93,8 @@ function App({ server, movieServer }) {
         alert(memberId + "님 환영합니다!");
         window.location.href = "/";
       }
-    }else{ //fail
+    } else {
+      //fail
       alert("아이디와 비밀번호를 정확히 입력해주세요.");
       setLoading(false);
       window.location.href = "/login";
@@ -107,18 +108,42 @@ function App({ server, movieServer }) {
           <Header />
           <Routes>
             {/* home */}
-            <Route path="/" exact element={<Home server={server} onClickLogout={onClickLogout} />}></Route>
-            <Route path="/home" element={<Home server={server} onClickLogout={onClickLogout} />}></Route>
+            <Route
+              path="/"
+              exact
+              element={<Home server={server} onClickLogout={onClickLogout} />}
+            ></Route>
+            <Route
+              path="/home"
+              element={<Home server={server} onClickLogout={onClickLogout} />}
+            ></Route>
 
             {/* login */}
             <Route path="/join" element={<Join server={server} />}></Route>
-            <Route path="/login" element={
-                <Login server={server} kakaoLoginUrl={kakaoLoginUrl} settingAccessToken={settingAccessToken}/>
-              }></Route>
-            <Route exact path="kakaoLoginUrl" element={<Home server={server} onClickLogout={onClickLogout}/>}></Route>
-            <Route path="/auth/callback/kakao" element={
-                <KakaoAuth server={server} settingAccessToken={settingAccessToken}/>
-              }></Route>
+            <Route
+              path="/login"
+              element={
+                <Login
+                  server={server}
+                  kakaoLoginUrl={kakaoLoginUrl}
+                  settingAccessToken={settingAccessToken}
+                />
+              }
+            ></Route>
+            <Route
+              exact
+              path="kakaoLoginUrl"
+              element={<Home server={server} onClickLogout={onClickLogout} />}
+            ></Route>
+            <Route
+              path="/auth/callback/kakao"
+              element={
+                <KakaoAuth
+                  server={server}
+                  settingAccessToken={settingAccessToken}
+                />
+              }
+            ></Route>
 
             {/* movie */}
             <Route
@@ -162,11 +187,25 @@ function App({ server, movieServer }) {
             ></Route>
 
             {/* myPage */}
-            <Route path="/profile" element={<Profile server={server} onClickLogout={onClickLogout}/>}></Route>
+            <Route
+              path="/profile"
+              element={
+                <Profile server={server} onClickLogout={onClickLogout} />
+              }
+            ></Route>
             <Route path="/cartList" element={<CartList />}></Route>
-            <Route path="/payment" element={<Payment server={server} onClickLogout={onClickLogout}/>}></Route>
-            <Route path="/payments" element={<PaymentList server={server} onClickLogout={onClickLogout}/>}></Route>
-            
+            <Route
+              path="/payment"
+              element={
+                <Payment server={server} onClickLogout={onClickLogout} />
+              }
+            ></Route>
+            <Route
+              path="/payments"
+              element={
+                <PaymentList server={server} onClickLogout={onClickLogout} />
+              }
+            ></Route>
           </Routes>
           <Footer />
         </BrowserRouter>
