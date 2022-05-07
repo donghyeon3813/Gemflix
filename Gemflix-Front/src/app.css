@@ -9,28 +9,64 @@
   padding: 0;
 }
 
+.white_btn {
+  color: gray;
+  background: white;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid white;
+  border-radius: 0.25rem;
+  font-size: medium;
+  line-height: 1.5;
+  font-weight: bold;
+}
+
+.purple_btn {
+  color: white;
+  background: mediumpurple;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid mediumpurple;
+  border-radius: 0.25rem;
+  font-size: medium;
+  line-height: 1.5;
+  font-weight: bold;
+}
+
 .header {
-  background-color: lemonchiffon;
+  background-color: mediumpurple;
   text-align: center;
-  height: 5em;
+  color: white;
+  font-weight: bold;
+  font-size: 80px;
+  font: large;
+  padding: 60px;
+}
+
+.home {
+  text-align: center;
+  font-size: 0px;
 }
 
 .footer {
-  background-color: lemonchiffon;
+  background-color: mediumpurple;
   text-align: center;
-  height: 5em;
+  padding: 40px;
+  color: white;
+  font-size: small;
 }
 
 .navbar {
   list-style: none;
   display: flex;
   padding: 0 5% 0 25%;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: mediumpurple;
+  padding-bottom: 10px;
 }
 
 .navbar_menu {
   list-style: none;
   flex: 60%;
-  background-color: aquamarine;
   display: flex;
 }
 
@@ -39,21 +75,23 @@
   flex: 1;
 }
 
+.navbar_menu_link_text {
+  color: white;
+}
+
+.navbar_menu_link {
+  text-decoration: none;
+}
+
 .navbar_member_button {
   list-style: none;
   flex: 40%;
-  background-color: brown;
   display: flex;
 }
 
 .navbar_member_button li {
   text-align: right;
   flex: 1;
-}
-
-.main {
-  text-align: center;
-  height: 40em;
 }
 
 .sotre {

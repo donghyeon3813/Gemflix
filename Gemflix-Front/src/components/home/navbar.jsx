@@ -49,14 +49,14 @@ const Navbar = ({server, onClickLogout}) => {
             <>
             <nav className='navbar'>
               <ul className='navbar_menu'>
-                <li><Link to="/reserve">예매</Link></li>
-                <li><Link to="/movies">영화</Link></li>
-                <li><Link to="/products">스토어</Link></li>
+                <li><Link className='navbar_menu_link' to="/reserve"><p className='navbar_menu_link_text'>예매</p></Link></li>
+                <li><Link className='navbar_menu_link' to="/movies"><p className='navbar_menu_link_text'>영화</p></Link></li>
+                <li><Link className='navbar_menu_link' to="/products"><p className='navbar_menu_link_text'>스토어</p></Link></li>
               </ul>
               <ul className='navbar_member_button'>
                 <li>{user.memberId} 님</li>
-                <li><button type='button' onClick={onClickProfile}>마이페이지</button></li>
-                <li><button type='button' onClick={onClickLogoutBtn}>로그아웃</button></li>
+                <li><button className='white_btn' type='button' onClick={onClickProfile}>마이페이지</button></li>
+                <li><button className='white_btn' type='button' onClick={onClickLogoutBtn}>로그아웃</button></li>
               </ul>
             </nav>
             </>
@@ -66,12 +66,12 @@ const Navbar = ({server, onClickLogout}) => {
             <>
             <nav className='navbar'>
               <ul className='navbar_menu'>
-                <li><Link to="/reserve">예매</Link></li>
-                <li><Link to="/movies">영화</Link></li>
-                <li><Link to="/products">스토어</Link></li>
+                <li><Link className='navbar_menu_link' to="/reserve"><p className='navbar_menu_link_text'>예매</p></Link></li>
+                <li><Link className='navbar_menu_link' to="/movies"><p className='navbar_menu_link_text'>영화</p></Link></li>
+                <li><Link className='navbar_menu_link' to="/products"><p className='navbar_menu_link_text'>스토어</p></Link></li>
               </ul>
               <ul className='navbar_member_button'>
-                <li><button type='button' onClick={()=> { navigate('/login'); }}>로그인</button></li>
+                <li><button className='white_btn' type='button' onClick={()=> { navigate('/login'); }}>로그인</button></li>
               </ul>
             </nav>
             </>
