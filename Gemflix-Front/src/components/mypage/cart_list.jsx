@@ -4,13 +4,14 @@ import CartItem from './cart_item';
 import { deleteCart } from '../../store/actions';
 import { useLocation, useNavigate } from 'react-router';
 
-const CartList = memo((props) => {
+const CartList = (props) => {
 
     const location = useLocation();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useSelector(store => store.userReducer, shallowEqual);
     const carts = useSelector(store => store.cartReducer, shallowEqual);
+
     const [memberCarts, setMemberCarts] = useState([]);
     const [cartName, setCartName] = useState('');
     const [orderCartName, setOrderCartName] = useState('');
@@ -31,11 +32,11 @@ const CartList = memo((props) => {
         if(0 < carts.length){
             const memberId = user.memberId;
             let tempMemberCart = null;
+
             carts.forEach(thisMember => {
                 if(Object.hasOwn(thisMember, memberId)){
                     tempMemberCart = thisMember[memberId];
                     setMemberCarts(tempMemberCart);
-                    console.log(tempMemberCart);
                 }
             });
 
@@ -64,6 +65,9 @@ const CartList = memo((props) => {
                     setOrderCartName(tempMemberCart[0].name);
                 }
             }
+            console.log(tempMemberCart);
+            console.log(memberCarts);
+            console.log(carts);
         }
     }, [refreshCnt]);
 
@@ -73,6 +77,10 @@ const CartList = memo((props) => {
     }
 
     const onChangeEach = (e, cId, totalPrice) => {
+        console.log("=== onChangeEach ===");
+        console.log(carts);
+        console.log(memberCarts);
+
         if(e.target.checked){
             setCheckList([...checkList, cId]);
             setSelectedPrice(selectedPrice + totalPrice);
@@ -83,6 +91,10 @@ const CartList = memo((props) => {
     }
 
     const onClickDeleteCart = () => {
+        console.log("=== onClickDeleteCart ===");
+        console.log(carts);
+        console.log(memberCarts);
+
         const memberId = user.memberId;
         let deleteAfterMemberItems;
 
@@ -114,6 +126,10 @@ const CartList = memo((props) => {
     }
 
     const onClickOrderCart = () => {
+        console.log("=== onClickOrderCart ===");
+        console.log(carts);
+        console.log(memberCarts);
+
         const len = checkList.length;
         if(len === 0){
             alert("선택된 상품이 없습니다.");
@@ -121,13 +137,14 @@ const CartList = memo((props) => {
             if(1 < len){
                 setOrderCartName(orderCartName + " 외 " + (len-1) + "개의 상품...");
             }
+
             navigate('/payment', {
                 state: {
                     price: selectedPrice,
                     cartName: orderCartName,
-                    carts: memberCarts,
                     beforeCarts: carts,
-                    delIdList: checkList
+                    memberCarts: memberCarts,
+                    checkIdList: checkList
                 }
             });
         }
@@ -161,12 +178,12 @@ const CartList = memo((props) => {
                     {
                         memberCarts.map((cart) => {
                             return (
-                                cart.selectedCounts.map((thisCount) => {
+                                cart.selectedCounts.map((thisCount, index) => {
                                     return (
-                                    <div className='cart_box' key={thisCount.cId}>
+                                    <div className='cart_box' key={index}>
                                         <input type="checkbox" onChange={(e) => onChangeEach(e, thisCount.cId, thisCount.totalPrice)} 
                                             checked={checkList.includes(thisCount.cId)}/>
-                                        <CartItem key={thisCount.cId} count={thisCount.count} 
+                                        <CartItem key={index} count={thisCount.count} 
                                             totalPrice={thisCount.totalPrice} name={cart.name} base64={cart.base64}/>
                                     </div>
                                     );
@@ -176,12 +193,12 @@ const CartList = memo((props) => {
                         })
                     }
                     <h2>총 {inputPriceFormat(selectedPrice)}원</h2>
-                    <button type='button' onClick={() => onClickOrderCart()}>선택상품 주문</button>
-                    <button type='button' onClick={() => onClickDeleteCart()}>선택상품 삭제</button>
+                    <button type='button' onClick={ () => onClickOrderCart()}>선택상품 주문</button>
+                    <button type='button' onClick={onClickDeleteCart}>선택상품 삭제</button>
                 </div>
             </>
         );
     }
-});
+};
 
 export default CartList;

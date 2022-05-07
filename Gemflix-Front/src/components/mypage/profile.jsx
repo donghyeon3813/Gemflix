@@ -41,23 +41,31 @@ const Profile = ({server, onClickLogout}) => {
         const code = response.code;
         switch(code){
                 case 1007: //interceptor에서 accessToken 재발급
-                break;
+                    break;
 
                 case 1000: //success
-                const payments = response.data;
-                console.log(payments);
-
-                navigate('/payments', {
-                    state: {
-                        memberInfo: memberInfo,
-                        payments: payments
-                    }
-                });
-                break;
+                    const payments = response.data;
+                    navigate('/payments', {
+                        state: {
+                            memberInfo: memberInfo,
+                            payments: payments
+                        }
+                    });
+                    break;
 
                 case 1008: //refreshToken 만료 -> 로그아웃
                 onClickLogout(true);
-                break;
+                    break;
+
+                default:
+                    const payments02 = [];
+                    navigate('/payments', {
+                        state: {
+                            memberInfo: memberInfo,
+                            payments: payments02
+                        }
+                    });
+                    break;
         }
         })
         .catch(ex => {

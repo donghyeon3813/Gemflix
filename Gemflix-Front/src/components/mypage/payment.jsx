@@ -3,7 +3,7 @@ import Modal from 'react-modal/lib/components/Modal';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import { useScript } from '../../hooks';
-import { deleteCart } from '../../store/actions';
+import { deleteCart, deleteCartItem } from '../../store/actions';
 import DaumPost from './daum_post';
 
 const Payment = ({server, onClickLogout}) => {
@@ -28,10 +28,11 @@ const Payment = ({server, onClickLogout}) => {
     const [address, setAddress] = useState('');
     const [detailAddress, setDetailAddress] = useState('');
 
-    const [carts, setCarts] = useState([]); //결제할 상품들
+    const [memberCarts, setMemberCarts] = useState([]);
+    const [payCarts, setPayCarts] = useState([]); //결제할 상품들
     const [beforeCarts, setBeforeCarts] = useState([]); //결제전 장바구니 상품목록
     const [tickets, setTickets] = useState([]); //결제할 티켓들
-    const [delIdList, setDelIdList] = useState([]); //결제할 아이디들
+    const [checkIdList, setCheckIdList] = useState([]); //결제할 아이디들
 
     const [memberPoint, setMemberPoint] = useState(0); //총 보유 포인트
     const [usePoint, setUsePoint] = useState(0); //사용할 포인트
@@ -60,22 +61,24 @@ const Payment = ({server, onClickLogout}) => {
     });
     
 	useEffect(() => {
-        if(location.state.carts){
-            setCarts(location.state.carts);
-        }
+        
         if(location.state.beforeCarts){
             setBeforeCarts(location.state.beforeCarts);
         }
         if(location.state.tickets){
             setTickets(location.state.tickets);
         }
-        if(location.state.delIdList){
-            setDelIdList(location.state.delIdList);
+        if(location.state.checkIdList){
+            setCheckIdList(location.state.checkIdList);
+        }
+        if(location.state.memberCarts){
+            setMemberCarts(location.state.memberCarts);
+            settingPaycarts(location.state.memberCarts, location.state.checkIdList);
         }
 
-        console.log(carts);
+        console.log(payCarts);
         console.log(tickets);
-	}, [carts, tickets])
+	}, [tickets])
 
     useEffect(() => {
         //server reqeust
@@ -110,6 +113,28 @@ const Payment = ({server, onClickLogout}) => {
             console.log("profile request end");
         });
     }, []);
+
+    const settingPaycarts = (tempMemberCarts, tempCheckIdList) => {
+        console.log("=== settingPaycarts ===");
+        console.log(tempMemberCarts);
+        console.log(tempCheckIdList);
+
+        let tempPayCarts = tempMemberCarts.map(thisItem => {
+            let oldSelectedCounts = thisItem.selectedCounts;
+            let newSelectedCounts = oldSelectedCounts.map((thisCount) => {
+                if(tempCheckIdList.includes(thisCount.cId)){
+                    return thisCount;
+                }
+            });
+            newSelectedCounts = newSelectedCounts.filter((element) => element !== undefined);
+            if(0 < newSelectedCounts.length){
+                thisItem.selectedCounts = newSelectedCounts;
+                return thisItem;
+            }
+        }).filter((item) => item !== undefined);
+        setPayCarts(tempPayCarts);
+        console.log(payCarts);
+    }
     
     const inputPriceFormat = (str) => {
         const comma = (str) => {
@@ -150,7 +175,7 @@ const Payment = ({server, onClickLogout}) => {
                         pay_name: name,
                         pay_phone: phone,
                         pay_address: address + " " + detailAddress,
-                        carts: carts,
+                        carts: payCarts,
                         tickets: tickets
                     };
 
@@ -189,7 +214,7 @@ const Payment = ({server, onClickLogout}) => {
                                 setDisType(1);
                             }
 
-                            console.log(carts);
+                            console.log(payCarts);
                             console.log(tickets);
 
                             const data = {
@@ -204,7 +229,7 @@ const Payment = ({server, onClickLogout}) => {
                                 pay_name: name,
                                 pay_phone: phone,
                                 pay_address: address + " " + detailAddress,
-                                carts: carts,
+                                carts: payCarts,
                                 tickets: tickets
                             };
 
@@ -245,20 +270,30 @@ const Payment = ({server, onClickLogout}) => {
         const code = response.code;
         switch(code){
                 case 1007: //interceptor에서 accessToken 재발급
-                break;
+                    break;
 
                 case 1000: //success
-                const payments = response.data;
-                console.log(payments);
+                    const payments = response.data;
+                    console.log(payments);
 
-                navigate('/payments', { state: { 
-                    payments: payments
-                } });
-                break;
+                    navigate('/payments', { state: { 
+                        payments: payments
+                    } });
+                    break;
 
                 case 1008: //refreshToken 만료 -> 로그아웃
-                onClickLogout(true);
-                break;
+                    onClickLogout(true);
+                    break;
+
+                default:
+                    const payments02 = [];
+                    navigate('/payments', {
+                        state: {
+                            memberInfo: memberInfo,
+                            payments: payments02
+                        }
+                    });
+                    break;
         }
         })
         .catch(ex => {
@@ -270,32 +305,36 @@ const Payment = ({server, onClickLogout}) => {
     }
 
     const deleteCartPaidCarts = () => {
-        //beforeCarts, carts, delIdList
+        console.log("=== deleteCartPaidCarts ===");
+        //beforeCarts, payCarts, checkIdList
+        console.log(checkIdList);
         const memberId = user.memberId;
-        let deleteAfterMemberItems;
 
-        beforeCarts.filter(thisMember => {
-            if(Object.hasOwn(thisMember, memberId)){
-                let oldItems = thisMember[memberId];
+        dispatch(deleteCartItem(memberId, checkIdList));
+        
+        // let deleteAfterMemberItems;
+        // beforeCarts.filter(thisMember => {
+        //     if(Object.hasOwn(thisMember, memberId)){
+        //         let oldItems = thisMember[memberId];
 
-                deleteAfterMemberItems = oldItems.map(thisItem => {
-                    let oldSelectedCounts = thisItem.selectedCounts;
-                    let newSelectedCounts = oldSelectedCounts.map((thisCount) => {
-                        if(!delIdList.includes(thisCount.cId)){
-                            return thisCount;
-                        }
-                    });
-                    newSelectedCounts = newSelectedCounts.filter((element) => element !== undefined);
-                    if(0 < newSelectedCounts.length){
-                        thisItem.selectedCounts = newSelectedCounts;
-                        return thisItem;
-                    }
-                });
-            }
-        });
-        deleteAfterMemberItems = deleteAfterMemberItems.filter((element) => element !== undefined);
-        console.log(deleteAfterMemberItems);
-        dispatch(deleteCart(deleteAfterMemberItems, memberId));
+        //         deleteAfterMemberItems = oldItems.map(thisItem => {
+        //             let oldSelectedCounts = thisItem.selectedCounts;
+        //             let newSelectedCounts = oldSelectedCounts.map((thisCount) => {
+        //                 if(!checkIdList.includes(thisCount.cId)){
+        //                     return thisCount;
+        //                 }
+        //             });
+        //             newSelectedCounts = newSelectedCounts.filter((element) => element !== undefined);
+        //             if(0 < newSelectedCounts.length){
+        //                 thisItem.selectedCounts = newSelectedCounts;
+        //                 return thisItem;
+        //             }
+        //         });
+        //     }
+        // });
+        // deleteAfterMemberItems = deleteAfterMemberItems.filter((element) => element !== undefined);
+        // console.log(deleteAfterMemberItems);
+        // dispatch(deleteCart(deleteAfterMemberItems, memberId));
     }
 
     const changeName = (event) => {

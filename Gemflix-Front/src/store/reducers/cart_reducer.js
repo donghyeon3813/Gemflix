@@ -131,7 +131,40 @@ const cartReducer = (state = defaultState, action) => {
             }
             return state;
 
-            case "DELETE_ITEM_BY_MEMBER": //장바구니에서 해당 멤버의 장바구니 삭제
+        case "DELETE_CART_ITEM": //장바구니에서 아이템 삭제
+            let checkIdList = action.payload.checkIdList;
+            let memberId04 = action.payload.memberId;
+
+            if(0 < state.length){
+                let newState = state.map(element => {
+                    if(Object.hasOwn(element, memberId04)){ //해당 멤버의 cart
+                        let oldItems = element[memberId04];
+        
+                        let deleteAfterMemberItems = oldItems.map(thisItem => {
+                            let oldSelectedCounts = thisItem.selectedCounts;
+                            let newSelectedCounts = oldSelectedCounts.map((thisCount) => {
+                                if(!checkIdList.includes(thisCount.cId)){
+                                    return thisCount;
+                                }
+                            });
+                            newSelectedCounts = newSelectedCounts.filter((element) => element !== undefined);
+                            if(0 < newSelectedCounts.length){
+                                thisItem.selectedCounts = newSelectedCounts;
+                                return thisItem;
+                            }
+                        });
+                        element[memberId04] = deleteAfterMemberItems;
+                        return element;
+
+                    }else{ //해당 멤버의 cart 아님
+                        return element;
+                    }
+                });
+                state = [...newState];
+            }
+            return state;
+
+        case "DELETE_ITEM_BY_MEMBER": //장바구니에서 해당 멤버의 장바구니 삭제
             let memberId03 = action.payload.memberId;
 
             if(0 < state.length){

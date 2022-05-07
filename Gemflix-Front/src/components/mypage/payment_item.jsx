@@ -28,7 +28,7 @@ const PaymentItem = (props) => {
                 <div className="cart_img">
                   <img
                     className="preview"
-                    // src={base64}
+                    src={paidProduct.base64}
                     style={{ width: "100px", height: "100px" }}
                   />
                 </div>
