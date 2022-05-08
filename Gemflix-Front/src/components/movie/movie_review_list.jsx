@@ -24,7 +24,9 @@ const MovieReviewList = (props) => {
   }, [page]);
   return (
     <>
+      <br />
       <div>총{totalReview}건</div>
+      <br />
       <hr />
       {reviewList.map((info) => (
         <div key={info.rvId}>

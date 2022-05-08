@@ -92,13 +92,15 @@ const MovieReserve = ({ movieServer }) => {
     setDates([...result]);
   };
   const handleReservePopupOn = (siId) => {
+    console.log("왜?");
     if (user.token === null) {
       alert("로그인이 필요한 기능입니다.");
       navigate("/login");
       return;
+    } else {
+      setSiId(siId);
+      setReservePopup(true);
     }
-    setSiId(siId);
-    setReservePopup(true);
   };
   const handleClosePop = () => {
     setReservePopup(false);
@@ -144,20 +146,31 @@ const MovieReserve = ({ movieServer }) => {
               <h4 className="title">영화관</h4>
             </div>
             <div className="inner">
-              {places.map((info) => (
-                <div key={info} onClick={() => handleGetTheaterList(info)}>
-                  {info}
+              <div className="place-theater-group">
+                <div className="place-group">
+                  {places.map((info) => (
+                    <div
+                      key={info}
+                      className="mouse-pointer-class"
+                      onClick={() => handleGetTheaterList(info)}
+                    >
+                      {info}
+                    </div>
+                  ))}
                 </div>
-              ))}
-              {theaters.map((info) => (
-                <div
-                  id="thId"
-                  key={info.thId}
-                  onClick={(e) => handleSetSearchData(e, info.thId)}
-                >
-                  {info.location}{" "}
+                <div className="theater-group">
+                  {theaters.map((info) => (
+                    <div
+                      className="mouse-pointer-class"
+                      id="thId"
+                      key={info.thId}
+                      onClick={(e) => handleSetSearchData(e, info.thId)}
+                    >
+                      {info.location}{" "}
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           </div>
           <div className="reserve_group_step">
@@ -165,15 +178,18 @@ const MovieReserve = ({ movieServer }) => {
               <h4 className="title">영화선택</h4>
             </div>
             <div className="inner">
-              {movies.map((info) => (
-                <div
-                  id="mvId"
-                  onClick={(e) => handleSetSearchData(e, info.mvId)}
-                  key={info.mvId}
-                >
-                  {info.title}
-                </div>
-              ))}
+              <div className="movie-group">
+                {movies.map((info) => (
+                  <div
+                    className="mouse-pointer-class"
+                    id="mvId"
+                    onClick={(e) => handleSetSearchData(e, info.mvId)}
+                    key={info.mvId}
+                  >
+                    {info.title}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <div className="reserve_group_step">
@@ -181,27 +197,30 @@ const MovieReserve = ({ movieServer }) => {
               <h4 className="title">날짜</h4>
             </div>
             <div className="inner">
-              <Swiper
-                className="swiper-container"
-                slidesOffsetBefore={1}
-                slidesOffsetAfter={1}
-                spaceBetween={50}
-                slidesPerView={7}
-                //*
-                onSwiper={(swiper) => console.log(swiper)}
-                onSlideChange={() => console.log("slide change")}
-              >
-                {dates.map((info) => (
-                  <SwiperSlide key={info.date}>
-                    <span
-                      id="date"
-                      onClick={(e) => handleSetSearchData(e, info.formetDate)}
-                    >
-                      {info.date}
-                    </span>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+              <div className="swiper-container-date">
+                <Swiper
+                  className="swiper-container-date"
+                  slidesOffsetBefore={1}
+                  slidesOffsetAfter={1}
+                  spaceBetween={50}
+                  slidesPerView={7}
+                  //*
+                  onSwiper={(swiper) => console.log(swiper)}
+                  onSlideChange={() => console.log("slide change")}
+                >
+                  {dates.map((info) => (
+                    <SwiperSlide key={info.date}>
+                      <span
+                        id="date"
+                        onClick={(e) => handleSetSearchData(e, info.formetDate)}
+                      >
+                        {info.date}
+                      </span>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+
               <div className="theater-room-all">
                 {mvTitles.map((title) => (
                   <React.Fragment key={title}>

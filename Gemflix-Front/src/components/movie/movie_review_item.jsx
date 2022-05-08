@@ -49,24 +49,48 @@ const MovieReviewItem = (props) => {
       <div>
         <span className="review-id">{reviewInfo.id}</span>
 
-        <span>{reviewInfo.score}</span>
+        <span>{reviewInfo.score}점</span>
         {user.memberId === reviewInfo.id ? (
           <>
             {reviewStatus === false ? (
-              <button onClick={() => handleReviewStatus()}>수정</button>
+              <button
+                className="review-btn"
+                onClick={() => handleReviewStatus()}
+              >
+                수정
+              </button>
             ) : (
-              <button onClick={() => handleReviewModify()}>저장</button>
+              <button
+                className="review-btn"
+                onClick={() => handleReviewModify()}
+              >
+                저장
+              </button>
             )}
-
-            <button onClick={() => handleReviewDelete()}>삭제</button>
+            {reviewStatus === false ? (
+              <button
+                className="review-btn"
+                onClick={() => handleReviewDelete()}
+              >
+                삭제
+              </button>
+            ) : (
+              <button
+                className="review-btn"
+                onClick={() => setReviewStatus(false)}
+              >
+                취소
+              </button>
+            )}
           </>
         ) : null}
       </div>
       <div>
         {reviewStatus === false ? (
-          <span>{reviewInfo.content}</span>
+          <p>{reviewInfo.content}</p>
         ) : (
-          <input
+          <textarea
+            className="review-upd-content"
             type="text"
             name="content"
             value={reviewInfo.content}

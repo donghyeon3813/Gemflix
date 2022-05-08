@@ -1,15 +1,44 @@
-.swiper-container {
-  width: 450px;
+.swiper-container-date {
+  width: 450px !important;
   height: 50px !important;
+  overflow: hidden;
 }
+
 .swiper-wrapper {
   height: 100px;
 }
+.mouse-pointer-class {
+  cursor: pointer;
+}
+.place-theater-group {
+  display: flex;
+  height: 100%;
+}
+
+.place-group {
+  width: 50%;
+  text-align: start;
+  padding-left: 20px;
+  overflow-y: auto;
+  height: 100%;
+}
+.theater-group {
+  width: 50%;
+  text-align: start;
+  padding-left: 20px;
+  overflow-y: auto;
+}
+
 .theater-room-group {
   display: flex;
   flex-wrap: wrap;
   margin-top: 10px;
   margin-bottom: 20px;
+}
+.movie-group {
+  overflow-y: auto;
+  text-align: left;
+  padding-left: 20px;
 }
 
 .theater-room {

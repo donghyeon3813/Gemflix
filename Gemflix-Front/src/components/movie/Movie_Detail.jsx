@@ -11,7 +11,6 @@ const MovieDetail = (prorps) => {
   const handlePeopleSet = () => {
     let actorArr = [];
     let directorArr = [];
-    console.log(movieDetailInfo.peopleList);
     movieDetailInfo.peopleList.map((info) => {
       info.type === "1"
         ? directorArr.push({ name: info.name, peId: info.peId })
@@ -35,67 +34,85 @@ const MovieDetail = (prorps) => {
     handlePeopleSet();
   }, []);
   // css 임시 설정
-  const movieBack = {
-    height: "100%",
-    width: "60%",
-    backgroundImage:
-      "linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ),url(" +
-      movieDetailInfo.backImgUrl +
-      ")",
-    backgroundRepeat: "no - repeat",
-    backgroundSize: "cover",
+  // const movieBack = {
+  //   height: "100%",
+  //   width: "60%",
+  //   backgroundImage:
+  //     "linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ),url(" +
+  //     movieDetailInfo.backImgUrl +
+  //     ")",
+  //   backgroundRepeat: "no - repeat",
+  //   backgroundSize: "cover",
 
-    opacity: "0.7",
-  };
+  //   opacity: "0.7",
+  // };
 
-  const movieImgBox = {
-    display: "flex",
-    height: "600px",
-    width: "100%",
-  };
+  // const movieImgBox = {
+  //   display: "flex",
+  //   height: "600px",
+  //   width: "100%",
+  // };
 
-  const darkBox = {
-    backgroundColor: "#0f0f0f",
-    width: "20%",
-    height: "100%",
-  };
+  // const darkBox = {
+  //   backgroundColor: "#0f0f0f",
+  //   width: "20%",
+  //   height: "100%",
+  // };
 
-  const white = {
-    color: "white",
-  };
+  // const white = {
+  //   color: "white",
+  // };
   return (
     <>
-      <div style={movieImgBox}>
-        <div style={darkBox}></div>
-        <div style={movieBack}>
-          <div style={white}>{movieDetailInfo.title}</div>
-          <div style={white}>평점:{movieDetailInfo.score}</div>
-          <div style={white}>
-            출연{" "}
-            {actors.map((info, index) => (
-              <span
-                key={info.peId}
-                onClick={() => handleSetPop(info.peId, info.name)}
-              >
-                {info.name}{" "}
+      <div className="movie-detail-group">
+        <div className="movie-info">
+          <img className="movie-detail-poster" src={movieDetailInfo.imgUrl} />
+          <div className="movie-info-text-group">
+            <h2 className="movie-info-title">{movieDetailInfo.title}</h2>
+            <div className="movie-margin-text">
+              장르{" "}
+              <span className="movie-text-gray">{movieDetailInfo.grNm}</span>
+            </div>
+            <div className="movie-margin-text">
+              개봉{" "}
+              <span className="movie-text-gray">{movieDetailInfo.openDt}</span>{" "}
+              |{" "}
+              <span className="movie-text-gray">
+                {movieDetailInfo.extent} 분
               </span>
-            ))}
-          </div>
-          <div style={white}>
-            감독{" "}
-            {directors.map((info) => (
-              <span
-                key={info.peId}
-                onClick={() => handleSetPop(info.peId, info.name)}
-              >
-                {info.name}{" "}
-              </span>
-            ))}
+            </div>
+            <div className="movie-margin-text">
+              평점{" "}
+              <span className="movie-text-gray">{movieDetailInfo.score}</span>
+            </div>
+            <div className="movie-margin-text">
+              출연{" "}
+              {actors.map((info, index) => (
+                <span
+                  className="movie-info-people movie-text-gray"
+                  key={info.peId}
+                  onClick={() => handleSetPop(info.peId, info.name)}
+                >
+                  {info.name}{" "}
+                </span>
+              ))}
+            </div>
+            <div className="movie-margin-text">
+              감독{" "}
+              {directors.map((info) => (
+                <span
+                  className="movie-info-people movie-text-gray"
+                  key={info.peId}
+                  onClick={() => handleSetPop(info.peId, info.name)}
+                >
+                  {info.name}{" "}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
-        <div style={darkBox}></div>
       </div>
-      <p>{movieDetailInfo.content}</p>
+      <p className="movie-info-content">{movieDetailInfo.content}</p>
 
       {filmographyPopup && (
         <MoveFilmographyPopUp

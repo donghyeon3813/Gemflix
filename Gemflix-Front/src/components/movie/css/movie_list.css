@@ -1,0 +1,53 @@
+/*영화 리스트 */
+.movie-list-box {
+  width: 70%;
+  display: flex;
+  flex-wrap: wrap;
+  margin: auto;
+}
+.movie-item-group {
+  width: 25%;
+  margin-bottom: 20px;
+}
+
+.movie-item {
+  width: 200px;
+  margin: auto;
+}
+
+.movie-poster {
+  width: 200px;
+  height: 280px;
+}
+
+/* 검색 창 */
+.movie-search-group {
+  width: 33%;
+  margin: auto;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  border: 4px solid mediumpurple;
+  border-radius: 15px;
+  display: flex;
+  padding: 5px;
+}
+
+.movie-search {
+  margin-left: 3px;
+  border: 0px solid white;
+  appearance: none;
+  width: 100%;
+  margin: auto;
+  border-color: white;
+  font-size: 14px;
+  padding: 5px;
+  border-color: white;
+}
+
+.search-icon {
+  width: 50px;
+  background-color: white;
+}
+.movie-search:horver {
+  border: 0px solid white;
+}

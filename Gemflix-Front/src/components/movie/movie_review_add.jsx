@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 const MovieReviewAdd = (props) => {
   const handleRegisterReview = props.handleRegisterReview;
-  const [reviewInfo, setReview] = useState({ score: "", review: "" });
+  const [reviewInfo, setReview] = useState({ score: "1", review: "" });
   const handleSetReview = (e) => {
     const { name, value } = e.target;
 
@@ -10,18 +10,36 @@ const MovieReviewAdd = (props) => {
 
   return (
     <>
-      <div>
-        <input
+      <div className="review-add-group">
+        <select
+          className="review-score"
           name="score"
           value={reviewInfo.score}
           onChange={(e) => handleSetReview(e)}
-        />
-        <input
+        >
+          <option value={1}>1점</option>
+          <option value={2}>2점</option>
+          <option value={3}>3점</option>
+          <option value={4}>4점</option>
+          <option value={5}>5점</option>
+          <option value={6}>6점</option>
+          <option value={7}>7점</option>
+          <option value={8}>8점</option>
+          <option value={9}>9점</option>
+          <option value={10}>10점</option>
+        </select>
+        <textarea
+          className="review-content"
           maxLength={1000}
           name="review"
           onChange={(e) => handleSetReview(e)}
-        />
-        <button onClick={(e) => handleRegisterReview(reviewInfo)}>등록</button>
+        ></textarea>
+        <button
+          className="review-add-btn"
+          onClick={(e) => handleRegisterReview(reviewInfo)}
+        >
+          등록
+        </button>
       </div>
     </>
   );

@@ -1,9 +1,9 @@
-.App {    
+.App {
   text-align: center;
   display: flex;
   height: 100%;
-}    
-      
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -103,7 +103,7 @@
   display: flex;
   height: 40em;
   padding: 5% 5% 5% 5%;
-  background-color: darkseagreen;
+  background-color: gray;
 }
 
 .reserve_step {
@@ -111,6 +111,7 @@
   background-color: white;
   display: flex;
   height: 100%;
+  line-height: 200px;
 }
 
 .reserve_step ul {
@@ -121,6 +122,7 @@
   list-style: none;
   height: 25%;
   text-align: center;
+  border-bottom: 1px solid black;
 }
 
 .reserve_group {
@@ -141,8 +143,9 @@
 }
 
 .inner {
-  background-color: lightblue;
+  background-color: mediumpurple;
   height: 93%;
+  border-right: 1px solid black;
 }
 .product_list {
   width: 100%;
