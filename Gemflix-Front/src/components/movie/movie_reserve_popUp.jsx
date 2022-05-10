@@ -40,26 +40,27 @@ const MovieReservePopUp = (props) => {
   }, []);
   return (
     <>
-      <div className="modal-filmo" onClick={() => handleClosePop()}>
-        <div className="modal-filmo-content">
-          <div className="modal-filmo-head">
+      <div className="modal-seat" onClick={() => handleClosePop()}>
+        <div className="modal-seat-content">
+          <div className="modal-seat-head">
             {screenInfo.startTime + "/" + screenInfo.endTime}
-            <label
-              className="modal-filmo-head-item"
+            <div
+              className="modal-seat-head-item"
               onClick={() => handleClosePop()}
             >
               ✖
-            </label>
+            </div>
           </div>
-          <div className="modal-filmo-people">
-            <div>
+          <div className="modal-spare-group">
+            <div className="modal-spare-seat">
               잔여좌석
               {screenInfo.seatCnt -
                 screenInfo.spareSeatCnt +
                 "/" +
                 screenInfo.seatCnt}
             </div>
-            <div>
+            <div className="modal-scrren">S C R E E N</div>
+            <div className="modal-small-seat">
               {seatRows.map((row) => (
                 <div className="small-seat-rows" key={row}>
                   {screenInfo.seatList
@@ -74,15 +75,22 @@ const MovieReservePopUp = (props) => {
               ))}
             </div>
 
-            <div> {handleRatingSwitch(screenInfo.rating)} </div>
+            <div className="guide-text">
+              {" "}
+              {handleRatingSwitch(screenInfo.rating)}{" "}
+            </div>
           </div>
-          <div>
-            <button onClick={() => handleClosePop()}>취소</button>
-            <button onClick={() => setReserveChildState(2)}>
+          <div className="btn-group">
+            <button className="black-btn" onClick={() => handleClosePop()}>
+              취소
+            </button>
+            <button
+              className="purple_btn"
+              onClick={() => setReserveChildState(2)}
+            >
               인원/좌석 선택
             </button>
           </div>
-          <div className="modal-filmo-item"></div>
         </div>
       </div>
     </>

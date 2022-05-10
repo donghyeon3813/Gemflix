@@ -13,7 +13,7 @@ import java.util.Date;
 public class MovieDto {
 
     private Long mvId; // 영화 고유번호
-    private Genre genre; // 장르 고유번호
+    private GenreDto genre; // 장르 고유번호
     private String title; // 영화 제목
     private String rating; // 영화 등급
     private Date openDt; //개봉일

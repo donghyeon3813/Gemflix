@@ -20,7 +20,7 @@ const PaymentTicketItem = (props) => {
   return (
     <div>
       {tickets.length > 0 ? (
-        <div className="payment_item">
+        <div className="payment_ticket_item">
           <h3>예매번호 : {payment.pmId}</h3>
           <p>결제일시 : {payment.payDate}</p>
           <div>

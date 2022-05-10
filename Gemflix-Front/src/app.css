@@ -206,3 +206,8 @@
 .ReactModal__Content {
   margin: 5% 20% 5% 20%;
 }
+
+.payment_ticket_item {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}

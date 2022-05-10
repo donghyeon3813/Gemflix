@@ -138,49 +138,63 @@ const MoviePayment = (props) => {
             <h4 className="title">예매정보</h4>
           </div>
           <div className="inner">
-            <img width={200} src={paymentInfo.screenInfo.imageUrl} />
-            <div>{paymentInfo.screenInfo.mvTitle}</div>
-            <div>
-              일시{" "}
-              <span>
-                {paymentInfo.screenInfo.startDate}{" "}
-                {paymentInfo.screenInfo.startTime}~
-                {paymentInfo.screenInfo.endTime}
-              </span>
-            </div>
-            <div>
-              영화관{" "}
-              <span>
-                {paymentInfo.screenInfo.location}{" "}
-                {paymentInfo.screenInfo.trName}
-              </span>
-            </div>
-            <div>
-              인원 <span>{paymentInfo.selectedSeat.length}</span>
-            </div>
-            <div>
-              좌석{" "}
-              {paymentInfo.selectedSeat.map((selectSeat, index) =>
-                paymentInfo.screenInfo.seatList
-                  .filter((seat) => seat.seId == selectSeat)
-                  .map((seat) => (
-                    <span key={seat.seId}>
-                      {index !== 0 ? ", " : null}
-                      {seat.seRow}-{seat.seCol}
-                    </span>
-                  ))
-              )}
-            </div>
-            <div>추가상품 구매</div>
-            <br />
-            <div>
-              포토 티켓{" "}
-              <button onClick={() => handlePhotoTicektMinus()}>-</button>
-              {photoTicketCnt}
-              <button onClick={() => handlePhotoTicektPlus()}>+</button>
+            <div className="movie-payment-info">
+              <img width={200} src={paymentInfo.screenInfo.imageUrl} />
+              <div>{paymentInfo.screenInfo.mvTitle}</div>
+              <div>
+                일시{" "}
+                <span>
+                  {paymentInfo.screenInfo.startDate}{" "}
+                  {paymentInfo.screenInfo.startTime}~
+                  {paymentInfo.screenInfo.endTime}
+                </span>
+              </div>
+              <div>
+                영화관{" "}
+                <span>
+                  {paymentInfo.screenInfo.location}{" "}
+                  {paymentInfo.screenInfo.trName}
+                </span>
+              </div>
+              <div>
+                인원 <span>{paymentInfo.selectedSeat.length}</span>
+              </div>
+              <div>
+                좌석{" "}
+                {paymentInfo.selectedSeat.map((selectSeat, index) =>
+                  paymentInfo.screenInfo.seatList
+                    .filter((seat) => seat.seId == selectSeat)
+                    .map((seat) => (
+                      <span key={seat.seId}>
+                        {index !== 0 ? ", " : null}
+                        {seat.seRow}-{seat.seCol}
+                      </span>
+                    ))
+                )}
+              </div>
+              <br />
+              <div>추가상품 구매</div>
               <br />
               <div>
-                {(photoTicketCnt * photoTicketPrice).toLocaleString("ko-KR")} 원
+                포토 티켓{" "}
+                <button
+                  className="white_btn"
+                  onClick={() => handlePhotoTicektMinus()}
+                >
+                  -
+                </button>
+                &nbsp;{photoTicketCnt}&nbsp;
+                <button
+                  className="white_btn"
+                  onClick={() => handlePhotoTicektPlus()}
+                >
+                  +
+                </button>
+                <br />
+                <div>
+                  {(photoTicketCnt * photoTicketPrice).toLocaleString("ko-KR")}{" "}
+                  원
+                </div>
               </div>
             </div>
           </div>
@@ -190,33 +204,41 @@ const MoviePayment = (props) => {
             <h4 className="title">결제하기</h4>
           </div>
           <div className="inner">
-            <div>
-              상품금액
-              <span> {paymentInfo.totalPrice.toLocaleString("ko-KR")} 원</span>
+            <div className="price-group">
+              <div>
+                상품금액
+                <span>
+                  {" "}
+                  {paymentInfo.totalPrice.toLocaleString("ko-KR")} 원
+                </span>
+              </div>
+              <div>
+                추가상품
+                <span>
+                  {" "}
+                  +{" "}
+                  {(photoTicketCnt * photoTicketPrice).toLocaleString(
+                    "ko-KR"
+                  )}{" "}
+                  원
+                </span>
+              </div>
+              <div>
+                결제금액
+                <span>
+                  {" "}
+                  총{" "}
+                  {(
+                    paymentInfo.totalPrice +
+                    photoTicketCnt * photoTicketPrice
+                  ).toLocaleString("ko-KR")}{" "}
+                  원
+                </span>
+              </div>
+              <button className="white_btn" onClick={requestPay}>
+                결제하기
+              </button>
             </div>
-            <div>
-              추가상품
-              <span>
-                {" "}
-                + {(photoTicketCnt * photoTicketPrice).toLocaleString(
-                  "ko-KR"
-                )}{" "}
-                원
-              </span>
-            </div>
-            <div>
-              결제금액
-              <span>
-                {" "}
-                총{" "}
-                {(
-                  paymentInfo.totalPrice +
-                  photoTicketCnt * photoTicketPrice
-                ).toLocaleString("ko-KR")}{" "}
-                원
-              </span>
-            </div>
-            <button onClick={requestPay}>결제하기</button>
           </div>
         </div>
       </div>
