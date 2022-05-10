@@ -18,6 +18,7 @@
   font-size: medium;
   line-height: 1.5;
   font-weight: bold;
+  margin: 10px;
 }
 
 .purple_btn {
@@ -29,6 +30,45 @@
   font-size: medium;
   line-height: 1.5;
   font-weight: bold;
+  margin: 10px;
+}
+
+.indigo_btn {
+  color: white;
+  background: indigo;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid indigo;
+  border-radius: 0.25rem;
+  font-size: medium;
+  line-height: 1.5;
+  font-weight: bold;
+  margin: 10px;
+}
+
+.form_box_input {
+  width: 100%;
+  padding: .5rem .8rem .5rem .8rem;
+  margin: .9vw 0 ;
+  border:0;
+  border-radius: 5px;
+  font-size: 20px;
+}
+
+.form_box_textarea{
+  height: 15vh;
+  width: 100%;
+  padding: .5rem .8rem .5rem .8rem;
+  margin: .9vw 0 ;
+  border:0;
+  border-radius: 5px;
+  font-size: 20px;
+}
+
+.custom_checkbox {
+  width: 20px;
+  height: 20px;
+  display:table-cell;
+  vertical-align:middle;
 }
 
 .header {
@@ -94,9 +134,39 @@
   flex: 1;
 }
 
+.login_page, .join_page {
+  text-align: center;
+  padding: 10% 0 10% 0;
+  background-color: mediumpurple;
+}
+
+.loading_box {
+  text-align: center;
+  background-color: mediumpurple;
+}
+
+.loading_img {
+  width: 10%;
+  height: 10%;
+  padding: 10% 0 10% 0;
+}
+
+.join_form {
+  text-align: center;
+}
+
+.join_table {
+  margin: auto;
+}
+
 .sotre {
   text-align: center;
   height: 40em;
+}
+
+.store_form {
+  padding: 0 30% 0 30%;
+  text-align: left;
 }
 
 .reserve_box {
@@ -144,6 +214,24 @@
   background-color: lightblue;
   height: 93%;
 }
+
+.product_form, .profile_form, .cart_list {
+  padding: 5%;
+  text-align: center;
+  background-color: mediumpurple;
+}
+
+.payment_form, .payment_list_form{
+  text-align: center;
+  background-color: mediumpurple;
+  padding: 0 30% 0 30%;
+}
+
+.product_buttons {
+  background-color: mediumpurple;
+  text-align: right;
+}
+
 .product_list {
   width: 100%;
   display: flex;
@@ -157,6 +245,17 @@
   height: 100%;
 }
 
+.product_total_price {
+  font-weight: bold;
+  font-size: x-large;
+  color: mediumpurple;
+  display: inline;
+}
+
+.product_btn {
+  text-align: center;
+}
+
 .product_name {
   text-align: left;
 }
@@ -164,11 +263,13 @@
 .product_price {
   text-align: left;
   font-weight: bold;
+  font-size: x-large;
 }
 
 .product_box {
   width: 20%;
-  padding: 25px 25px 25px 25px;
+  height: 250px;
+  padding: 50px 25px 50px 25px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -182,18 +283,73 @@
 .product_text_box {
   width: 100%;
   height: 20%;
+  text-align: center;
 }
 
 .product_category {
   text-align: center;
   font-weight: bold;
   font-size: x-large;
-  background-color: lightsteelblue;
+  background-color: indigo;
+  color: white;
   padding: 8px;
 }
 
 .cart_item {
   display: flex;
+}
+
+.cart_img {
+  padding: 5px 10px 5px 10px;
+}
+
+.cart_content {
+  text-align: left;
+  vertical-align:middle;
+  padding: 5px 10px 5px 10px;
+}
+
+.cart_text {
+  display: inline;
+  font-weight: bold;
+  font-size: larger;
+  padding: 0 10px 0 10px;
+}
+
+.profile_text {
+  display: inline;
+  font-weight: bold;
+  padding: 0 10px 0 10px;
+}
+
+.cart_box_list {
+  padding: 30px;
+}
+
+.cart_box {
+  display: inline-block;
+  padding: 20px;
+  border-radius: 1rem;
+  width: 55%;
+  background: white;
+  margin: 10px;
+}
+
+.payment_point_box, .product_payment_item {
+  padding: 20px;
+  border-radius: 1rem;
+  background: white;
+  margin: 30px;
+}
+
+.cart_item_box {
+  display: inline-block;
+  padding: 0 20px 0 20px;
+  float: left;
+}
+
+.total_price {
+  color: mediumpurple;
 }
 
 .product_modal {

@@ -143,17 +143,29 @@ const Profile = ({server, onClickLogout}) => {
         setTempEmail(event.target.value);
     }
 
+    const inputPriceFormat = (str) => {
+        const comma = (str) => {
+          str = String(str);
+          return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, "$1,");
+        };
+        const uncomma = (str) => {
+          str = String(str);
+          return str.replace(/[^\d]+/g, "");
+        };
+        return comma(uncomma(str));
+    };
+
     return (
         <>
-        <div>
-            <h1>Profile</h1>
-            <label>아이디 : {memberInfo.id}</label><br/>
+        <div className='profile_form'>
+            <h1>Profile</h1><br/>
+            <label className='profile_text'>아이디 : </label>{memberInfo.id}<br/>
             {memberInfo.phone == null ? 
                 <>
                 </>
             :
                 <>
-                <label>핸드폰 번호 : {memberInfo.phone}</label><br/>
+                <label className='profile_text'>핸드폰 번호 : </label>{memberInfo.phone}<br/>
                 </>
                     
             }
@@ -162,22 +174,23 @@ const Profile = ({server, onClickLogout}) => {
 
             {email == null ? 
                 <>
-                <label>이메일 : </label>
-                <input type="email" placeholder="email" onChange={changeEmail}/>
-                <button type='button' onClick={onClickCertifyEmail}>이메일 인증하기</button><br/>
+                <label className='profile_text'>이메일 : </label>
+                <input style={{width:"300px"}} className='form_box_input' type="email" placeholder="email" onChange={changeEmail}/>
+                <button className='white_btn' type='button' onClick={onClickCertifyEmail}>이메일 인증하기</button><br/>
                 </>
             :
                 <>
-                <label>이메일 : {email}</label><br/>
+                <label className='profile_text'>이메일 : </label>{email}<br/>
                 </>
                     
             }
-            <label>포인트 : {memberInfo.point} p</label><br/>
-            <label>가입날짜 : {regDate}</label>
+            <label className='profile_text'>포인트 : </label>{inputPriceFormat(memberInfo.point)} p<br/>
+            <label className='profile_text'>가입날짜 : </label>{regDate}<br/><br/>
+
+            <button className='indigo_btn' type='button' onClick={onClickCartList}>장바구니</button>
+            <button className='indigo_btn' type='button' onClick={onClickPaymentList}>결제내역</button>
+            <button className='indigo_btn' type='button' onClick={onClickDeleteMember}>탈퇴하기</button>
         </div>
-        <button type='button' onClick={onClickCartList}>장바구니</button>
-        <button type='button' onClick={onClickPaymentList}>결제내역</button>
-        <button type='button' onClick={onClickDeleteMember}>탈퇴하기</button>
         </>
         )
     };

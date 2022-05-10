@@ -173,28 +173,32 @@ const CartList = (props) => {
         return (
             <>
                 <div className='cart_list'>
-                    <input type="checkbox" onChange={onChangeAll} checked={checkList.length === idList.length}/>
-                    <h3>{cartName}</h3>
+                    <div className='cart_top'>
+                        <input className='custom_checkbox' type="checkbox" onChange={onChangeAll} checked={checkList.length === idList.length}/>
+                        <p className='cart_text'>{cartName}</p>
+                    </div>
+                    <div className='cart_box_list'>
                     {
                         memberCarts.map((cart) => {
                             return (
                                 cart.selectedCounts.map((thisCount, index) => {
                                     return (
-                                    <div className='cart_box' key={index}>
-                                        <input type="checkbox" onChange={(e) => onChangeEach(e, thisCount.cId, thisCount.totalPrice)} 
+                                        <div className='cart_box' key={index}>
+                                        <input style={{float:"left"}} className='custom_checkbox' type="checkbox" onChange={(e) => onChangeEach(e, thisCount.cId, thisCount.totalPrice)} 
                                             checked={checkList.includes(thisCount.cId)}/>
                                         <CartItem key={index} count={thisCount.count} 
                                             totalPrice={thisCount.totalPrice} name={cart.name} base64={cart.base64}/>
-                                    </div>
+                                        </div>
                                     );
                                 })
-
                             );
                         })
                     }
+                    </div>
                     <h2>총 {inputPriceFormat(selectedPrice)}원</h2>
-                    <button type='button' onClick={ () => onClickOrderCart()}>선택상품 주문</button>
-                    <button type='button' onClick={onClickDeleteCart}>선택상품 삭제</button>
+                    <br/><br/>
+                    <button className='indigo_btn' type='button' onClick={ () => onClickOrderCart()}>선택상품 주문</button>
+                    <button className='indigo_btn' type='button' onClick={onClickDeleteCart}>선택상품 삭제</button>
                 </div>
             </>
         );

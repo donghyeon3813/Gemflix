@@ -92,9 +92,12 @@ const ProductItem = memo((props) => {
                             <p className='product_name'>{props.content}</p>
                             <p className='product_price'>{inputPriceFormat(props.price)}원</p>
                         </div>
-                        <button type='button' onClick={onClickUpdate}>수정</button>
-                        <button type='button' onClick={() => onClickDelete(props.prId)}>삭제</button>
-                        <button type='button' onClick={()=> setModalIsOpen(false)}>취소</button>
+                        <br/>
+                        <div className='product_btn'>
+                            <button className='indigo_btn' type='button' onClick={onClickUpdate}>수정</button>
+                            <button className='indigo_btn' type='button' onClick={() => onClickDelete(props.prId)}>삭제</button>
+                            <button className='indigo_btn' type='button' onClick={()=> setModalIsOpen(false)}>취소</button>
+                        </div>
                     </div>
                 </Modal>
             </>
@@ -127,9 +130,13 @@ const ProductItem = memo((props) => {
                             <label>총 금액 : </label>
                             <p className='product_total_price'>{inputPriceFormat(totalPrice)}원</p>
                         </form>
-                        <button type='button' onClick={() => onClickAddCart(props)}>장바구니 담기</button>
-                        <button type='button' onClick={()=> setModalIsOpen(false)}>취소</button>
+                        <br/>
+                        <div className='product_btn'>
+                            <button className='indigo_btn' type='button' onClick={() => onClickAddCart(props)}>장바구니 담기</button>
+                            <button className='indigo_btn' type='button' onClick={()=> setModalIsOpen(false)}>취소</button>
+                        </div>
                     </div>
+                        
                 </Modal>
             </>
         );
@@ -155,7 +162,10 @@ const ProductItem = memo((props) => {
                             <p className='product_name'>{props.content}</p>
                             <p className='product_price'>{inputPriceFormat(props.price)}원</p>
                         </div>
-                        <button type='button' onClick={()=> setModalIsOpen(false)}>취소</button>
+                        <br/>
+                        <div className='product_btn'>
+                            <button className='indigo_btn' type='button' onClick={()=> setModalIsOpen(false)}>취소</button>
+                        </div>
                     </div>
                 </Modal>
             </>

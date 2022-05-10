@@ -58,6 +58,7 @@ public class ProductService {
                 break;
         }
         productDto.setImgLocation(imgLocation);
+        productDto.setDelStatus(Constant.BooleanStringValue.FALSE);
 
         //setting category
         CategoryDto categoryDto = new CategoryDto();

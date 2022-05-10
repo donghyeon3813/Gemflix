@@ -87,7 +87,7 @@ const ProductList = ({server}) => {
             return (
                 <div className='product'>
                     <div className='product_buttons'>
-                        <button type="button" onClick={onClickCreate}>상품추가</button>
+                        <button className='white_btn' type="button" onClick={onClickCreate}>상품추가</button>
                     </div>
                     <div>등록된 상품이 없습니다.</div>
                 </div>
@@ -96,7 +96,7 @@ const ProductList = ({server}) => {
             return (
                 <div className='product'>
                     <div className='product_buttons'>
-                        <button type="button" onClick={onClickCreate}>상품추가</button>
+                        <button className='white_btn' type="button" onClick={onClickCreate}>상품추가</button>
                     </div>
                     <div>
                         {

@@ -147,12 +147,12 @@ const cartReducer = (state = defaultState, action) => {
                                     return thisCount;
                                 }
                             });
-                            newSelectedCounts = newSelectedCounts.filter((element) => element !== undefined);
+                            newSelectedCounts = newSelectedCounts.filter((thisCount) => thisCount !== undefined);
                             if(0 < newSelectedCounts.length){
                                 thisItem.selectedCounts = newSelectedCounts;
                                 return thisItem;
                             }
-                        });
+                        }).filter((thisItem) => thisItem !== undefined);
                         element[memberId04] = deleteAfterMemberItems;
                         return element;
 
