@@ -17,5 +17,6 @@ public class TheaterRoomDto {
     private Long roomId;
     private String name;
     private String seatCnt;
+    private TheaterDto theater;
 
 }
