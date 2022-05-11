@@ -16,6 +16,7 @@
   top: 25%;
   left: 23%;
   height: 600px;
+  border-radius: 10px;
   width: 970px;
   display: flex;
   align-items: center;
@@ -32,15 +33,31 @@
 }
 
 .modal-filmo-item {
-  margin: auto;
-  height: 520px;
+  height: 450px;
   width: 100%;
+  margin: auto;
   margin-bottom: 25px;
   display: flex;
   flex-wrap: wrap;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .modal-filmo-people {
   width: 100%;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.modal-item-style {
+  width: 310px;
+}
+.modal-item-group {
+  width: 200px;
+  margin: auto;
+}
+
+.modal-item-image {
+  width: 200px;
+  height: 280px;
 }

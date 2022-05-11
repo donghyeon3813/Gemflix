@@ -3,12 +3,13 @@ package com.movie.Gemflix.service.scheduler;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.movie.Gemflix.config.ApiProperties;
-import com.movie.Gemflix.dto.movie.TheMovie;
+import com.movie.Gemflix.dto.movie.*;
 import com.movie.Gemflix.entity.*;
 import com.movie.Gemflix.repository.movie.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ public class MovieUpdateService {
     private final WebClient webClient;
     private final ApiProperties apiProperties;
     private final TrailerRepository trailerRepository;
+    private final ModelMapper modelMapper;
 
     public String getapi(){
 
@@ -58,11 +60,11 @@ public class MovieUpdateService {
         for(int i = 0; i<tmgGenreList.size(); i++){
             Optional<Genre> optGenre =
                     genreRepository.findByGrNm(tmgGenreList.getJSONObject(i).get("name").toString());
-
             if(!optGenre.isPresent()){
-                Genre genre = Genre.builder()
+                GenreDto genreDto = GenreDto.builder()
                         .grNm(tmgGenreList.getJSONObject(i).get("name").toString())
                         .build();
+                Genre genre = modelMapper.map(genreDto,Genre.class);
                 genreList.add(genre);
             }else {
                 log.info( "Genre Exist {}",tmgGenreList.getJSONObject(i).get("name").toString());
@@ -141,8 +143,8 @@ public class MovieUpdateService {
                                     Optional<Genre> genre = genreRepository.findByGrNm(theMovieData.getGenreName());
                                     SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD");
                                     try {
-                                        Movie movie = Movie.builder()
-                                                .genre(genre.get())
+                                        MovieDto movieDto = MovieDto.builder()
+                                                .genre(modelMapper.map(genre.get(),GenreDto.class))
                                                 .title(theMovieData.getTitle())
                                                 .rating(theMovieData.getRating())
                                                 .openDt(format.parse(theMovieData.getRelease_date()))
@@ -152,6 +154,7 @@ public class MovieUpdateService {
                                                 .backImgUrl(imgBaseUrl+theMovieData.getBackdrop_path())
                                                 .apiId(theMovieData.getId())
                                                 .build();
+                                        Movie movie = modelMapper.map(movieDto, Movie.class);
                                         movieRepository.save(movie);
                                     } catch (ParseException e) {
                                         e.printStackTrace();
@@ -211,13 +214,14 @@ public class MovieUpdateService {
                         }
                         boolean peopleDup = peopleRepository.existsByApiId(peopleApiId);
                         if(!peopleDup){
-                            People people = People.builder()
+                            PeopleDto peopledto = PeopleDto.builder()
                                     .name(name)
                                     .type(type)
                                     .birth(birth)
                                     .nationality(nationality)
                                     .apiId(peopleApiId)
                                     .build();
+                            People people = modelMapper.map(peopledto, People.class);
                             peopleRepository.save(people);
                         }
                     }
@@ -256,13 +260,14 @@ public class MovieUpdateService {
                     }
                     boolean peopleDup = peopleRepository.existsByApiId(peopleApiId);
                     if (!peopleDup) {
-                        People people = People.builder()
+                        PeopleDto peopledto = PeopleDto.builder()
                                 .name(name)
                                 .type(type)
                                 .birth(birth)
                                 .nationality(nationality)
                                 .apiId(peopleApiId)
                                 .build();
+                        People people = modelMapper.map(peopledto, People.class);
                         peopleRepository.save(people);
                         directorCnt++;
                     }
@@ -293,10 +298,11 @@ public class MovieUpdateService {
                             filmographyRepository.findByMovieAndPeople(movieInfo.get(), people);
 
                     if(!optFilmography.isPresent()){
-                        Filmography filmography = Filmography.builder()
-                                .movie(movieInfo.get())
-                                .people(people)
+                        FilmographyDto filmographyDto = FilmographyDto.builder()
+                                .movie(modelMapper.map(movieInfo.get(), MovieDto.class))
+                                .people(modelMapper.map(people, PeopleDto.class))
                                 .build();
+                        Filmography filmography = modelMapper.map(filmographyDto, Filmography.class);
                         filmographyRepository.save(filmography);
                         saveFilmographyList.add(filmography);
                     }
@@ -311,10 +317,11 @@ public class MovieUpdateService {
                     Optional<Filmography> optFilmography =
                             filmographyRepository.findByMovieAndPeople(movieInfo.get(), people);
                     if(!optFilmography.isPresent()){
-                        Filmography filmography = Filmography.builder()
-                                .movie(movieInfo.get())
-                                .people(people)
+                        FilmographyDto filmographyDto = FilmographyDto.builder()
+                                .movie(modelMapper.map(movieInfo.get(), MovieDto.class))
+                                .people(modelMapper.map(people, PeopleDto.class))
                                 .build();
+                        Filmography filmography = modelMapper.map(filmographyDto, Filmography.class);
                         filmographyRepository.save(filmography);
                         saveFilmographyList.add(filmography);
                     }
@@ -349,11 +356,12 @@ public class MovieUpdateService {
                 String imgLocation = "https://img.youtube.com/vi/"+key+"/hqdefault.jpg";
                 Optional<Trailer> trailerInfo = trailerRepository.findByTrLocation(trLocation);
                 if(!trailerInfo.isPresent()){
-                    Trailer trailer = Trailer.builder()
-                            .movie(movie)
+                    TrailerDto trailerDto = TrailerDto.builder()
+                            .movie(modelMapper.map(movie, MovieDto.class))
                             .trLocation(trLocation)
                             .imgLocation(imgLocation)
                             .build();
+                    Trailer trailer = modelMapper.map(trailerDto, Trailer.class);
                     saveTrailerList.add(trailer);
                 }else{
                     continue;

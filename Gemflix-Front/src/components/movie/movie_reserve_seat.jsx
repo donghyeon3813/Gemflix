@@ -100,18 +100,19 @@ const MovieReserveSeat = (props) => {
         <div className="group_top">
           <h4 className="title">인원/좌석 선택</h4>
         </div>
-        <div>
-          인원{" "}
-          <input
-            type="number"
-            value={personCnt}
-            onChange={(e) => handleSetPersonCnt(e)}
-          />
-        </div>
-        <div>- 인원을 선택하세요</div>
-        <div>S C R E E N</div>
+
         <div className="inner">
-          <div>
+          <div className="bg-black">
+            인원{" "}
+            <input
+              type="number"
+              value={personCnt}
+              onChange={(e) => handleSetPersonCnt(e)}
+            />
+          </div>
+          <div className="bg-black">- 인원을 선택하세요</div>
+          <div className="screen-text">S C R E E N</div>
+          <div className="big-seat">
             {seatRows.map((row) => (
               <div className="big-seat-rows" key={row}>
                 <span className="seat-row-name">{row}</span>
@@ -129,10 +130,15 @@ const MovieReserveSeat = (props) => {
               </div>
             ))}
           </div>
-        </div>
-        <div>
-          총 합계 : {totalPrice.toLocaleString("ko-KR")} 원{" "}
-          <button onClick={() => handleSetPaymentInfo(3)}>결제하기</button>
+          <div>
+            총 합계 : {totalPrice.toLocaleString("ko-KR")} 원{" "}
+            <button
+              className="white_btn"
+              onClick={() => handleSetPaymentInfo(3)}
+            >
+              결제하기
+            </button>
+          </div>
         </div>
       </div>
     </>

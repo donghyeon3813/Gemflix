@@ -1,15 +1,44 @@
-.swiper-container {
-  width: 450px;
+.swiper-container-date {
+  width: 450px !important;
   height: 50px !important;
+  overflow: hidden;
 }
+
 .swiper-wrapper {
   height: 100px;
 }
+.mouse-pointer-class {
+  cursor: pointer;
+}
+.place-theater-group {
+  display: flex;
+  height: 100%;
+}
+
+.place-group {
+  width: 50%;
+  text-align: start;
+  padding-left: 20px;
+  overflow-y: auto;
+  height: 100%;
+}
+.theater-group {
+  width: 50%;
+  text-align: start;
+  padding-left: 20px;
+  overflow-y: auto;
+}
+
 .theater-room-group {
   display: flex;
   flex-wrap: wrap;
   margin-top: 10px;
   margin-bottom: 20px;
+}
+.movie-group {
+  overflow-y: auto;
+  text-align: left;
+  padding-left: 20px;
 }
 
 .theater-room {
@@ -48,5 +77,120 @@
 
 .back-ground-red {
   background-color: red;
+  color: white;
+}
+
+.modal-seat {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 3;
+}
+
+.modal-seat-content {
+  background-color: white;
+  position: absolute;
+  top: 25%;
+  left: 35%;
+  height: 350px;
+  width: 500px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 0;
+}
+
+.modal-seat-head {
+  height: 30px;
+  width: 100%;
+  text-align: center;
+  padding-right: 10px;
+  background-color: gray;
+  color: white;
+  font-size: 20px;
+  display: flex;
+  justify-content: end;
+  padding-top: 10px;
+}
+.modal-seat-head-item {
+  width: 39%;
+  text-align: right;
+  cursor: pointer;
+}
+.modal-spare-group {
+  width: 100%;
+}
+.modal-spare-seat {
+  width: 100%;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+.modal-scrren {
+  width: 100%;
+  color: gray;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.modal-small-seat {
+  width: 24%;
+  margin: auto;
+  margin-bottom: 30px;
+}
+.guide-text {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 40px;
+}
+.btn-group {
+  width: 40%;
+  margin: auto;
+  margin-bottom: 20px;
+}
+
+.black-btn {
+  color: white;
+  background: gray;
+  padding: 0.375rem 0.75rem;
+  border: 1px solid white;
+  border-radius: 0.25rem;
+  font-size: medium;
+  line-height: 1.5;
+  font-weight: bold;
+}
+
+.bg-black {
+  background-color: black;
+}
+.bg-gray {
+  background-color: gray;
+}
+
+.screen-text {
+  margin-top: 30px;
+  margin-bottom: 50px;
+  background-color: gray;
+}
+.big-seat {
+  margin-top: 50px;
+  width: 50%;
+  margin: auto;
+  margin-bottom: 200px;
+}
+
+.movie-payment-info {
+  padding-top: 50px;
+  padding-left: 40px;
+  text-align: left;
+}
+.payment-complite-info {
+  width: 50%;
+  margin: auto;
+  margin-top: 50px;
+  margin-bottom: 30px;
+
   color: white;
 }

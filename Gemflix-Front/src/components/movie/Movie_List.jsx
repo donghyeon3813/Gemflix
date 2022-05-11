@@ -5,6 +5,7 @@ import MovieItem from "./movie_item";
 import MovieSearch from "./movie_search";
 import MovieDetail from "./movie_detail";
 import { useNavigate } from "react-router";
+import "./css/movie_list.css";
 
 const MovieList = ({ movieServer }) => {
   const navigate = useNavigate();
@@ -55,11 +56,6 @@ const MovieList = ({ movieServer }) => {
     handleGetMovieList(page);
   }, [page, title]);
 
-  const listBox = {
-    width: "1900px",
-    display: "flex",
-    flexWrap: "wrap",
-  };
   const movieDetailBox = {
     width: "1900px",
   };
@@ -69,10 +65,13 @@ const MovieList = ({ movieServer }) => {
   return (
     <>
       <MovieSearch setTitle={setTitle} />
-      <div style={listBox}>
+      <div className="movie-list-box">
         {movieListInfo.map((info, index) => (
           <React.Fragment key={info.mvId}>
-            <div onClick={(e) => handleGetMovieDetail(e, info.mvId, index)}>
+            <div
+              className="movie-item-group"
+              onClick={(e) => handleGetMovieDetail(e, info.mvId, index)}
+            >
               <MovieItem info={info} />
             </div>
             {/* {movieDetailInfo && index + 1 === contentIndex ? ( 상세정보 페이지 이동으로 변경

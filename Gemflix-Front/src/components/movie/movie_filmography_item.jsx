@@ -2,18 +2,24 @@ import axios from "axios";
 const MovieFilmographyItem = (props) => {
   const filmography = props.filmography;
   const movieItemStyle = {
-    width: "300px",
-    margin: "auto",
+    width: "200px",
   };
   const imgStyle = {
     width: "200px",
     height: "280px",
+    margin: "auto",
   };
 
   return (
-    <div style={movieItemStyle}>
-      <img src={filmography.imgUrl} style={imgStyle}></img>
-      <div>{filmography.title}</div>
+    <div className="modal-item-style">
+      <div className="modal-item-group">
+        <img
+          className="modal-item-image"
+          src={filmography.imgUrl}
+          style={imgStyle}
+        ></img>
+        <div>{filmography.title}</div>
+      </div>
     </div>
   );
 };

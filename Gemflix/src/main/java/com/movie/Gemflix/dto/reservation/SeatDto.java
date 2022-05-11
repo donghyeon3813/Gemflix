@@ -2,6 +2,7 @@ package com.movie.Gemflix.dto.reservation;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.movie.Gemflix.dto.movie.TheaterRoomDto;
 import com.movie.Gemflix.dto.movie.TicketDto;
 import com.movie.Gemflix.entity.TheaterRoom;
 import lombok.Data;
@@ -10,7 +11,7 @@ import lombok.Data;
 public class SeatDto {
     private Long seId;
 
-    private TheaterRoom theaterRoom;
+    private TheaterRoomDto theaterRoom;
 
     private String seCol;
 

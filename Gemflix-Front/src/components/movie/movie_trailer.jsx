@@ -7,8 +7,6 @@ import "swiper/swiper.scss";
 import "swiper/components/navigation/navigation.scss"; // *
 import "swiper/components/pagination/pagination.scss"; // *
 
-import "./css/movie_trailer.css";
-
 import SwiperCore, { Navigation, Pagination, A11y } from "swiper";
 
 SwiperCore.use([Navigation, Pagination, A11y]);
@@ -27,15 +25,6 @@ const MoveTrailer = (props) => {
     setTrailerPop(false);
   };
 
-  const carouselBox = {
-    width: "1900px",
-  };
-  const carousel = {
-    width: "80%",
-    height: "300px",
-    overflow: "hidden",
-    display: "flex",
-  };
   return (
     <>
       <Swiper
