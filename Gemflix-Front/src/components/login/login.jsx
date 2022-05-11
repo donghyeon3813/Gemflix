@@ -38,20 +38,19 @@ const Login = ({server, kakaoLoginUrl, settingAccessToken}) => {
     if(!loading){
         return (
             <>
-            <div>
-                <div>
-                    <h1>로그인페이지</h1>
+            <div className='login_page'>
+                <div className='login_box'>
+                    <h1>로그인</h1><br/>
                     <form ref={loginFormRef} className="login-form">
-                        <label>아이디 : </label>
-                        <input ref={idInputRef} type="text" placeholder="id" name='input_id'/><br />
-                        <label>비밀번호 : </label>
-                        <input ref={passwordInputRef} type="password" placeholder="password" name='input_password' onKeyPress={handleKeyPress}/><br />
+                        <input className='form_box_input' style={{width: '300px'}} ref={idInputRef} type="text" placeholder="ID" name='input_id'/><br />
+                        <input className='form_box_input' style={{width: '300px'}} ref={passwordInputRef} type="password" placeholder="PASSWORD" name='input_password' onKeyPress={handleKeyPress}/><br />
                     </form>
-                    <button type="button" className="login-button" onClick={onClickLogin}>로그인</button>
                 </div>
-                <div>
-                    <button type='button' onClick={()=> { navigate('/join'); }}>회원가입</button>
+                <div className='login_box'>
+                    <button className="indigo_btn" type="button" onClick={onClickLogin}>로그인</button>
+                    <button className="indigo_btn" type='button' onClick={()=> { navigate('/join'); }}>회원가입</button>
                 </div>
+                <br/>
                 <div>
                     <a href={kakaoLoginUrl}>
                         <img src="images/default/kakao_login_medium_wide.png"/>
@@ -62,8 +61,8 @@ const Login = ({server, kakaoLoginUrl, settingAccessToken}) => {
         );
     }else{
         return (
-          <div>
-            Loading ....
+          <div className='loading_box'>
+            <img className='loading_img' src="images/default/loading.jpg"/>
           </div>
         )
     }

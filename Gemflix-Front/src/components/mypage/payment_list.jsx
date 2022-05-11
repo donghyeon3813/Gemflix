@@ -9,10 +9,14 @@ const PaymentList = () => {
 
         const user = useSelector(store => store.userReducer, shallowEqual);
         const location = useLocation();
-        const [disStatus, setDisStatus] = useState('T');
+        const [disStatus, setDisStatus] = useState('P');
+        const payments = location.state.payments;
+        
         const productDisplayType = disStatus === 'P' ? {display:"block"} : {display:"none"};
         const ticketDisplayType = disStatus === 'T' ? {display:"block"} : {display:"none"};
-        const payments = location.state.payments;
+        const productBtnColor = disStatus === 'P' ? "indigo_btn" : "white_btn";
+        const ticketBtnColor = disStatus === 'T' ? "indigo_btn" : "white_btn";
+
         
 
   const changeDisplay = (event) => {
@@ -20,16 +24,16 @@ const PaymentList = () => {
   };
 
   if (payments.length == 0) {
-    return <div>결제내역이 없습니다.</div>;
+    return <div>상품 결제내역이 없습니다.</div>;
+
   } else {
     return (
-      <div>
-        <p>결제내역 페이지</p>
-        <button type="button" value="T" onClick={changeDisplay}>
-          구매한 티켓
-        </button>
-        <button type="button" value="P" onClick={changeDisplay}>
+      <div className="payment_list_form">
+        <button className={productBtnColor} type="button" value="P" onClick={changeDisplay}>
           구매한 상품
+        </button>
+        <button className={ticketBtnColor} type="button" value="T" onClick={changeDisplay}>
+          구매한 티켓
         </button>
 
         {/* 상품 결제내역 */}

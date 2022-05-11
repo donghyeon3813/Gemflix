@@ -16,7 +16,7 @@ const PaymentTicketItem = (props) => {
     };
     return comma(uncomma(str));
   };
-
+  
   return (
     <div>
       {tickets.length > 0 ? (
@@ -52,7 +52,8 @@ const PaymentTicketItem = (props) => {
           <p>할인금액 : {inputPriceFormat(payment.disAmount)} 원</p>
           <p>결제금액 : {inputPriceFormat(payment.payAmount)} 원</p>
         </div>
-      ) : null}
+      ) 
+      : null}
     </div>
   );
 };

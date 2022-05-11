@@ -3,7 +3,7 @@ import Modal from 'react-modal/lib/components/Modal';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 import { useScript } from '../../hooks';
-import { deleteCart } from '../../store/actions';
+import { deleteCartItem } from '../../store/actions';
 import DaumPost from './daum_post';
 
 const Payment = ({server, onClickLogout}) => {
@@ -28,10 +28,11 @@ const Payment = ({server, onClickLogout}) => {
     const [address, setAddress] = useState('');
     const [detailAddress, setDetailAddress] = useState('');
 
-    const [carts, setCarts] = useState([]); //결제할 상품들
+    const [memberCarts, setMemberCarts] = useState([]);
+    const [payCarts, setPayCarts] = useState([]); //결제할 상품들
     const [beforeCarts, setBeforeCarts] = useState([]); //결제전 장바구니 상품목록
     const [tickets, setTickets] = useState([]); //결제할 티켓들
-    const [delIdList, setDelIdList] = useState([]); //결제할 아이디들
+    const [checkIdList, setCheckIdList] = useState([]); //결제할 아이디들
 
     const [memberPoint, setMemberPoint] = useState(0); //총 보유 포인트
     const [usePoint, setUsePoint] = useState(0); //사용할 포인트
@@ -60,22 +61,24 @@ const Payment = ({server, onClickLogout}) => {
     });
     
 	useEffect(() => {
-        if(location.state.carts){
-            setCarts(location.state.carts);
-        }
+        
         if(location.state.beforeCarts){
             setBeforeCarts(location.state.beforeCarts);
         }
         if(location.state.tickets){
             setTickets(location.state.tickets);
         }
-        if(location.state.delIdList){
-            setDelIdList(location.state.delIdList);
+        if(location.state.checkIdList){
+            setCheckIdList(location.state.checkIdList);
+        }
+        if(location.state.memberCarts){
+            setMemberCarts(location.state.memberCarts);
+            settingPaycarts(location.state.memberCarts, location.state.checkIdList);
         }
 
-        console.log(carts);
+        console.log(payCarts);
         console.log(tickets);
-	}, [carts, tickets])
+	}, [tickets])
 
     useEffect(() => {
         //server reqeust
@@ -110,6 +113,28 @@ const Payment = ({server, onClickLogout}) => {
             console.log("profile request end");
         });
     }, []);
+
+    const settingPaycarts = (tempMemberCarts, tempCheckIdList) => {
+        console.log("=== settingPaycarts ===");
+        console.log(tempMemberCarts);
+        console.log(tempCheckIdList);
+
+        let tempPayCarts = tempMemberCarts.map(thisItem => {
+            let oldSelectedCounts = thisItem.selectedCounts;
+            let newSelectedCounts = oldSelectedCounts.map((thisCount) => {
+                if(tempCheckIdList.includes(thisCount.cId)){
+                    return thisCount;
+                }
+            });
+            newSelectedCounts = newSelectedCounts.filter((element) => element !== undefined);
+            if(0 < newSelectedCounts.length){
+                thisItem.selectedCounts = newSelectedCounts;
+                return thisItem;
+            }
+        }).filter((item) => item !== undefined);
+        setPayCarts(tempPayCarts);
+        console.log(payCarts);
+    }
     
     const inputPriceFormat = (str) => {
         const comma = (str) => {
@@ -150,7 +175,7 @@ const Payment = ({server, onClickLogout}) => {
                         pay_name: name,
                         pay_phone: phone,
                         pay_address: address + " " + detailAddress,
-                        carts: carts,
+                        carts: payCarts,
                         tickets: tickets
                     };
 
@@ -189,7 +214,7 @@ const Payment = ({server, onClickLogout}) => {
                                 setDisType(1);
                             }
 
-                            console.log(carts);
+                            console.log(payCarts);
                             console.log(tickets);
 
                             const data = {
@@ -204,7 +229,7 @@ const Payment = ({server, onClickLogout}) => {
                                 pay_name: name,
                                 pay_phone: phone,
                                 pay_address: address + " " + detailAddress,
-                                carts: carts,
+                                carts: payCarts,
                                 tickets: tickets
                             };
 
@@ -245,20 +270,30 @@ const Payment = ({server, onClickLogout}) => {
         const code = response.code;
         switch(code){
                 case 1007: //interceptor에서 accessToken 재발급
-                break;
+                    break;
 
                 case 1000: //success
-                const payments = response.data;
-                console.log(payments);
+                    const payments = response.data;
+                    console.log(payments);
 
-                navigate('/payments', { state: { 
-                    payments: payments
-                } });
-                break;
+                    navigate('/payments', { state: { 
+                        payments: payments
+                    } });
+                    break;
 
                 case 1008: //refreshToken 만료 -> 로그아웃
-                onClickLogout(true);
-                break;
+                    onClickLogout(true);
+                    break;
+
+                default:
+                    const payments02 = [];
+                    navigate('/payments', {
+                        state: {
+                            memberInfo: memberInfo,
+                            payments: payments02
+                        }
+                    });
+                    break;
         }
         })
         .catch(ex => {
@@ -270,32 +305,12 @@ const Payment = ({server, onClickLogout}) => {
     }
 
     const deleteCartPaidCarts = () => {
-        //beforeCarts, carts, delIdList
+        console.log("=== deleteCartPaidCarts ===");
+        //beforeCarts, payCarts, checkIdList
+        console.log(checkIdList);
         const memberId = user.memberId;
-        let deleteAfterMemberItems;
 
-        beforeCarts.filter(thisMember => {
-            if(Object.hasOwn(thisMember, memberId)){
-                let oldItems = thisMember[memberId];
-
-                deleteAfterMemberItems = oldItems.map(thisItem => {
-                    let oldSelectedCounts = thisItem.selectedCounts;
-                    let newSelectedCounts = oldSelectedCounts.map((thisCount) => {
-                        if(!delIdList.includes(thisCount.cId)){
-                            return thisCount;
-                        }
-                    });
-                    newSelectedCounts = newSelectedCounts.filter((element) => element !== undefined);
-                    if(0 < newSelectedCounts.length){
-                        thisItem.selectedCounts = newSelectedCounts;
-                        return thisItem;
-                    }
-                });
-            }
-        });
-        deleteAfterMemberItems = deleteAfterMemberItems.filter((element) => element !== undefined);
-        console.log(deleteAfterMemberItems);
-        dispatch(deleteCart(deleteAfterMemberItems, memberId));
+        dispatch(deleteCartItem(memberId, checkIdList));
     }
 
     const changeName = (event) => {
@@ -399,49 +414,54 @@ const Payment = ({server, onClickLogout}) => {
     }
 
     return (
-        <div>
-            <h3>배송 정보를 입력해주세요.</h3>
-            <br/>
+        <div className='payment_form'>
+            <h2 style={{color:"white"}}>배송 정보를 입력해주세요.</h2>
+            <br/><br/>
             <div>
-                <h4>상품 정보</h4>
+                <h3>상품 정보</h3>
                 <p>{cartName}</p>
-                <br/>
+                <br/><br/>
 
-                <h4>할인적용</h4>
+                <h3>할인적용</h3>
                 <label><input type="radio" value='N' checked={disStatus === "N" ? true : false} onChange={changeRadioNone}/>없음</label>
                 <label><input type="radio" value='P' checked={disStatus === "P" ? true : false} onChange={changeRadioPoint}/>포인트 사용</label>
-                
-                <div style={pointDisplayType}>
-                    <label>사용할 포인트</label>
-                    <input value={usePoint} type="number" min="0" max={limitPoint} placeholder="사용할 포인트" onChange={(e) => changeUsePoint(e)}/><br/>
-                    <p>잔여 포인트 : {remainPoint}</p>
-                    <button type='button' onClick={useAllPoint}>전액사용</button>
+                <br/><br/>
+
+                <div className='payment_point_box' style={pointDisplayType}>
+                    <label>사용할 포인트 : </label>
+                    <input value={usePoint} type="number" min="0" max={limitPoint} placeholder="사용할 포인트" onChange={(e) => changeUsePoint(e)}/> p<br/>
+                    <p>잔여 포인트 : {inputPriceFormat(remainPoint)}</p>
+                    <button className='indigo_btn' type='button' onClick={useAllPoint}>전액사용</button>
                 </div>
 
-                <br/>
-                <br/>
+                <br/><br/>
                 <h2>총 {inputPriceFormat(payAmount)}원</h2>
             </div>
-            <br/>
+            <br/><br/>
+            <hr/>
+            <br/><br/>
             <div>
-                <h4>주문자 정보</h4>
-                <label>이름: </label><br/>
-                <input value={name} type="text" placeholder="이름" onChange={changeName}/><br/>
-                <label>핸드폰 번호: </label><br/>
-                <input value={phone} type="tel" placeholder="핸드폰 번호" onChange={changePhone}/><br/>
-                <label>주소: </label>
+                <h2 style={{color:"white"}}>주문자 정보</h2>
+                <br/><br/>
+                <h3>이름</h3>
+                <input className='form_box_input' value={name} type="text" placeholder="이름" onChange={changeName}/><br/>
+                <h3>핸드폰 번호</h3>
+                <input className='form_box_input' value={phone} type="tel" placeholder="핸드폰 번호" onChange={changePhone}/><br/>
+                <h3 style={{display:"inline"}}>주소</h3>
 
-                <button onClick={() => setModalIsOpen(true)}>우편번호 찾기</button><br/>
+                <button className='white_btn' onClick={() => setModalIsOpen(true)}>우편번호 찾기</button><br/>
                     <Modal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} ariaHideApp={false}>
                         <div className='address_modal'>
                             <DaumPost returnFullAddress={returnFullAddress}/>
                         </div>
                     </Modal>
 
-                <input value={address} type="text" readOnly placeholder="주소" /><br/>
-                <input value={detailAddress} type="text" placeholder="상세주소" onChange={changeDetailAddress}/><br/>
+                <input className='form_box_input' value={address} type="text" readOnly placeholder="주소" /><br/>
+                <input className='form_box_input' value={detailAddress} type="text" placeholder="상세주소" onChange={changeDetailAddress}/><br/>
             </div>
-            <button onClick={requestPay}>결제하기</button>
+            <br/><br/>
+            <button className='indigo_btn' onClick={requestPay}>결제하기</button>
+            <br/><br/>
         </div>
       );
     

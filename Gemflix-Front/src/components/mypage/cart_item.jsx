@@ -20,7 +20,7 @@ const CartItem = (props) => {
     };
 
     return (
-        <div>
+        <div className='cart_item_box'>
             <div className='cart_item'>
                 <div className='cart_img'>
                     <img

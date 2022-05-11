@@ -21,6 +21,7 @@ import ProductModifyForm from "./components/product/product_modify_form";
 import Payment from "./components/mypage/payment";
 import CartList from "./components/mypage/cart_list";
 import PaymentList from "./components/mypage/payment_list";
+import Navbar from "./components/home/navbar";
 dotenv.config();
 
 function App({ server, movieServer }) {

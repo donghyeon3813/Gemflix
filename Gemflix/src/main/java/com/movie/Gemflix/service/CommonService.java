@@ -6,6 +6,7 @@ import com.movie.Gemflix.security.service.UserDetailsServiceImpl;
 import com.movie.Gemflix.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tika.Tika;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -127,6 +131,36 @@ public class CommonService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public String fileToString(File file) throws IOException {
+
+        String fileName = file.getName();
+        String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+
+        String fileString = "";
+        FileInputStream inputStream =  null;
+        ByteArrayOutputStream byteOutStream = null;
+
+        try {
+            inputStream = new FileInputStream(file);
+            byteOutStream = new ByteArrayOutputStream();
+
+            int len = 0;
+            byte[] buf = new byte[1024];
+            while ((len = inputStream.read(buf)) != -1) {
+                byteOutStream.write(buf, 0, len);
+            }
+            byte[] fileArray = byteOutStream.toByteArray();
+            fileString = new String(Base64.encodeBase64(fileArray));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            inputStream.close();
+            byteOutStream.close();
+        }
+        return "data:image/" + extension + ";base64," + fileString;
     }
 
 }

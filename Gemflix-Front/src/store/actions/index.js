@@ -28,6 +28,13 @@ export const deleteCart = (deleteAfterMemberItems, memberId) => {
         payload: {deleteAfterMemberItems, memberId}
     }
 }
+//장바구니에서 아이템 삭제
+export const deleteCartItem = (memberId, checkIdList) => {
+    return {
+        type:"DELETE_CART_ITEM",
+        payload: {memberId, checkIdList}
+    }
+}
 
 //장바구니에서 해당 멤버의 장바구니 삭제
 export const deleteCartByMember = (memberId) => {

@@ -17,10 +17,12 @@ const PaymentItem = (props) => {
   };
 
   return (
-    <div>
+    <div className="product_payment_item">
       <div className="payment_item">
         <h3>결제번호 : {payment.pmId}</h3>
-        <p>결제일시 : {payment.payDate}</p>
+        <p>결제일시 : {String(payment.payDate).replace("T", " ")}</p>
+        <br/><hr/><br/>
+
         {paidProducts.map((paidProduct, index) => {
           return (
             <div key={index}>
@@ -28,7 +30,7 @@ const PaymentItem = (props) => {
                 <div className="cart_img">
                   <img
                     className="preview"
-                    // src={base64}
+                    src={paidProduct.base64}
                     style={{ width: "100px", height: "100px" }}
                   />
                 </div>
@@ -41,9 +43,11 @@ const PaymentItem = (props) => {
             </div>
           );
         })}
+        
+        <br/><hr/><br/>
         <p>상품금액 : {inputPriceFormat(payment.proAmount)} 원</p>
-        <p>할인금액 : {inputPriceFormat(payment.disAmount)} 원</p>
-        <p>결제금액 : {inputPriceFormat(payment.payAmount)} 원</p>
+        <p>할인금액 : -{inputPriceFormat(payment.disAmount)} 원</p>
+        <h3 className="total_price">결제금액 : {inputPriceFormat(payment.payAmount)} 원</h3>
       </div>
     </div>
   );

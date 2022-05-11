@@ -58,6 +58,7 @@ public class ProductService {
                 break;
         }
         productDto.setImgLocation(imgLocation);
+        productDto.setDelStatus(Constant.BooleanStringValue.FALSE);
 
         //setting category
         CategoryDto categoryDto = new CategoryDto();
@@ -133,7 +134,7 @@ public class ProductService {
                     try {
                         Resource resource = new FileSystemResource(location);
                         File file = resource.getFile();
-                        String base64 = fileToString(file);
+                        String base64 = commonService.fileToString(file);
                         productDTO.setBase64(base64);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -143,35 +144,7 @@ public class ProductService {
         return productDtos;
     }
 
-    public String fileToString(File file) throws IOException {
 
-        String fileName = file.getName();
-        String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
-
-        String fileString = "";
-        FileInputStream inputStream =  null;
-        ByteArrayOutputStream byteOutStream = null;
-
-        try {
-            inputStream = new FileInputStream(file);
-            byteOutStream = new ByteArrayOutputStream();
-
-            int len = 0;
-            byte[] buf = new byte[1024];
-            while ((len = inputStream.read(buf)) != -1) {
-                byteOutStream.write(buf, 0, len);
-            }
-            byte[] fileArray = byteOutStream.toByteArray();
-            fileString = new String(Base64.encodeBase64(fileArray));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            inputStream.close();
-            byteOutStream.close();
-        }
-        return "data:image/" + extension + ";base64," + fileString;
-    }
 
 
 

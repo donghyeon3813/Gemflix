@@ -13,6 +13,7 @@ public class PaidProductDto {
 
     private int count;
     private int price;
+    private String base64;
 
     private ProductDto product; //상품
 

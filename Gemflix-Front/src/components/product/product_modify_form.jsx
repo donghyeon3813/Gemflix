@@ -14,7 +14,7 @@ const ProductModifyForm = ({server, onClickLogout}) => {
     const [name, setName] = useState('');
     const [content, setContent] = useState('');
     const [status, setStatus] = useState(null);
-    const [price, setPrice] = useState(0);
+    const [price, setPrice] = useState('');
     const [response, setReponse] = useState([]);
     const [requestCnt, setRequestCnt] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -129,7 +129,7 @@ const ProductModifyForm = ({server, onClickLogout}) => {
             setImgFile(null);
             setStatus(null);
             setImgBase64([]);
-            setPrice(0);
+            setPrice('');
             setCategory(categories.get(0));
             setName('');
             setContent('');
@@ -187,7 +187,7 @@ const ProductModifyForm = ({server, onClickLogout}) => {
 
     if(!loading){
         return (
-            <div>
+            <div className='product_form'>
                 <form ref={storeFormRef} className="store_form">
                     <div>
                         <select name="category" onChange={handleSelect} value={categoryIdx}>
@@ -197,21 +197,23 @@ const ProductModifyForm = ({server, onClickLogout}) => {
                             </option>
                         ))}
                         </select>
+                        <br/><br/>
     
-                        <h4>상품명</h4>
-                        <input value={name} type="text" placeholder="상품명(20자 이내)" onChange={changeName} onKeyPress={handleKeyPress}/><br/>
-                        <h4>가격</h4>
-                        <input value={inputPriceFormat(price)} type="text" placeholder="가격(100만원 이내)" onChange={changePrice}/>원<br/>
-                        <h4>상세설명</h4>
-                        <input value={content} type="text" placeholder="상세설명(500자 이내)" onChange={changeContent}/><br/>
-                        <h4>판매상태</h4>
+                        <h3>상품명</h3>
+                        <input className='form_box_input' value={name} type="text" placeholder="상품명(20자 이내)" onChange={changeName} onKeyPress={handleKeyPress}/><br/>
+                        <h3>가격</h3>
+                        <input className='form_box_input' value={inputPriceFormat(price)} type="text" placeholder="가격(100만원 이내)" onChange={changePrice}/><br/>
+                        <h3>상세설명</h3>
+                        <input className='form_box_input' value={content} type="text" placeholder="상세설명(500자 이내)" onChange={changeContent}/><br/>
+                        <h3>판매상태</h3>
                         <label><input type="radio" value='Y' checked={status === "Y" ? true : false} onChange={changeRadioYes}/>판매중</label>
                         <label><input type="radio" value='N' checked={status === "N" ? true : false} onChange={changeRadioNo}/>판매 중단</label>
                         <br/>
     
                         <input type="file" id="file" multiple="multiple" onChange={handleChangeFile} />(100MB 이내)
                         <div style={{display:`${imgBase64}`?"block":"none"}}>
-                            <h4>이미지 미리보기</h4>
+                        <br/>
+                            <h3>이미지 미리보기</h3>
                             <img
                             className="preview"
                             src={imgBase64}
@@ -221,11 +223,12 @@ const ProductModifyForm = ({server, onClickLogout}) => {
                         </div>
                     </div>
                 </form>
+                <br/><br/>
     
                 <div>
-                    <button onClick={onClickModify}>작성완료</button>
-                    <button onClick={onClickReset}>모두 지우기</button>
-                    <button onClick={onClickProductList}>목록으로</button>
+                    <button className='indigo_btn' onClick={onClickModify}>작성완료</button>
+                    <button className='indigo_btn' onClick={onClickReset}>모두 지우기</button>
+                    <button className='indigo_btn' onClick={onClickProductList}>목록으로</button>
                 </div>
             </div>
         );

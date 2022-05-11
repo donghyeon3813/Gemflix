@@ -23,12 +23,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -49,6 +52,7 @@ public class PaymentService {
     private final WebClient webClient;
     private final ModelMapper modelMapper;
     private final PointService pointService;
+    private final CommonService commonService;
 
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
@@ -354,6 +358,21 @@ public class PaymentService {
         List<PaymentDto> paymentDtos = payments.stream()
                 .map(payment -> {
                     PaymentDto paymentDto = modelMapper.map(payment, PaymentDto.class);
+                    List<PaidProductDto> paidProductsDto = paymentDto.getPaidProducts();
+
+                    paidProductsDto.stream().map(paidProductDto -> {
+                        String location = paidProductDto.getProduct().getImgLocation();
+                        try {
+                            Resource resource = new FileSystemResource(location);
+                            File file = resource.getFile();
+                            String base64 = commonService.fileToString(file);
+                            paidProductDto.setBase64(base64);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return paidProductDto;
+                    }).collect(Collectors.toList());
+
                     return paymentDto;
                 }).collect(Collectors.toList());
 

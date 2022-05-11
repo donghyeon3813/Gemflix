@@ -72,27 +72,37 @@ const Join = ({server}) => {
     if(!loading){
         return (
             <>
-            <div>
-                <h2>회원가입 페이지</h2>
-                <form className="join-form" onSubmit={onClickJoin}>
-                    <label>아이디 : </label>
-                    <input value={id} type="text" placeholder="id" onChange={changeId}/><br />
-                    <label>비밀번호 : </label>
-                    <input value={password} type="password" placeholder="password" onChange={changePassword}/><br />
-                    <label>핸드폰 번호 : </label>
-                    <input value={phone} type="tel" placeholder="phone" onChange={changePhone}/><br />
-                    <label>이메일 : </label>
-                    <input value={email} type="email" placeholder="email" onChange={changeEmail} onKeyPress={handleKeyPress}/>
+            <div className='join_page'>
+                <h1>회원가입</h1><br/>
+                <form className="join_form" onSubmit={onClickJoin}>
+                    <table className='join_table'>
+                        <tr>
+                            <td><h4>ID : </h4></td>
+                            <td><input className='form_box_input' style={{width: '300px'}} value={id} type="text" placeholder="ID" onChange={changeId}/><br /></td>
+                        </tr>
+                        <tr>
+                            <td><h4>PW : </h4></td>
+                            <td><input className='form_box_input' style={{width: '300px'}} value={password} type="password" placeholder="PASSWORD" onChange={changePassword}/><br /></td>
+                        </tr>
+                        <tr>
+                            <td><h4>PHONE : </h4></td>
+                            <td><input className='form_box_input' style={{width: '300px'}} value={phone} type="tel" placeholder="PHONE" onChange={changePhone}/><br /></td>
+                        </tr>
+                        <tr>
+                            <td><h4>EMAIL : </h4></td>
+                            <td><input className='form_box_input' style={{width: '300px'}} value={email} type="email" placeholder="EMAIL" onChange={changeEmail} onKeyPress={handleKeyPress}/></td>
+                        </tr>
+                    </table>
+                    <button className='indigo_btn' type="button" onClick={onClickJoin}>가입하기</button>
                 </form>
-                <button type="button" className="join-button" onClick={onClickJoin}>가입하기</button>
             </div>
             </>
         );
     }else{
         return (
-          <div>
-            Loading ....
-          </div>
+            <div className='loading_box'>
+                <img className='loading_img' src="images/default/loading.jpg"/>
+            </div>
         )
     }
 };
