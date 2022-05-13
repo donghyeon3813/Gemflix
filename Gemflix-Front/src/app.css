@@ -366,3 +366,8 @@
 .payment_ticket_item {
   padding: 10px;
 }
+
+.product_none {
+  background: mediumpurple;
+  text-align: center;
+}

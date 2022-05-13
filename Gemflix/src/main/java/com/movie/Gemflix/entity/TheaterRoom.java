@@ -18,8 +18,7 @@ import java.time.LocalDateTime;
 public class TheaterRoom {
 
     @Id
-    @SequenceGenerator(name = "ROOM_ID_SEQ_GEN", sequenceName = "ROOM_ID_SEQ", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ROOM_ID_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
 
     private String name;

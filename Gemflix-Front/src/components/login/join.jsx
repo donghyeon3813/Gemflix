@@ -76,22 +76,26 @@ const Join = ({server}) => {
                 <h1>회원가입</h1><br/>
                 <form className="join_form" onSubmit={onClickJoin}>
                     <table className='join_table'>
-                        <tr>
-                            <td><h4>ID : </h4></td>
-                            <td><input className='form_box_input' style={{width: '300px'}} value={id} type="text" placeholder="ID" onChange={changeId}/><br /></td>
-                        </tr>
-                        <tr>
-                            <td><h4>PW : </h4></td>
-                            <td><input className='form_box_input' style={{width: '300px'}} value={password} type="password" placeholder="PASSWORD" onChange={changePassword}/><br /></td>
-                        </tr>
-                        <tr>
-                            <td><h4>PHONE : </h4></td>
-                            <td><input className='form_box_input' style={{width: '300px'}} value={phone} type="tel" placeholder="PHONE" onChange={changePhone}/><br /></td>
-                        </tr>
-                        <tr>
-                            <td><h4>EMAIL : </h4></td>
-                            <td><input className='form_box_input' style={{width: '300px'}} value={email} type="email" placeholder="EMAIL" onChange={changeEmail} onKeyPress={handleKeyPress}/></td>
-                        </tr>
+                        <thead>
+                            <tr>
+                                <td><h4>ID : </h4></td>
+                                <td><input className='form_box_input' style={{width: '300px'}} value={id} type="text" placeholder="ID" onChange={changeId}/><br /></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><h4>PW : </h4></td>
+                                <td><input className='form_box_input' style={{width: '300px'}} value={password} type="password" placeholder="PASSWORD" onChange={changePassword}/><br /></td>
+                            </tr>
+                            <tr>
+                                <td><h4>PHONE : </h4></td>
+                                <td><input className='form_box_input' style={{width: '300px'}} value={phone} type="tel" placeholder="PHONE" onChange={changePhone}/><br /></td>
+                            </tr>
+                            <tr>
+                                <td><h4>EMAIL : </h4></td>
+                                <td><input className='form_box_input' style={{width: '300px'}} value={email} type="email" placeholder="EMAIL" onChange={changeEmail} onKeyPress={handleKeyPress}/></td>
+                            </tr>
+                        </tbody>
                     </table>
                     <button className='indigo_btn' type="button" onClick={onClickJoin}>가입하기</button>
                 </form>

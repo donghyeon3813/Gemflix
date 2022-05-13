@@ -14,8 +14,7 @@ import javax.persistence.*;
 @Table(name = "PHOTO_TICKET")
 public class PhotoTicket {
     @Id
-    @SequenceGenerator(name = "PT_ID_SEQ_GEN", sequenceName = "PT_ID_SEQ", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PT_ID_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ptId;
 
     @OneToOne(cascade = CascadeType.ALL)

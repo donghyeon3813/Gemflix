@@ -19,7 +19,7 @@ const ProductCreateForm = ({server, onClickLogout}) => {
 
     const [categories, setCategories] = useState([]);
     const [category, setCategory] = useState('');
-    const [categoryIdx, setCategoryIdx] = useState(0);
+    const [categoryIdx, setCategoryIdx] = useState(1);
 
     const storeFormRef = useRef();
 
@@ -27,7 +27,7 @@ const ProductCreateForm = ({server, onClickLogout}) => {
         const tempCategories = location.state.categories;
         setCategories(tempCategories);
         setCategory(tempCategories.get(0));
-        setCategoryIdx(0);
+        setCategoryIdx(1);
     }, [])
 
     const handleChangeFile = (event) => {

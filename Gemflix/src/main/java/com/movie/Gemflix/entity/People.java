@@ -15,17 +15,10 @@ import java.util.Date;
 @Entity
 @Data
 @Table(name = "PEOPLE")
-@SequenceGenerator(
-        name = "PE_ID_SEQ_GEN",
-        sequenceName = "PE_ID_SEQ",
-        initialValue = 1,
-        allocationSize = 1
-)
 public class People {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-            generator = "PE_ID_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PE_ID")
     private Long peId;
 

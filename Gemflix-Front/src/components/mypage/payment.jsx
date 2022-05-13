@@ -430,7 +430,7 @@ const Payment = ({server, onClickLogout}) => {
                 <div className='payment_point_box' style={pointDisplayType}>
                     <label>사용할 포인트 : </label>
                     <input value={usePoint} type="number" min="0" max={limitPoint} placeholder="사용할 포인트" onChange={(e) => changeUsePoint(e)}/> p<br/>
-                    <p>잔여 포인트 : {inputPriceFormat(remainPoint)}</p>
+                    <p>잔여 포인트 : {inputPriceFormat(remainPoint)} p</p>
                     <button className='indigo_btn' type='button' onClick={useAllPoint}>전액사용</button>
                 </div>
 

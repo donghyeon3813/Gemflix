@@ -20,7 +20,7 @@ const ProductModifyForm = ({server, onClickLogout}) => {
     const [loading, setLoading] = useState(false);
 
     const [category, setCategory] = useState('');
-    const [categoryIdx, setCategoryIdx] = useState(0);
+    const [categoryIdx, setCategoryIdx] = useState(1);
     const [prId, setPrId] = useState(0);
     const storeFormRef = useRef();
 
@@ -234,9 +234,9 @@ const ProductModifyForm = ({server, onClickLogout}) => {
         );
     }else{
         return (
-          <div>
-            Loading ....
-          </div>
+            <div className='loading_box'>
+                <img className='loading_img' src="images/default/loading.jpg"/>
+            </div>
         )
     }
 };

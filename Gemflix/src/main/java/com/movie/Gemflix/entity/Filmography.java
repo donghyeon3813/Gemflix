@@ -13,18 +13,11 @@ import javax.persistence.*;
 @Entity
 @Data
 @Table(name = "FILMOGRAPHY")
-@SequenceGenerator(
-        name = "FG_ID_SEQ_GEN",
-        sequenceName = "FG_ID_SEQ",
-        initialValue = 1,
-        allocationSize = 1
-)
 public class Filmography {
 
     @Id
     @Column(name = "FG_ID")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
-    generator = "FG_ID_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pgId;
 
     @OneToOne

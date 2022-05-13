@@ -14,19 +14,10 @@ import javax.persistence.*;
 @Entity
 @Data
 @Table(name = "GENRE")
-@SequenceGenerator(
-        name = "GR_ID_SEQ_GEN",
-        sequenceName = "GR_ID_SEQ",
-        initialValue = 1,
-        allocationSize = 1
-)
 public class Genre {
 
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "GR_ID_SEQ_GEN"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "gr_id")
     private Integer grId;
     
