@@ -15,7 +15,6 @@ const MovieReserveSeat = (props) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const handleGetScreenInfo = (siId) => {
     movieServer.screenInfo(siId).then((response) => {
-      console.log(response);
       setScreenInfo(response.data);
       const dupSeatRows = new Set();
       response.data.seatList.map((info) => dupSeatRows.add(info.seRow));

@@ -8,7 +8,6 @@ const MoveFilmographyPopUp = (props) => {
   const [filmographys, setFilmographys] = useState([]);
   const handleGetFilmoGraphy = (peId) => {
     movieServer.filmography(peId).then((response) => {
-      console.log(response);
       setFilmographys(response.data);
     });
   };

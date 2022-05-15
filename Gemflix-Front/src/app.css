@@ -47,19 +47,19 @@
 
 .form_box_input {
   width: 100%;
-  padding: .5rem .8rem .5rem .8rem;
-  margin: .9vw 0 ;
-  border:0;
+  padding: 0.5rem 0.8rem 0.5rem 0.8rem;
+  margin: 0.9vw 0;
+  border: 0;
   border-radius: 5px;
   font-size: 20px;
 }
 
-.form_box_textarea{
+.form_box_textarea {
   height: 15vh;
   width: 100%;
-  padding: .5rem .8rem .5rem .8rem;
-  margin: .9vw 0 ;
-  border:0;
+  padding: 0.5rem 0.8rem 0.5rem 0.8rem;
+  margin: 0.9vw 0;
+  border: 0;
   border-radius: 5px;
   font-size: 20px;
 }
@@ -67,8 +67,8 @@
 .custom_checkbox {
   width: 20px;
   height: 20px;
-  display:table-cell;
-  vertical-align:middle;
+  display: table-cell;
+  vertical-align: middle;
 }
 
 .header {
@@ -134,7 +134,8 @@
   flex: 1;
 }
 
-.login_page, .join_page {
+.login_page,
+.join_page {
   text-align: center;
   padding: 10% 0 10% 0;
   background-color: mediumpurple;
@@ -218,13 +219,16 @@
   border-right: 1px solid black;
 }
 
-.product_form, .profile_form, .cart_list {
+.product_form,
+.profile_form,
+.cart_list {
   padding: 5%;
   text-align: center;
   background-color: mediumpurple;
 }
 
-.payment_form, .payment_list_form{
+.payment_form,
+.payment_list_form {
   text-align: center;
   background-color: mediumpurple;
   padding: 0 30% 0 30%;
@@ -308,7 +312,7 @@
 
 .cart_content {
   text-align: left;
-  vertical-align:middle;
+  vertical-align: middle;
   padding: 5px 10px 5px 10px;
 }
 
@@ -338,7 +342,8 @@
   margin: 10px;
 }
 
-.payment_point_box, .product_payment_item {
+.payment_point_box,
+.product_payment_item {
   padding: 20px;
   border-radius: 1rem;
   background: white;
@@ -364,6 +369,12 @@
 }
 
 .payment_ticket_item {
-  margin-top: 10px;
-  margin-bottom: 10px;
+  padding: 20px;
+  border-radius: 1rem;
+  background: white;
+  margin: 30px;
+}
+
+.payment_ticket_content {
+  text-align: left;
 }

@@ -5,6 +5,8 @@ import MovieReviewItem from "./movie_review_item";
 const MovieReviewList = (props) => {
   const movieServer = props.movieServer;
   const mvId = props.mvId;
+  const movieInfo = props.movieInfo;
+  const handlePageMovieList = props.handlePageMovieList;
 
   const [reviewList, setReviewList] = useState([]);
   const [limit, setLimit] = useState(10);
@@ -14,14 +16,13 @@ const MovieReviewList = (props) => {
   function handleGetReviewList(page) {
     const data = { page: page, size: limit, mvId: mvId };
     movieServer.reviews(data).then((response) => {
-      console.log(response.data.content);
       setReviewList(response.data.content);
       setTotalReview(response.data.totalElements);
     });
   }
   useEffect(() => {
     handleGetReviewList(0);
-  }, [page]);
+  }, [page, movieInfo]);
   return (
     <>
       <br />
@@ -30,7 +31,12 @@ const MovieReviewList = (props) => {
       <hr />
       {reviewList.map((info) => (
         <div key={info.rvId}>
-          <MovieReviewItem reviewInfo={info} movieServer={movieServer} />
+          <MovieReviewItem
+            handleGetReviewList={handleGetReviewList}
+            reviewInfo={info}
+            movieServer={movieServer}
+            handlePageMovieList={handlePageMovieList}
+          />
           <hr />
         </div>
       ))}

@@ -33,15 +33,10 @@ const MoviePayment = (props) => {
       buyer_addr: "주소정보", //주문자 주소
       buyer_email: userInfo.email,
     };
-    paymentInfo.selectedSeat.map((selectSeat) => {
-      paymentInfo.screenInfo.seatList
-        .filter((seat) => seat.seId == selectSeat)
-        .map((seat) => console.log(seat.seRow + "-" + seat.seCol));
-    });
+
     IMP.request_pay(data, (res) => {
       if (res.success) {
         // 결제 성공 시 로직
-        console.log("payment requset success");
         const imp_uid = res.imp_uid;
         const merchant_uid = res.merchant_uid;
         const reserveInfo = {
@@ -69,7 +64,6 @@ const MoviePayment = (props) => {
         // axios로 HTTP 요청
         movieServer.completePayment(data, user.memberId).then((data) => {
           // 서버 결제 API 성공시 로직
-          console.log(data);
           let reserveDate =
             paymentInfo.screenInfo.startDate +
             " " +
@@ -99,7 +93,6 @@ const MoviePayment = (props) => {
         alert("결제가 완료되었습니다.");
       } else {
         // 결제 실패 시 로직
-        console.log("payment requset fail: " + res.error_msg);
         alert("결제에 실패하였습니다. 에러 내용: " + res.error_msg);
       }
     });

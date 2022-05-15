@@ -69,13 +69,13 @@ public class MovieService {
                 return new CommonResponse(ErrorType.MOVIE_REVIEW_NOT_TICKET.getErrorCode(),
                         ErrorType.MOVIE_REVIEW_NOT_TICKET.getErrorMessage());
             }
-            log.info("ticket 정보 :");
+
             TicketDto ticket = modelMapper.map(ticketList.get(0), TicketDto.class);
             ReviewDto reviewDto = new ReviewDto();
             reviewDto.setContent(reviewRegisterDto.getContent());
             reviewDto.setScore(reviewRegisterDto.getScore());
             reviewDto.setTicket(ticket);
-            log.info("ticket 정보 : {}",ticket);
+
             Review review = modelMapper.map(reviewDto, Review.class);
             log.info("{}",review);
             reviewRepository.save(review);

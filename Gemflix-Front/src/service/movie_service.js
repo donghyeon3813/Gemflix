@@ -8,7 +8,6 @@ class MovieService {
     return await this.server
       .get("/movie/list", { params: data })
       .then(function (success) {
-        console.log(success);
         return success.data;
       })
       .catch(function (error) {
@@ -17,11 +16,9 @@ class MovieService {
   }
 
   async movieDetail(data) {
-    console.log(data);
     return await this.server
       .get("movie/details", { params: data })
       .then(function (success) {
-        console.log(success);
         return success.data;
       })
       .catch(function (error) {
@@ -38,7 +35,6 @@ class MovieService {
         },
       })
       .then(function (success) {
-        console.log(success);
         return success.data;
       })
       .catch(function (error) {
@@ -50,7 +46,6 @@ class MovieService {
     return await this.server
       .get("/movie/reviews", { params: data })
       .then(function (success) {
-        console.log(success);
         return success.data;
       })
       .catch(function (error) {
@@ -64,7 +59,6 @@ class MovieService {
         headers: { Authorization: "Bearer " + accessToken },
       })
       .then(function (success) {
-        console.log(success);
         return success.data;
       })
       .catch(function (error) {
@@ -78,7 +72,6 @@ class MovieService {
         headers: { Authorization: "Bearer " + accessToken },
       })
       .then(function (success) {
-        console.log(success);
         return success.data;
       })
       .catch(function (error) {
@@ -87,11 +80,9 @@ class MovieService {
   }
 
   async filmography(data) {
-    console.log(data);
     return await this.server
       .get("movie/filmographys/" + data, null)
       .then(function (success) {
-        console.log(success);
         return success.data;
       })
       .catch(function (error) {
@@ -103,7 +94,6 @@ class MovieService {
     return await this.server
       .get("/reservation/places/", null)
       .then(function (success) {
-        console.log(success);
         return success.data;
       })
       .catch(function (error) {
@@ -114,7 +104,6 @@ class MovieService {
     return await this.server
       .get("/reservation/theaters/", { params: data })
       .then(function (success) {
-        console.log(success);
         return success.data;
       })
       .catch(function (error) {
@@ -126,7 +115,6 @@ class MovieService {
     return await this.server
       .get("/reservation/movies/", null)
       .then(function (success) {
-        console.log(success);
         return success.data;
       })
       .catch(function (error) {
@@ -134,11 +122,9 @@ class MovieService {
       });
   }
   async screens(data) {
-    console.log(data);
     return await this.server
       .get("/reservation/screens/", { params: data })
       .then(function (success) {
-        console.log(success);
         return success.data;
       })
       .catch(function (error) {
@@ -146,11 +132,9 @@ class MovieService {
       });
   }
   async screenInfo(data) {
-    console.log(data);
     return await this.server
       .get("/reservation/screen/" + data, null)
       .then(function (success) {
-        console.log(success);
         return success.data;
       })
       .catch(function (error) {
@@ -164,11 +148,9 @@ class MovieService {
         headers: { "Content-Type": "application/json" },
       })
       .then(function (success) {
-        console.log(success.data);
         return success.data;
       })
       .catch(function (error) {
-        console.log(error.request.response);
         return JSON.parse(error.request.response);
       });
   }

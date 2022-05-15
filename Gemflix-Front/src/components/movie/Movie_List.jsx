@@ -18,7 +18,6 @@ const MovieList = ({ movieServer }) => {
   const [contentIndex, setContentIndex] = useState(0);
 
   function handleGetMovieList(page) {
-    console.log(page);
     const data = { page: page, size: limit, title: title };
     movieServer.movies(data).then((response) => {
       setMovieListInfo(response.data.content);
@@ -29,25 +28,19 @@ const MovieList = ({ movieServer }) => {
     navigate("/movies/view", { state: { mvId: mvId } });
   };
   const handleDetailPosition = (index) => {
-    console.log(index);
-    console.log(index % 4);
     let indexShare = index % 4;
     switch (indexShare) {
       case 0:
         setContentIndex(index + 4);
-        console.log(index + 4);
         break;
       case 1:
         setContentIndex(index + 3);
-        console.log(index + 3);
         break;
       case 2:
         setContentIndex(index + 2);
-        console.log(index + 2);
         break;
       case 3:
         setContentIndex(index + 1);
-        console.log(index + 1);
         break;
     }
   };

@@ -72,7 +72,7 @@ public class MovieController {
                 return CommonResponse.createResponse(
                         CommonResponse.builder()
                                 .code(Constant.Success.SUCCESS_CODE)
-                                .message("성공")
+                                .message("Success")
                                 .data(movieDetailDto)
                                 .build(), HttpStatus.OK
                 );
@@ -103,7 +103,6 @@ public class MovieController {
     public ResponseEntity<?> reviewRegister(@RequestBody ReviewRegisterDto reviewDto, HttpServletRequest request){
         log.info("method :{}","reviewRegister");
         log.info("parameter :{}",reviewDto);
-        System.out.println("ewqewqewqewqewqewqweq");
         try {
             CommonResponse response = movieService.reviewRegister(reviewDto, request);
             if(response!= null){

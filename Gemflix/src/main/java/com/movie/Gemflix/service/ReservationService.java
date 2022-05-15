@@ -41,7 +41,6 @@ public class ReservationService {
         LocalDateTime startDay = LocalDate.parse(date,df).atStartOfDay();
         LocalDateTime endDay = startDay.plusDays(1);
         LocalDateTime now = LocalDateTime.now();
-        System.out.println(now+"날짜");
         return screeningRepositorySupport.findScreenList(startDay,endDay , now, thId, mvId);
     }
 

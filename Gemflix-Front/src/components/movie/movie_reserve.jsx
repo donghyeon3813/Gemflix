@@ -66,7 +66,6 @@ const MovieReserve = ({ movieServer }) => {
   };
 
   const handleSetSearchData = (e, text) => {
-    console.log(e.target.id);
     const name = e.target.id;
 
     if (name === "thId") {
@@ -92,7 +91,6 @@ const MovieReserve = ({ movieServer }) => {
     setDates([...result]);
   };
   const handleReservePopupOn = (siId) => {
-    console.log("왜?");
     if (user.token === null) {
       alert("로그인이 필요한 기능입니다.");
       navigate("/login");
@@ -205,8 +203,6 @@ const MovieReserve = ({ movieServer }) => {
                   spaceBetween={50}
                   slidesPerView={7}
                   //*
-                  onSwiper={(swiper) => console.log(swiper)}
-                  onSlideChange={() => console.log("slide change")}
                 >
                   {dates.map((info) => (
                     <SwiperSlide key={info.date}>
