@@ -19,8 +19,7 @@ import java.util.List;
 public class Payment {
 
     @Id
-    @SequenceGenerator(name = "PM_ID_SEQ_GEN", sequenceName = "PM_ID_SEQ", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PM_ID_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pmId; //결제정보 고유번호
 
     @ManyToOne

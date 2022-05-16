@@ -17,8 +17,7 @@ import java.time.LocalDateTime;
 public class Screening {
 
     @Id
-    @SequenceGenerator(name = "SI_ID_SEQ_GEN", sequenceName = "SI_ID_SEQ", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SI_ID_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long siId;
 
     @ManyToOne

@@ -16,8 +16,7 @@ import javax.persistence.*;
 public class Seat {
 
     @Id
-    @SequenceGenerator(name = "SE_ID_SEQ_GEN", sequenceName = "SE_ID_SEQ", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SE_ID_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long seId;
 
     @ManyToOne

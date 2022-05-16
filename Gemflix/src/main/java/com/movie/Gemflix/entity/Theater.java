@@ -16,8 +16,7 @@ import javax.persistence.*;
 public class Theater {
 
     @Id
-    @SequenceGenerator(name = "TH_ID_SEQ_GEN", sequenceName = "TH_ID_SEQ", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TH_ID_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long thId;
 
     private String place;

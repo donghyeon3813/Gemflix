@@ -16,8 +16,7 @@ import javax.persistence.*;
 public class PaidProduct {
 
         @Id
-        @SequenceGenerator(name = "PP_ID_SEQ_GEN", sequenceName = "PP_ID_SEQ", initialValue = 1, allocationSize = 1)
-        @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PP_ID_SEQ_GEN")
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long ppId;
 
         private int count;

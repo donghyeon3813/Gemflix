@@ -14,19 +14,10 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Data
-@SequenceGenerator(
-        name = "TR_ID_SEQ_GEN", // 시퀀스 제네레이터 이름
-        sequenceName = "TR_ID_SEQ", // 시퀀스 이름
-        initialValue = 1, // 시작값
-        allocationSize = 1 // 메모리를 통해 할당할 사이즈
-)
 public class Trailer {
     @Column(name = "TR_ID")
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "TR_ID_SEQ_GEN"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long trId;
 
     @ManyToOne

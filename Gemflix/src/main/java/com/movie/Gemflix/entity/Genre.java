@@ -23,10 +23,7 @@ import javax.persistence.*;
 public class Genre {
 
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "GR_ID_SEQ_GEN"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "gr_id")
     private Integer grId;
     

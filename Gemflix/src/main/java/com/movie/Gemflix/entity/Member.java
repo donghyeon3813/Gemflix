@@ -20,8 +20,7 @@ import java.util.List;
 public class Member extends BaseEntity {
 
     @Id
-    @SequenceGenerator(name = "M_ID_SEQ_GEN", sequenceName = "M_ID_SEQ", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "M_ID_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mId;
 
     private String id;

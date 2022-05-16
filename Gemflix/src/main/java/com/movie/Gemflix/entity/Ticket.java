@@ -16,8 +16,7 @@ import javax.persistence.*;
 public class Ticket {
 
     @Id
-    @SequenceGenerator(name = "TK_ID_SEQ_GEN", sequenceName = "TK_ID_SEQ", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TK_ID_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tkId;
 
     private int price;

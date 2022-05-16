@@ -17,8 +17,7 @@ import java.time.LocalDateTime;
 @Table(name = "REVIEW")
 public class Review extends BaseEntity{
     @Id
-    @SequenceGenerator(name = "RV_ID_SEQ_GEN", sequenceName = "RV_ID_SEQ", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RV_ID_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long rvId;
 
 

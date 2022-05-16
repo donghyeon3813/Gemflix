@@ -17,8 +17,7 @@ import java.time.LocalDateTime;
 public class PointHistory {
 
     @Id
-    @SequenceGenerator(name = "PH_ID_SEQ_GEN", sequenceName = "PH_ID_SEQ", initialValue = 1, allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PH_ID_SEQ_GEN")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long phId;
 
     private int changePoint;

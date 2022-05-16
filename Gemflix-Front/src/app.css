@@ -183,6 +183,8 @@
   display: flex;
   height: 100%;
   line-height: 200px;
+  font-weight: bold;
+  font-size: medium;
 }
 
 .reserve_step ul {

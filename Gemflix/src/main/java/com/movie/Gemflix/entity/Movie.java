@@ -14,20 +14,11 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 @Data
-@SequenceGenerator(
-        name = "MV_ID_SEQ_GEN", // 시퀀스 제네레이터 이름
-        sequenceName = "MV_ID_SEQ", // 시퀀스 이름
-        initialValue = 1, // 시작값
-        allocationSize = 1 // 메모리를 통해 할당할 사이즈
-)
 public class Movie {
 
     @Id
     @Column(name = "MV_ID")
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "MV_ID_SEQ_GEN"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mvId; // 영화 고유번호
 
     @OneToOne
