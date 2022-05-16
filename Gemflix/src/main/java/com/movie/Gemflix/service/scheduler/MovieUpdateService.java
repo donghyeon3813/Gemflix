@@ -2,6 +2,7 @@ package com.movie.Gemflix.service.scheduler;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.movie.Gemflix.common.Constant;
 import com.movie.Gemflix.config.ApiProperties;
 import com.movie.Gemflix.dto.movie.*;
 import com.movie.Gemflix.entity.*;
@@ -142,6 +143,13 @@ public class MovieUpdateService {
                                 if(!optMovie.isPresent()){
                                     Optional<Genre> genre = genreRepository.findByGrNm(theMovieData.getGenreName());
                                     SimpleDateFormat format = new SimpleDateFormat("YYYY-MM-DD");
+                                    int num = (int) (Math.random() * 45 + 1);
+                                    String status = "";
+                                    if(23 < num){
+                                        status = Constant.BooleanStringValue.TRUE;
+                                    }else{
+                                        status = Constant.BooleanStringValue.FALSE;
+                                    }
                                     try {
                                         MovieDto movieDto = MovieDto.builder()
                                                 .genre(modelMapper.map(genre.get(),GenreDto.class))
@@ -153,6 +161,7 @@ public class MovieUpdateService {
                                                 .imgUrl(imgBaseUrl+theMovieData.getPoster_path())
                                                 .backImgUrl(imgBaseUrl+theMovieData.getBackdrop_path())
                                                 .apiId(theMovieData.getId())
+                                                .status(status)
                                                 .build();
                                         Movie movie = modelMapper.map(movieDto, Movie.class);
                                         movieRepository.save(movie);

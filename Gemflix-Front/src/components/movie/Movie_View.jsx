@@ -20,6 +20,13 @@ const MovieView = ({ movieServer }) => {
   ]);
   const [selectedTeb, setSelectedTeb] = useState(1);
 
+  const [reviewInfo, setReview] = useState({ score: "1", review: "" });
+  const handleSetReview = (e) => {
+    const { name, value } = e.target;
+
+    setReview({ ...reviewInfo, [name]: value });
+  };
+
   const handlePageMovieList = () => {
     if (location.state === null) {
       alert("조회된 정보가 없습니다.");
@@ -70,7 +77,9 @@ const MovieView = ({ movieServer }) => {
     };
     movieServer.reviewRegister(data, user.token).then((response) => {
       if (response.code !== "200") {
-        alert(response.message);
+        alert("등록되었습니다.");
+        handleGetMovieDetail(location.state.mvId);
+        setReview({ score: "1", review: "" });
       }
     });
   };
@@ -110,10 +119,16 @@ const MovieView = ({ movieServer }) => {
             <MoveTrailer trailerList={movieInfo.trailerList} />
           ) : (
             <div className="review-box">
-              <MovieReviewAdd handleRegisterReview={handleRegisterReview} />
+              <MovieReviewAdd
+                handleRegisterReview={handleRegisterReview}
+                handleSetReview={handleSetReview}
+                reviewInfo={reviewInfo}
+              />
               <MovieReviewList
                 movieServer={movieServer}
                 mvId={movieInfo.mvId}
+                movieInfo={movieInfo}
+                handlePageMovieList={handlePageMovieList}
               />
             </div>
           )}

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useSelector, shallowEqual } from "react-redux";
 const MovieReviewItem = (props) => {
   const movieServer = props.movieServer;
+  const handleGetReviewList = props.handleGetReviewList;
+  const handlePageMovieList = props.handlePageMovieList;
   const [reviewInfo, setReviewInfo] = useState(props.reviewInfo);
   const user = useSelector((store) => store.userReducer, shallowEqual);
   const [reviewStatus, setReviewStatus] = useState(false);
@@ -39,7 +41,9 @@ const MovieReviewItem = (props) => {
 
     movieServer.reviewDelete(rvId, user.token).then((response) => {
       if (response.code !== "200") {
-        alert(response.message);
+        alert("삭제되었습니다.");
+        handleGetReviewList(0);
+        handlePageMovieList();
       }
     });
   };

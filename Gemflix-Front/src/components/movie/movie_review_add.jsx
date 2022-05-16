@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 const MovieReviewAdd = (props) => {
   const handleRegisterReview = props.handleRegisterReview;
-  const [reviewInfo, setReview] = useState({ score: "1", review: "" });
-  const handleSetReview = (e) => {
-    const { name, value } = e.target;
-
-    setReview({ ...reviewInfo, [name]: value });
-  };
-
+  const handleSetReview = props.handleSetReview;
+  const reviewInfo = props.reviewInfo;
   return (
     <>
       <div className="review-add-group">
@@ -33,6 +28,7 @@ const MovieReviewAdd = (props) => {
           maxLength={1000}
           name="review"
           onChange={(e) => handleSetReview(e)}
+          value={reviewInfo.review}
         ></textarea>
         <button
           className="review-add-btn"

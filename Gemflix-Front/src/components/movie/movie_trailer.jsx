@@ -36,8 +36,6 @@ const MoveTrailer = (props) => {
         navigation //*
         centeredSlides={true}
         pagination={{ clickable: true }} //*
-        onSwiper={(swiper) => console.log(swiper)}
-        onSlideChange={() => console.log("slide change")}
       >
         {trailerList.map((info) => (
           <SwiperSlide key={info.imgLocation}>

@@ -39,6 +39,7 @@
   overflow-y: auto;
   text-align: left;
   padding-left: 20px;
+  height: 100%;
 }
 
 .theater-room {
@@ -146,7 +147,6 @@
   margin-bottom: 40px;
 }
 .btn-group {
-  width: 40%;
   margin: auto;
   margin-bottom: 20px;
 }

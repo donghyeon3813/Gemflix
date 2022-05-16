@@ -71,7 +71,7 @@ public class MovieRepositorySupport {
                                 .innerJoin(review.ticket, ticket)
                                 .innerJoin(ticket.screening, screening)
                                 .innerJoin(screening.movie, movie)
-                                .where(movie.mvId.eq(movieSearchDto.getMvId())),"score")
+                                .where(movie.mvId.eq(movieSearchDto.getMvId()),review.delStatus.eq("0")),"score")
                         ))
                 .from(movie)
                 .where(movie.mvId.eq(movieSearchDto.getMvId()))

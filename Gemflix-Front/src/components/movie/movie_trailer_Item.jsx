@@ -5,8 +5,6 @@ const MoveTrailerItem = (props) => {
   const trLocation = props.trLocation;
   const imgRef = useRef(null);
   useEffect(() => {
-    console.log(imgRef);
-    console.log(imgRef.current.height);
     if (imgRef.current.height === 90) {
     }
   }, []);
