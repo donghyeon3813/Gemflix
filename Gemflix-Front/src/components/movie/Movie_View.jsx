@@ -76,11 +76,9 @@ const MovieView = ({ movieServer }) => {
       score: score,
     };
     movieServer.reviewRegister(data, user.token).then((response) => {
-      if (response.code !== "200") {
-        alert("등록되었습니다.");
-        handleGetMovieDetail(location.state.mvId);
-        setReview({ score: "1", review: "" });
-      }
+      alert(response.message);
+      handleGetMovieDetail(location.state.mvId);
+      setReview({ score: "1", review: "" });
     });
   };
   const handleTebMenu = (value) => {
