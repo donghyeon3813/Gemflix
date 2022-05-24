@@ -13,7 +13,9 @@ import javax.persistence.*;
 @DynamicInsert //insert시 null인 필드 제외
 @Table(name = "PHOTO_TICKET")
 public class PhotoTicket {
+
     @Id
+    @Column(name = "PR_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long ptId;
 

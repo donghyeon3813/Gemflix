@@ -19,6 +19,7 @@ import java.util.List;
 public class Payment {
 
     @Id
+    @Column(name = "PM_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pmId; //결제정보 고유번호
 

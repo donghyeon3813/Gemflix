@@ -16,6 +16,7 @@ import javax.persistence.*;
 public class Product extends BaseEntity{
 
     @Id
+    @Column(name = "PR_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long prId;
 

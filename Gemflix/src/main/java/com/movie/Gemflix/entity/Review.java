@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 public class Review extends BaseEntity{
 
     @Id
+    @Column(name = "RV_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long rvId;
 

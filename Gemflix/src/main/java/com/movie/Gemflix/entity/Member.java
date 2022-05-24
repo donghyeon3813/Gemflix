@@ -20,6 +20,7 @@ import java.util.List;
 public class Member extends BaseEntity {
 
     @Id
+    @Column(name = "M_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mId;
 

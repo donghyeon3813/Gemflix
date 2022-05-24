@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 public class TheaterRoom {
 
     @Id
+    @Column(name = "ROOM_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
 

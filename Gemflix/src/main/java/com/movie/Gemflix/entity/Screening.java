@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 public class Screening {
 
     @Id
+    @Column(name = "SI_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long siId;
 

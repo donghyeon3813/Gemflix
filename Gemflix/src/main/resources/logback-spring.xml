@@ -9,10 +9,10 @@
     </appender>
 
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>C:\MovieLog\MovieLog.log</file>
+        <file>/MovieLog/MovieLog.log</file>
         <!-- 일자별로 로그파일 적용하기 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>C:\MovieLog\%d{yyyy-MM-dd}\MovieLog_%d{yyyyMMdd}.%i.log</fileNamePattern>
+            <fileNamePattern>/MovieLog/%d{yyyy-MM-dd}/MovieLog_%d{yyyyMMdd}.%i.log</fileNamePattern>
             <maxFileSize>50MB</maxFileSize>
             <!-- 일자별 백업파일의 보관기간 -->
             <maxHistory>60</maxHistory>

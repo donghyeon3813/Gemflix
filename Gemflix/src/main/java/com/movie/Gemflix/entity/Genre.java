@@ -18,10 +18,10 @@ public class Genre {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "gr_id")
+    @Column(name = "GR_ID")
     private Integer grId;
     
-    @Column(name = "gr_nm")
+    @Column(name = "GR_NM")
     private String grNm;
 
 }

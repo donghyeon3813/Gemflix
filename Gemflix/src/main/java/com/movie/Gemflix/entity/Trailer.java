@@ -15,8 +15,9 @@ import javax.persistence.*;
 @Builder
 @Data
 public class Trailer {
-    @Column(name = "TR_ID")
+
     @Id
+    @Column(name = "TR_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long trId;
 

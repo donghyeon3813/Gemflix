@@ -16,6 +16,7 @@ import javax.persistence.*;
 public class Theater {
 
     @Id
+    @Column(name = "TH_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long thId;
 

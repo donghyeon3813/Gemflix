@@ -16,6 +16,7 @@ import javax.persistence.*;
 public class Ticket {
 
     @Id
+    @Column(name = "TK_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tkId;
 
