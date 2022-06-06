@@ -22,6 +22,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cgId;
 
+    @Column(name = "CG_NAME")
     private String cgName;
 
 }

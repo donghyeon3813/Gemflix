@@ -20,7 +20,10 @@ public class PaidProduct {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long ppId;
 
+        @Column(name = "COUNT")
         private int count;
+
+        @Column(name = "PRICE")
         private int price;
 
         @ManyToOne

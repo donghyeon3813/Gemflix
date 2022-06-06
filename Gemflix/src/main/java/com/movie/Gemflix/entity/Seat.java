@@ -24,7 +24,9 @@ public class Seat {
     @JoinColumn( name = "ROOM_ID")
     private TheaterRoom theaterRoom;
 
+    @Column(name = "SE_COL")
     private String seCol;
 
+    @Column(name = "SE_ROW")
     private String seRow;
 }

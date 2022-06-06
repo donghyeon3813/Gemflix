@@ -22,7 +22,10 @@ public class TheaterRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
 
+    @Column(name = "NAME")
     private String name;
+
+    @Column(name = "SEAT_CNT")
     private int seatCnt;
 
     @ManyToOne

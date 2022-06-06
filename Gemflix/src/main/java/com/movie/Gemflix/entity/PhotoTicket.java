@@ -23,8 +23,10 @@ public class PhotoTicket {
     @JoinColumn(name = "PM_ID") //결제정보 고유번호
     private Payment payment;
 
+    @Column(name = "PRICE")
     private int price;
 
+    @Column(name = "CNT")
     private int cnt;
 
 }

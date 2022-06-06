@@ -20,11 +20,22 @@ public class Product extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long prId;
 
+    @Column(name = "NAME")
     private String name;
+
+    @Column(name = "CONTENT")
     private String content;
+
+    @Column(name = "PRICE")
     private int price;
+
+    @Column(name = "STATUS")
     private String status;
+
+    @Column(name = "IMG_LOCATION")
     private String imgLocation;
+
+    @Column(name = "DEL_STATUS")
     private String delStatus;
 
     @ManyToOne

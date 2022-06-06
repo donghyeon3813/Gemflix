@@ -21,10 +21,19 @@ public class PointHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long phId;
 
+    @Column(name = "CHANGE_POINT")
     private int changePoint;
+
+    @Column(name = "BEFORE_POINT")
     private int beforePoint;
+
+    @Column(name = "AFTER_POINT")
     private int afterPoint;
+
+    @Column(name = "TYPE")
     private String type;
+
+    @Column(name = "REG_DATE")
     private LocalDateTime regDate;
 
     @ManyToOne(cascade = CascadeType.ALL)

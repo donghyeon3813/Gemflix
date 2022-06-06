@@ -26,10 +26,13 @@ public class Review extends BaseEntity{
     @JoinColumn(name = "TK_ID")
     private Ticket ticket;
 
+    @Column(name = "CONTENT")
     private String content;
 
+    @Column(name = "SCORE")
     private float score;
 
+    @Column(name = "DEL_STATUS")
     private String delStatus;
 
 }

@@ -24,15 +24,34 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mId;
 
+    @Column(name = "ID")
     private String id;
+
+    @Column(name = "PASSWORD")
     private String password;
+
+    @Column(name = "POINT")
     private int point;
+
+    @Column(name = "PHONE")
     private String phone;
+
+    @Column(name = "STATUS")
     private String status;
+
+    @Column(name = "EMAIL")
     private String email;
+
+    @Column(name = "AUTHORITY")
     private MemberRole authority;
+
+    @Column(name = "GRADE")
     private String grade;
+
+    @Column(name = "DEL_STATUS")
     private String delStatus;
+
+    @Column(name = "FROM_SOCIAL")
     private String fromSocial;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)

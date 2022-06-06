@@ -20,7 +20,10 @@ public class Theater {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long thId;
 
+    @Column(name = "PLACE")
     private String place;
+
+    @Column(name = "LOCATION")
     private String location;
 
 }

@@ -16,10 +16,10 @@ import java.time.LocalDateTime;
 abstract class BaseEntity {
 
     @CreatedDate //엔티티 생성시간 처리
-    @Column(name = "regDate", updatable = false)
+    @Column(name = "REG_DATE", updatable = false)
     private LocalDateTime regDate;
 
     @LastModifiedDate //최종 수정시간 자동처리
-    @Column(name = "modDate")
+    @Column(name = "MOD_DATE")
     private LocalDateTime modDate;
 }

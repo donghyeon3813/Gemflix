@@ -20,7 +20,10 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tkId;
 
+    @Column(name = "PRICE")
     private int price;
+
+    @Column(name = "RV_USE_STATE")
     private String rvUseState;
 
     @ManyToOne

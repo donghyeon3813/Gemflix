@@ -29,9 +29,16 @@ public class Screening {
     @JoinColumn(name = "MV_ID")
     private Movie movie;
 
+    @Column(name = "START_TIME")
     private LocalDateTime startTime;
+
+    @Column(name = "END_TIME")
     private LocalDateTime endTime;
+
+    @Column(name = "SCREENING_DATE")
     private LocalDateTime screeningDate;
+
+    @Column(name = "TYPE")
     private String type;
 
 }
