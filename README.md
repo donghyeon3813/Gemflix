@@ -29,15 +29,16 @@
 3. React를 이용한 SPA 구성
 4. Redux를 이용한 로그인 / 장바구니 상태관리
 5. WebClient를 이용한 Non-Blocking & 비동기 HTTP 통신
-6. 다양한 API 활용(영화, 결제)
+6. 다양한 API 활용(영화, 결제, 소셜로그인)
+7. Rest API 구현
 
 ***
 ## Using
-1. FrontEnd - REACT, JS, CSS3
+1. FrontEnd - React, React-Router, JS, CSS3
 2. BackEnd - Java(JDK 1.8), Spring Boot, JPA
 3. OS - Windows
-4. Library&API - KakaoLogin, JavaMail API, I'mport API, 공공 API
-5. Document - Google Drive, ERC Cloud
+4. Library&API - KakaoLogin, theMovieDB, JavaMail, I'mport API
+5. Document - Google Drive, ERD Cloud
 6. CI - git(v2.28.0.windows.1), Github
 7. DataBase - MySQL(v8.0)
 
@@ -62,10 +63,10 @@
 3. **이메일 인증** (Redis를 사용한 이메일 인증 링크 만료시간 설정)
 ![06](https://user-images.githubusercontent.com/72774476/171987391-ce7a8c38-0eaf-41ba-b0a2-8b6e2bba7688.png)
 
-4. **영화 목록 조회/검색/페이징** (WebClient를 사용한 Non-Blocking & 비동기 HTTP 통신)
+4. **영화 목록 조회/검색/페이징**
 ![07](https://user-images.githubusercontent.com/72774476/171987838-cf40b243-54f4-416e-ba14-0f16baab8ff6.png)
 
-5. **영화 상세정보/필모그래피/예고편 조회**
+5. **영화 상세정보/필모그래피/예고편/리뷰 조회**
 ![08](https://user-images.githubusercontent.com/72774476/171987891-6a769a55-d74b-4c88-a737-8d43bf0698c1.png)
 
 6. **영화 평점 및 관람평 리뷰 등록/수정/삭제**
@@ -82,12 +83,13 @@
 9. **영화 및 상품 결제** (I'mport API 연동)
 ![14](https://user-images.githubusercontent.com/72774476/171988541-54449c4f-4e5e-4490-a5e4-89a2c59c7c6f.png)
 
-10. **마이페이지 영화 예매내역, 상품 결젠역 조회**
+10. **마이페이지 영화 예매내역, 상품 결제내역 조회**
 ![15](https://user-images.githubusercontent.com/72774476/171988596-96666385-ba77-473f-a9df-30ed873605c0.png)
 ![16](https://user-images.githubusercontent.com/72774476/171988660-1dde2fff-4839-45e5-8f74-e778ef4da97b.png)
 
 11. **회원탈퇴**
 ![17](https://user-images.githubusercontent.com/72774476/171988702-48eb00f7-611a-4b49-9b7c-a7ee807bb099.png)
+
 
 ***
 ## ERD
